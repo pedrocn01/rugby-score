@@ -1,0 +1,786 @@
+import 'package:flutter/material.dart';
+import '../config/leagues.dart';
+import '../config/logos.dart';
+import '../config/themes.dart';
+import '../data/static_data.dart';
+import '../models/team_stats.dart';
+import '../services/rugby_service.dart';
+
+class DetalleLiga extends StatefulWidget {
+  final String nombreLiga;
+  final int leagueId;
+  final LeagueTheme theme;
+  final bool isStatic;
+  final bool isStaticStandingsOnly;
+
+  const DetalleLiga({
+    super.key,
+    required this.nombreLiga,
+    required this.leagueId,
+    required this.theme,
+    this.isStatic = false,
+    this.isStaticStandingsOnly = false,
+  });
+
+  @override
+  State<DetalleLiga> createState() => _DetalleLigaState();
+}
+
+class _DetalleLigaState extends State<DetalleLiga> {
+  final RugbyService _service = RugbyService();
+  late Future<List<dynamic>> _matchesFuture;
+  late Future<List<List<dynamic>>> _standingsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isStatic) {
+      _matchesFuture  = Future.value(StaticDataService.getMatches(widget.nombreLiga));
+      _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
+    } else if (widget.isStaticStandingsOnly) {
+      _matchesFuture  = _service.fetchMatches(widget.leagueId);
+      _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
+    } else if (computeStandingsLeagues.contains(widget.nombreLiga)) {
+      final f = _service.fetchMatches(widget.leagueId);
+      _matchesFuture  = f;
+      _standingsFuture = sevensLeagues.contains(widget.nombreLiga)
+          ? f.then(_computePoolStandings)
+          : f.then(_computeStandingsFromMatches);
+    } else {
+      _matchesFuture  = _service.fetchMatches(widget.leagueId);
+      _standingsFuture = _service.fetchStandings(widget.leagueId);
+    }
+  }
+
+  // ── Cálculo de tabla desde partidos ─────────────────────────────────────
+
+  List<List<dynamic>> _computeStandingsFromMatches(List<dynamic> matches) {
+    final Map<String, TeamStats> stats = {};
+
+    for (final match in matches) {
+      final hs = match['scores']?['home'];
+      final as_ = match['scores']?['away'];
+      if (hs == null || as_ == null) continue;
+
+      final home = match['teams']['home']['name'] as String;
+      final away = match['teams']['away']['name'] as String;
+
+      stats.putIfAbsent(home, () => TeamStats(home));
+      stats.putIfAbsent(away, () => TeamStats(away));
+
+      stats[home]!.pj++;
+      stats[away]!.pj++;
+
+      if (hs > as_) {
+        stats[home]!.g++;  stats[away]!.p++;
+        stats[home]!.pts += 4;
+      } else if (as_ > hs) {
+        stats[away]!.g++;  stats[home]!.p++;
+        stats[away]!.pts += 4;
+      } else {
+        stats[home]!.e++;  stats[away]!.e++;
+        stats[home]!.pts += 2;
+        stats[away]!.pts += 2;
+      }
+    }
+
+    final sorted = stats.values.toList()
+      ..sort((a, b) => b.pts != a.pts ? b.pts.compareTo(a.pts) : b.g.compareTo(a.g));
+
+    return [
+      sorted.asMap().entries.map((e) => {
+        'position': e.key + 1,
+        'team': {'name': e.value.name},
+        'games': {
+          'played': e.value.pj,
+          'win':    {'total': e.value.g},
+          'draw':   {'total': e.value.e},
+          'lose':   {'total': e.value.p},
+        },
+        'points':     e.value.pts,
+        'description': null,
+      }).toList(),
+    ];
+  }
+
+  // ── Cálculo de tabla por pools (7s) ─────────────────────────────────────
+
+  List<List<dynamic>> _computePoolStandings(List<dynamic> matches) {
+    // Solo partidos de fase de grupos de la competencia principal
+    final poolMatches = matches.where((p) {
+      final week = p['week']?.toString().toLowerCase() ?? '';
+      return week.startsWith('pool');
+    }).toList();
+
+    // Agrupar por pool
+    final Map<String, List<dynamic>> byPool = {};
+    for (final match in poolMatches) {
+      final pool = match['week']?.toString() ?? 'Pool';
+      byPool.putIfAbsent(pool, () => []).add(match);
+    }
+
+    final sortedPools = byPool.keys.toList()..sort();
+
+    return sortedPools.map((pool) {
+      final Map<String, TeamStats> stats = {};
+      for (final match in byPool[pool]!) {
+        final hs  = match['scores']?['home'];
+        final as_ = match['scores']?['away'];
+        if (hs == null || as_ == null) continue;
+
+        final home = match['teams']['home']['name'] as String;
+        final away = match['teams']['away']['name'] as String;
+
+        stats.putIfAbsent(home, () => TeamStats(home));
+        stats.putIfAbsent(away, () => TeamStats(away));
+
+        stats[home]!.pj++;
+        stats[away]!.pj++;
+
+        if (hs > as_) {
+          stats[home]!.g++;  stats[away]!.p++;
+          stats[home]!.pts += 4;
+        } else if (as_ > hs) {
+          stats[away]!.g++;  stats[home]!.p++;
+          stats[away]!.pts += 4;
+        } else {
+          stats[home]!.e++;  stats[away]!.e++;
+          stats[home]!.pts += 2;
+          stats[away]!.pts += 2;
+        }
+      }
+
+      final sorted = stats.values.toList()
+        ..sort((a, b) => b.pts != a.pts ? b.pts.compareTo(a.pts) : b.g.compareTo(a.g));
+
+      return sorted.asMap().entries.map((e) => {
+        'position': e.key + 1,
+        'team':     {'name': e.value.name},
+        'games': {
+          'played': e.value.pj,
+          'win':    {'total': e.value.g},
+          'draw':   {'total': e.value.e},
+          'lose':   {'total': e.value.p},
+        },
+        'points':      e.value.pts,
+        'description': null,
+      }).toList();
+    }).toList();
+  }
+
+  // ── Filtro de partidos — solo competencia principal (7s) ─────────────────
+
+  bool _isMainDrawMatch(dynamic partido) {
+    final week = partido['week']?.toString().toLowerCase() ?? '';
+    if (week.isEmpty) return true;
+    if (week.startsWith('pool')) return true;
+    if (week.contains('cup')) return true;
+    if (week.contains('plate')) return false;
+    if (week.contains('bowl')) return false;
+    if (week.contains('shield')) return false;
+    if (week.contains('challenge')) return false;
+    return true;
+  }
+
+  // ── Formateo de fechas ───────────────────────────────────────────────────
+
+  String _formatFecha(String? dateStr) {
+    if (dateStr == null) return '';
+    try {
+      final dt = DateTime.parse(dateStr).toLocal();
+      const dias   = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+      const meses  = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+      return '${dias[dt.weekday - 1]} ${dt.day} ${meses[dt.month - 1]}';
+    } catch (_) {
+      return dateStr.substring(0, 10);
+    }
+  }
+
+  String _formatHora(String? dateStr) {
+    if (dateStr == null) return '';
+    try {
+      final dt = DateTime.parse(dateStr).toLocal();
+      return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  // ── Etiquetas de jornada ────────────────────────────────────────────────
+
+  String _labelJornada(String week) {
+    final num = int.tryParse(week);
+    if (num != null) return 'FECHA $num';
+    const fases = {
+      'quarter-finals':     'CUARTOS DE FINAL',
+      'semi-finals':        'SEMIFINALES',
+      'final':              'FINAL',
+      'bronze final':       'TERCER PUESTO',
+      'round of 16':        'OCTAVOS DE FINAL',
+      'round-of-16':        'OCTAVOS DE FINAL',
+      'playoffs':           'PLAYOFFS',
+      'octavos':            'OCTAVOS DE FINAL',
+      // 7s pools
+      'pool a':             'POOL A',
+      'pool b':             'POOL B',
+      'pool c':             'POOL C',
+      'pool d':             'POOL D',
+      // 7s Cup knockouts
+      'cup quarter-finals': 'CUARTOS — CUP',
+      'cup semi-finals':    'SEMIFINALES — CUP',
+      'cup final':          'FINAL — CUP',
+    };
+    return fases[week.toLowerCase()] ?? week.toUpperCase();
+  }
+
+  String _inferirInstancia(dynamic partido) {
+    final w = partido['week']?.toString();
+    if (w != null && w != 'null') return w;
+    return 'Round of 16';
+  }
+
+  List<String> _ordenarJornadas(Iterable<String> jornadas, {bool proximosAscendente = false}) {
+    const ordenFases = [
+      'final', 'semi-finals', 'quarter-finals',
+      'round of 16', 'round-of-16', 'playoffs', 'octavos',
+    ];
+    final lista = jornadas.toList();
+    lista.sort((a, b) {
+      final ia = int.tryParse(a);
+      final ib = int.tryParse(b);
+      if (ia != null && ib != null) return proximosAscendente ? ia.compareTo(ib) : ib.compareTo(ia);
+      if (ia != null) return proximosAscendente ? -1 : 1;
+      if (ib != null) return proximosAscendente ? 1 : -1;
+      final oa = ordenFases.indexOf(a.toLowerCase());
+      final ob = ordenFases.indexOf(b.toLowerCase());
+      return (oa == -1 ? 99 : oa).compareTo(ob == -1 ? 99 : ob);
+    });
+    return lista;
+  }
+
+  // ── Build principal ──────────────────────────────────────────────────────
+
+  @override
+  Widget build(BuildContext context) {
+    final bool onlyTabla      = soloTablaLeagues.contains(widget.nombreLiga);
+    final bool onlyResultados = soloResultadosLeagues.contains(widget.nombreLiga);
+
+    final List<Tab> tabs = onlyTabla
+        ? [const Tab(text: 'TABLA')]
+        : onlyResultados
+            ? [const Tab(text: 'RESULTADOS')]
+            : const [Tab(text: 'RESULTADOS'), Tab(text: 'TABLA'), Tab(text: 'PRÓXIMOS')];
+
+    return DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        appBar: AppBar(
+          title: Text(
+            widget.nombreLiga,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+          ),
+          backgroundColor: widget.theme.primary,
+          iconTheme: const IconThemeData(color: Colors.white),
+          bottom: TabBar(
+            indicatorColor:       widget.theme.accent,
+            indicatorWeight:      3,
+            labelColor:           Colors.white,
+            unselectedLabelColor: Colors.white60,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+            tabs: tabs,
+          ),
+        ),
+        body: onlyTabla
+            ? _tablaWidget()
+            : FutureBuilder<List<dynamic>>(
+                future: _matchesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator(color: widget.theme.primary));
+                  }
+                  if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
+
+                  final partidos = snapshot.data ?? [];
+                  final isSevensTournament = sevensLeagues.contains(widget.nombreLiga);
+
+                  final jugados = partidos
+                      .where((p) => p['scores']?['home'] != null)
+                      .where((p) => !isSevensTournament || _isMainDrawMatch(p))
+                      .toList()
+                    ..sort((a, b) {
+                      final da = DateTime.tryParse(a['date'] ?? '') ?? DateTime(2000);
+                      final db = DateTime.tryParse(b['date'] ?? '') ?? DateTime(2000);
+                      return db.compareTo(da);
+                    });
+
+                  final proximos = partidos
+                      .where((p) => p['scores']?['home'] == null)
+                      .where((p) => !isSevensTournament || _isMainDrawMatch(p))
+                      .toList()
+                    ..sort((a, b) {
+                      final da = DateTime.tryParse(a['date'] ?? '') ?? DateTime(2099);
+                      final db = DateTime.tryParse(b['date'] ?? '') ?? DateTime(2099);
+                      return da.compareTo(db);
+                    });
+
+                  return TabBarView(
+                    children: onlyResultados
+                        ? [_listaResultados(jugados)]
+                        : [_listaResultados(jugados), _tablaWidget(), _listaProximos(proximos)],
+                  );
+                },
+              ),
+      ),
+    );
+  }
+
+  // ── Tab: Resultados ──────────────────────────────────────────────────────
+
+  Widget _listaResultados(List<dynamic> data) {
+    if (data.isEmpty) return _emptyState('No hay resultados disponibles');
+
+    final Map<String, List<dynamic>> porJornada = {};
+    for (final p in data) {
+      porJornada.putIfAbsent(_inferirInstancia(p), () => []).add(p);
+    }
+    final jornadas = _ordenarJornadas(porJornada.keys);
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      children: jornadas.map((j) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+            child: Text(
+              _labelJornada(j),
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: widget.theme.primary, letterSpacing: 1.5),
+            ),
+          ),
+          ...porJornada[j]!.map(_cardResultado),
+        ],
+      )).toList(),
+    );
+  }
+
+  Widget _cardResultado(dynamic partido) {
+    final homeTeam  = partido['teams']?['home']?['name'] ?? 'Local';
+    final awayTeam  = partido['teams']?['away']?['name'] ?? 'Visitante';
+    final homeScore = partido['scores']?['home'] ?? '-';
+    final awayScore = partido['scores']?['away'] ?? '-';
+    final homePT1   = partido['periods']?['first']?['home'];
+    final awayPT1   = partido['periods']?['first']?['away'];
+    final homePT2   = partido['periods']?['second']?['home'];
+    final awayPT2   = partido['periods']?['second']?['away'];
+    final fecha     = _formatFecha(partido['date']);
+    final hora      = _formatHora(partido['date']);
+    final status    = partido['status']?['short'] ?? '';
+    final homeWon   = (homeScore is int && awayScore is int) && homeScore > awayScore;
+    final awayWon   = (homeScore is int && awayScore is int) && awayScore > homeScore;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      decoration: BoxDecoration(
+        color:        Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 6, offset: const Offset(0, 2))],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('$fecha · $hora', style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
+                if (status.isNotEmpty) _statusChip(status),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _teamLogo(homeTeam, size: 28),
+                      const SizedBox(height: 4),
+                      Text(
+                        homeTeam,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                          fontWeight: homeWon ? FontWeight.w800 : FontWeight.w500,
+                          fontSize:   13,
+                          color:      homeWon ? const Color(0xFF1A1A1A) : const Color(0xFF555555),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(color: widget.theme.primary, borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    '$homeScore - $awayScore',
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18, letterSpacing: 1),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _teamLogo(awayTeam, size: 28),
+                      const SizedBox(height: 4),
+                      Text(
+                        awayTeam,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: awayWon ? FontWeight.w800 : FontWeight.w500,
+                          fontSize:   13,
+                          color:      awayWon ? const Color(0xFF1A1A1A) : const Color(0xFF555555),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (homePT1 != null && awayPT1 != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('1T: $homePT1-$awayPT1', style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
+                  if (homePT2 != null && awayPT2 != null) ...[
+                    const Text('  ·  ', style: TextStyle(color: Color(0xFFCCCCCC))),
+                    Text('2T: $homePT2-$awayPT2', style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
+                  ],
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _teamLogoSmall(String teamName) {
+    final url = clubLogo(teamName);
+    if (url == null) return const SizedBox(width: 20);
+    return Image.network(
+      url,
+      width: 20, height: 20,
+      fit: BoxFit.contain,
+      errorBuilder: (ctx, err, st) => const SizedBox(width: 20),
+    );
+  }
+
+  Widget _teamLogo(String teamName, {double size = 28}) {
+    final url = clubLogo(teamName);
+    if (url == null) return const SizedBox.shrink();
+    return Image.network(
+      url,
+      width: size, height: size,
+      fit: BoxFit.contain,
+      errorBuilder: (ctx, err, st) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _statusChip(String status) {
+    final Color bg;
+    final Color fg;
+    final String label;
+    switch (status) {
+      case 'FT':
+        bg = const Color(0xFFE8F5EE); fg = const Color(0xFF2D6A4F); label = 'Final';
+      case 'AET':
+        bg = const Color(0xFFFFF3E8); fg = const Color(0xFFE85D04); label = 'Prórroga';
+      default:
+        bg = const Color(0xFFEEF2FF); fg = widget.theme.primary;    label = status;
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
+      child: Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: fg)),
+    );
+  }
+
+  // ── Tab: Tabla ───────────────────────────────────────────────────────────
+
+  Widget _tablaWidget() {
+    return FutureBuilder<List<List<dynamic>>>(
+      future: _standingsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(color: widget.theme.primary));
+        }
+        if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
+
+        final grupos = snapshot.data ?? [];
+        if (grupos.isEmpty) return _emptyState('Tabla no disponible para esta liga');
+
+        final tieneGrupos   = grupos.length > 1;
+        final ocultarLeyenda = widget.nombreLiga == 'Seis Naciones' || widget.nombreLiga == 'The Rugby Championship';
+
+        final grupoLabels = switch (widget.nombreLiga) {
+          'Champions Cup' => ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'],
+          'Challenge Cup' => ['GRUPO A', 'GRUPO B', 'GRUPO C'],
+          _ when sevensLeagues.contains(widget.nombreLiga) =>
+            List.generate(grupos.length, (i) => 'POOL ${String.fromCharCode(65 + i)}'),
+          _ => <String>[],
+        };
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...grupos.asMap().entries.map((entry) {
+                final idx       = entry.key;
+                final tabla     = entry.value;
+                final labelGrupo = grupoLabels.isNotEmpty && idx < grupoLabels.length
+                    ? grupoLabels[idx]
+                    : 'GRUPO ${idx + 1}';
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (tieneGrupos)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10, top: idx == 0 ? 0 : 24),
+                        child: Text(
+                          labelGrupo,
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: widget.theme.primary, letterSpacing: 2),
+                        ),
+                      ),
+                    _tablaHeader(),
+                    _tablaBody(tabla),
+                  ],
+                );
+              }),
+
+              if (!ocultarLeyenda) ...[
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica playoffs'),
+                    const SizedBox(width: 16),
+                    _leyendaItem(Colors.red, 'Descenso'),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _tablaHeader() {
+    return Container(
+      decoration: BoxDecoration(
+        color:        widget.theme.primary,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      child: const Row(
+        children: [
+          SizedBox(width: 28, child: Text('#',     style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
+          Expanded(            child: Text('Equipo', style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
+          SizedBox(width: 32, child: Text('PJ',   textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 32, child: Text('G',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 32, child: Text('E',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 32, child: Text('P',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 40, child: Text('Pts',  textAlign: TextAlign.center, style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w800, fontSize: 12))),
+        ],
+      ),
+    );
+  }
+
+  Widget _tablaBody(List<dynamic> tabla) {
+    return Container(
+      decoration: BoxDecoration(
+        color:        Colors.white,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(14)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.07), blurRadius: 8, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        children: tabla.asMap().entries.map<Widget>((eq) {
+          final i      = eq.key;
+          final equipo = eq.value;
+          final pos    = equipo['position'] ?? i + 1;
+          final nombre = equipo['team']?['name'] ?? '-';
+          final pj     = equipo['games']?['played'] ?? '-';
+          final g      = equipo['games']?['win']?['total'] ?? '-';
+          final e      = equipo['games']?['draw']?['total'] ?? '-';
+          final p      = equipo['games']?['lose']?['total'] ?? '-';
+          final pts    = equipo['points'] ?? '-';
+          final desc   = equipo['description'] as String?;
+          final isLast = i == tabla.length - 1;
+
+          Color leftBorder = Colors.transparent;
+          Color rowBg      = i.isOdd ? const Color(0xFFFAFAFA) : Colors.white;
+
+          if (desc != null) {
+            if (desc.contains('Relegation') && !desc.contains('Playoffs')) {
+              leftBorder = Colors.red;
+              rowBg      = const Color(0xFFFFF5F5);
+            } else if (desc.contains('Playoffs') || desc.contains('Qualified')) {
+              leftBorder = const Color(0xFF2D6A4F);
+              rowBg      = const Color(0xFFF0FAF5);
+            }
+          }
+
+          return Container(
+            decoration: BoxDecoration(
+              color: rowBg,
+              border: Border(
+                left:   BorderSide(color: leftBorder, width: 4),
+                bottom: isLast ? BorderSide.none : const BorderSide(color: Color(0xFFEEEEEE), width: 1),
+              ),
+              borderRadius: isLast ? const BorderRadius.vertical(bottom: Radius.circular(14)) : BorderRadius.zero,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            child: Row(
+              children: [
+                SizedBox(width: 28, child: Text(pos.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
+                _teamLogoSmall(nombre),
+                const SizedBox(width: 6),
+                Expanded(           child: Text(nombre,         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
+                SizedBox(width: 32, child: Text(pj.toString(),  textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 32, child: Text(g.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 32, child: Text(e.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 32, child: Text(p.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 40, child: Text(pts.toString(), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Color(0xFF1A1A1A)))),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _leyendaItem(Color color, String texto) {
+    return Row(
+      children: [
+        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+        const SizedBox(width: 6),
+        Text(texto, style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
+      ],
+    );
+  }
+
+  // ── Tab: Próximos ────────────────────────────────────────────────────────
+
+  Widget _listaProximos(List<dynamic> data) {
+    if (data.isEmpty) return _emptyState('No hay próximos partidos programados');
+
+    final Map<String, List<dynamic>> porJornada = {};
+    for (final p in data) {
+      porJornada.putIfAbsent(_inferirInstancia(p), () => []).add(p);
+    }
+    final jornadas = _ordenarJornadas(porJornada.keys, proximosAscendente: true);
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      children: jornadas.map((j) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+            child: Text(
+              _labelJornada(j),
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: widget.theme.primary, letterSpacing: 1.5),
+            ),
+          ),
+          ...porJornada[j]!.map(_cardProximo),
+        ],
+      )).toList(),
+    );
+  }
+
+  Widget _cardProximo(dynamic partido) {
+    final homeTeam = partido['teams']?['home']?['name'] ?? 'Local';
+    final awayTeam = partido['teams']?['away']?['name'] ?? 'Visitante';
+    final fecha    = _formatFecha(partido['date']);
+    final hora     = _formatHora(partido['date']);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      decoration: BoxDecoration(
+        color:        Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border:       Border.all(color: widget.theme.primary.withValues(alpha: 0.15), width: 1.5),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6, offset: const Offset(0, 2))],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.calendar_today, size: 12, color: widget.theme.primary),
+                const SizedBox(width: 5),
+                Text('$fecha · $hora hs', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: widget.theme.primary)),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _teamLogo(homeTeam, size: 28),
+                      const SizedBox(height: 4),
+                      Text(homeTeam, textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF1A1A1A))),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin:     const EdgeInsets.symmetric(horizontal: 14),
+                  padding:    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color:        widget.theme.background,
+                    borderRadius: BorderRadius.circular(10),
+                    border:       Border.all(color: widget.theme.primary.withValues(alpha: 0.3)),
+                  ),
+                  child: Text('VS', style: TextStyle(color: widget.theme.primary, fontWeight: FontWeight.w900, fontSize: 14)),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _teamLogo(awayTeam, size: 28),
+                      const SizedBox(height: 4),
+                      Text(awayTeam, textAlign: TextAlign.left, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF1A1A1A))),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Empty state ──────────────────────────────────────────────────────────
+
+  Widget _emptyState(String mensaje) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.sports_rugby, size: 48, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Text(mensaje, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFF888888), fontSize: 14)),
+        ],
+      ),
+    );
+  }
+}

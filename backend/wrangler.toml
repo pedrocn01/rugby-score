@@ -1,0 +1,10 @@
+name            = "rugby-proxy"
+main            = "worker.js"
+compatibility_date = "2025-01-01"
+
+# La API key se guarda como secreto en Cloudflare (nunca en este archivo).
+# Para configurarla: wrangler secret put API_KEY
+#
+# Variables de entorno NO secretas (opcionales):
+# [vars]
+# SOME_VAR = "value"
