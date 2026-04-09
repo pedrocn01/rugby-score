@@ -99,7 +99,7 @@ export default {
         'Cache-Control':                `public, max-age=${ttl}`,
         'Access-Control-Allow-Origin':  '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key',
         'X-Cache':                      'MISS',
         'X-Cache-TTL':                  `${ttl}s`,
       },
@@ -123,7 +123,7 @@ function corsResponse(body, status = 200) {
       'Content-Type':                 'application/json',
       'Access-Control-Allow-Origin':  '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key',
     },
   });
 }
