@@ -35,22 +35,30 @@ class _DetalleLigaState extends State<DetalleLiga> {
   @override
   void initState() {
     super.initState();
+    _loadData(noCache: false);
+  }
+
+  void _loadData({bool noCache = false}) {
     if (widget.isStatic) {
       _matchesFuture  = Future.value(StaticDataService.getMatches(widget.nombreLiga));
       _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
     } else if (widget.isStaticStandingsOnly) {
-      _matchesFuture  = _service.fetchMatches(widget.leagueId);
+      _matchesFuture  = _service.fetchMatches(widget.leagueId, noCache: noCache);
       _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
     } else if (computeStandingsLeagues.contains(widget.nombreLiga)) {
-      final f = _service.fetchMatches(widget.leagueId);
+      final f = _service.fetchMatches(widget.leagueId, noCache: noCache);
       _matchesFuture  = f;
       _standingsFuture = sevensLeagues.contains(widget.nombreLiga)
           ? f.then(_computePoolStandings)
           : f.then(_computeStandingsFromMatches);
     } else {
-      _matchesFuture  = _service.fetchMatches(widget.leagueId);
+      _matchesFuture  = _service.fetchMatches(widget.leagueId, noCache: noCache);
       _standingsFuture = _service.fetchStandings(widget.leagueId);
     }
+  }
+
+  void _refresh() {
+    setState(() => _loadData(noCache: true));
   }
 
   // ── Cálculo de tabla desde partidos ─────────────────────────────────────
@@ -293,6 +301,12 @@ class _DetalleLigaState extends State<DetalleLiga> {
           backgroundColor: widget.theme.primary,
           iconTheme: const IconThemeData(color: Colors.white),
           actions: [
+            if (!widget.isStatic)
+              IconButton(
+                icon: const Icon(Icons.refresh_rounded, color: Colors.white70),
+                onPressed: _refresh,
+                tooltip: 'Actualizar',
+              ),
             Builder(
               builder: (ctx) => IconButton(
                 icon: const Icon(Icons.menu_rounded, color: Colors.white),

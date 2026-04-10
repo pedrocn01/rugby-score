@@ -244,9 +244,25 @@ class _ProximoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final home = match['teams']?['home']?['name'] as String? ?? 'Local';
-    final away = match['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final hora = _formatHora(match['date'] as String?);
+    final home      = match['teams']?['home']?['name'] as String? ?? 'Local';
+    final away      = match['teams']?['away']?['name'] as String? ?? 'Visitante';
+    final hora      = _formatHora(match['date'] as String?);
+    final status    = match['status']?['short'] as String? ?? 'NS';
+    final homeScore = match['scores']?['home'];
+    final awayScore = match['scores']?['away'];
+
+    const liveStatuses = {'1H', '2H', 'HT', 'ET', 'BT', 'P'};
+    const doneStatuses = {'FT', 'AET', 'PEN', 'AWD', 'Canc'};
+    final isLive = liveStatuses.contains(status);
+    final isDone = doneStatuses.contains(status);
+    final hasScore = homeScore != null && awayScore != null;
+
+    // Color del indicador izquierdo según estado
+    final Color leftColor = isLive
+        ? Colors.redAccent
+        : isDone
+            ? const Color(0xFF555555)
+            : const Color(0xFF4A7C59);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -254,16 +270,30 @@ class _ProximoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF2A2A2A)),
+        border: Border.all(
+          color: isLive ? Colors.redAccent.withValues(alpha: 0.4) : const Color(0xFF2A2A2A),
+        ),
       ),
       child: Row(
         children: [
-          // Hora
+          // Hora / Marcador / Estado
           SizedBox(
-            width: 42,
-            child: Text(hora,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Color(0xFF4A7C59), fontWeight: FontWeight.w800, fontSize: 13)),
+            width: 48,
+            child: hasScore
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('$homeScore',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: leftColor, fontWeight: FontWeight.w900, fontSize: 14)),
+                      Text('$awayScore',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: leftColor, fontWeight: FontWeight.w900, fontSize: 14)),
+                    ],
+                  )
+                : Text(hora,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: leftColor, fontWeight: FontWeight.w800, fontSize: 13)),
           ),
           Container(width: 1, height: 32, color: const Color(0xFF2A2A2A),
             margin: const EdgeInsets.symmetric(horizontal: 12)),
@@ -273,17 +303,51 @@ class _ProximoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(home,
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: isDone && hasScore && (homeScore > awayScore) ? FontWeight.w800 : FontWeight.w600,
+                    fontSize: 13)),
                 const SizedBox(height: 4),
                 Text(away,
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.65),
-                    fontWeight: FontWeight.w500, fontSize: 13)),
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.65),
+                    fontWeight: isDone && hasScore && (awayScore > homeScore) ? FontWeight.w800 : FontWeight.w500,
+                    fontSize: 13)),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right_rounded, color: Color(0xFF333333), size: 20),
+          // Badge estado
+          if (isLive)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.redAccent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
+              ),
+              child: Text(_statusLabel(status),
+                style: const TextStyle(color: Colors.redAccent, fontSize: 9, fontWeight: FontWeight.w800)),
+            )
+          else if (isDone)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2A2A2A),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: const Text('FT',
+                style: TextStyle(color: Color(0xFF888888), fontSize: 9, fontWeight: FontWeight.w700)),
+            )
+          else
+            const Icon(Icons.chevron_right_rounded, color: Color(0xFF333333), size: 20),
         ],
       ),
     );
   }
+
+  String _statusLabel(String s) => switch (s) {
+    '1H' => '1T', 'HT' => 'HT', '2H' => '2T',
+    'ET' => 'PR', 'BT' => 'ET', 'P'  => 'PEN',
+    _ => s,
+  };
 }

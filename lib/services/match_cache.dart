@@ -40,7 +40,7 @@ class MatchCache {
 
       final results = await Future.wait(
         entries.map((e) => service
-            .fetchMatches(e.value)
+            .fetchMatches(e.value, noCache: force)
             .catchError((_) => <dynamic>[])),
       );
 
@@ -74,28 +74,36 @@ class MatchCache {
     return result;
   }
 
-  /// Próximos partidos (NS), desde hoy, agrupados por fecha YYYY-MM-DD
+  /// Partidos de hoy (todos los estados) + próximos días (solo NS), agrupados por fecha
   Map<String, List<MatchEntry>> getUpcoming() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
     final byDate = <String, List<MatchEntry>>{};
-
-    final cutoff = DateTime.now().subtract(const Duration(minutes: 10));
 
     for (final entry in _data.entries) {
       for (final m in entry.value) {
         final s = m['status']?['short'] as String? ?? '';
-        if (s != 'NS') continue;
         final rawDate = m['date'] as String? ?? '';
         if (rawDate.length < 10) continue;
-        // Convertir a hora local para agrupar por la fecha correcta (evita desfase UTC)
+        // Convertir a hora local para agrupar por la fecha correcta
         final utcDt = DateTime.tryParse(rawDate);
         if (utcDt == null) continue;
-        // Excluir partidos cuya hora ya pasó (el status NS puede estar desactualizado en caché)
-        if (utcDt.isBefore(cutoff)) continue;
         final localDt = utcDt.toLocal();
         final matchDate = DateTime(localDt.year, localDt.month, localDt.day);
-        if (matchDate.isBefore(today)) continue;
+
+        // Hoy: mostrar todos (jugados, en vivo, próximos)
+        // Días futuros: solo partidos no iniciados (NS)
+        final isToday = matchDate.isAtSameMomentAs(today);
+        if (isToday) {
+          // Incluir todo excepto partidos de días anteriores
+          if (matchDate.isBefore(today)) continue;
+        } else {
+          // Días futuros: solo NS
+          if (s != 'NS') continue;
+          if (matchDate.isBefore(tomorrow)) continue;
+        }
+
         final dateStr = '${localDt.year.toString().padLeft(4, '0')}-'
             '${localDt.month.toString().padLeft(2, '0')}-'
             '${localDt.day.toString().padLeft(2, '0')}';
