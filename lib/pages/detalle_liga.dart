@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/leagues.dart';
 import '../config/logos.dart';
+import '../widgets/app_drawer.dart';
 import '../config/themes.dart';
 import '../data/static_data.dart';
 import '../models/team_stats.dart';
@@ -275,6 +276,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
       length: tabs.length,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
+        drawer: const AppDrawer(),
         appBar: AppBar(
           title: Text(
             widget.nombreLiga,

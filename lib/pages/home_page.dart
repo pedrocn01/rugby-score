@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/leagues.dart';
 import '../config/logos.dart';
 import '../widgets/league_card.dart';
+import '../widgets/app_drawer.dart';
 import 'carpeta_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
+      drawer: const AppDrawer(),
       body: CustomScrollView(
         slivers: [
           // ─── Header ────────────────────────────────────────────────────────

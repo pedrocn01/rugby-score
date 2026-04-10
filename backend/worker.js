@@ -43,10 +43,14 @@ function getTTL() {
     return 10 * 60;          // 10 minutos
   }
   if (day === 1) {
-    // Lunes → resultados del finde ya cargados, poca actividad
+    // Lunes → resultados del finde ya cargados
     return 60 * 60;          // 1 hora
   }
-  // Martes, Miércoles, Jueves → semana tranquila
+  if (day === 4) {
+    // Jueves → hay partidos de Champions/URC/etc de noche
+    return 2 * 60 * 60;      // 2 horas
+  }
+  // Martes, Miércoles → semana tranquila
   return 24 * 60 * 60;       // 24 horas
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/league_card.dart';
+import '../widgets/app_drawer.dart';
 
 class CarpetaPage extends StatefulWidget {
   final String titulo;
@@ -33,6 +34,7 @@ class _CarpetaPageState extends State<CarpetaPage> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F0F),
+      drawer: const AppDrawer(),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
