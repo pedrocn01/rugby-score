@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../config/leagues.dart';
 import '../config/logos.dart';
+import '../config/themes.dart';
 import '../widgets/league_card.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/rugby_logo.dart';
 import 'carpeta_page.dart';
+import 'detalle_liga.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -218,12 +220,28 @@ class _FolderTileState extends State<_FolderTile> {
     final logoUrl  = folderLogoUrls[widget.folderName];
     final isMobile = MediaQuery.of(context).size.width < 700;
 
-    void onTap() => Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => CarpetaPage(titulo: widget.folderName, ligas: ligas),
-      ),
-    );
+    void onTap() {
+      if (ligas.length == 1) {
+        final ligaNombre = ligas[0];
+        Navigator.push(context, MaterialPageRoute(
+          builder: (_) => DetalleLiga(
+            nombreLiga:            ligaNombre,
+            leagueId:              leagueIds[ligaNombre] ?? 0,
+            theme:                 leagueThemes[ligaNombre] ?? const LeagueTheme(
+              primary:    Color(0xFF1B4332),
+              accent:     Color(0xFF40916C),
+              background: Color(0xFFE8F5EE),
+            ),
+            isStatic:              staticLeagues.contains(ligaNombre),
+            isStaticStandingsOnly: staticStandingsOnly.contains(ligaNombre),
+          ),
+        ));
+      } else {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (_) => CarpetaPage(titulo: widget.folderName, ligas: ligas),
+        ));
+      }
+    }
 
     if (isMobile) {
       return GestureDetector(
@@ -389,8 +407,8 @@ class _FooterWidget extends StatelessWidget {
               Icon(Icons.mail_outline_rounded, size: 16, color: Colors.white.withValues(alpha: 0.35)),
               const SizedBox(width: 8),
               Text(
-                'Próximamente',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.30), fontSize: 13, fontStyle: FontStyle.italic),
+                'rugbyscore01@gmail.com',
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.60), fontSize: 13),
               ),
             ],
           ),

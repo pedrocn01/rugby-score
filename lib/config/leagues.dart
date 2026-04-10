@@ -34,9 +34,6 @@ const Map<String, int> leagueIds = {
   'The Rugby Championship':    85,
   'Super Rugby Américas':      41,
   'URBA Top 14':               -1, // datos estáticos
-  'URBA Primera A':            -1,
-  'URBA Primera B':            -1,
-  'URBA Primera C':            -1,
   // Circuito 7s
   'Acumulado 7s':              -1, // tabla acumulada estática
   '7s Dubai':                  111,
@@ -51,9 +48,6 @@ const Map<String, int> leagueIds = {
 // ─── Ligas 100% estáticas (partidos + tabla cargados a mano) ──────────────
 const Set<String> staticLeagues = {
   'URBA Top 14',
-  'URBA Primera A',
-  'URBA Primera B',
-  'URBA Primera C',
   'Acumulado 7s',
 };
 
@@ -97,7 +91,7 @@ const Set<String> soloResultadosLeagues = {};
 
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
 const Map<String, List<String>> folders = {
-  'URBA': ['URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
+  'URBA': ['URBA Top 14'],
   'Circuito 7s': [
     'Acumulado 7s',
     '7s Dubai',
