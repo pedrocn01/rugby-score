@@ -214,20 +214,40 @@ class _FolderTileState extends State<_FolderTile> {
 
   @override
   Widget build(BuildContext context) {
-    final ligas   = folders[widget.folderName]!;
-    final logoUrl = folderLogoUrls[widget.folderName];
+    final ligas    = folders[widget.folderName]!;
+    final logoUrl  = folderLogoUrls[widget.folderName];
+    final isMobile = MediaQuery.of(context).size.width < 700;
+
+    void onTap() => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CarpetaPage(titulo: widget.folderName, ligas: ligas),
+      ),
+    );
+
+    if (isMobile) {
+      return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [_primary, _dark],
+            ),
+          ),
+          child: logoUrl != null ? _logoContent(logoUrl, ligas) : _iconContent(ligas),
+        ),
+      );
+    }
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit:  (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => CarpetaPage(titulo: widget.folderName, ligas: ligas),
-          ),
-        ),
+        onTap: onTap,
         child: AnimatedScale(
           scale:    _hovered ? 1.04 : 1.0,
           duration: const Duration(milliseconds: 160),
@@ -251,72 +271,64 @@ class _FolderTileState extends State<_FolderTile> {
                 ),
               ],
             ),
-            child: logoUrl != null
-                ? Column(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
-                          child: Image.network(
-                            logoUrl,
-                            fit: BoxFit.contain,
-                            errorBuilder: (ctx, e, s) => const Icon(Icons.folder_open_rounded, color: Colors.white54, size: 36),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.35),
-                          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.folderName,
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
-                              child: Text('${ligas.length}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 9)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : Stack(
-                    children: [
-                      Positioned(right: -6, bottom: -6,
-                        child: Icon(Icons.folder_open_rounded, size: 60, color: Colors.white.withValues(alpha: 0.07))),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.folder_open_rounded, color: Colors.white70, size: 24),
-                            const Spacer(),
-                            Text(widget.folderName,
-                              maxLines: 2,
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12, height: 1.2)),
-                            const SizedBox(height: 4),
-                            Text('${ligas.length} torneos',
-                              style: TextStyle(color: Colors.white.withValues(alpha: 0.55), fontSize: 10)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+            child: logoUrl != null ? _logoContent(logoUrl, ligas) : _iconContent(ligas),
           ),
         ),
       ),
     );
   }
+
+  Widget _logoContent(String logoUrl, List<String> ligas) => Column(
+    children: [
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
+          child: Image.network(logoUrl, fit: BoxFit.contain,
+            errorBuilder: (ctx, e, s) => const Icon(Icons.folder_open_rounded, color: Colors.white54, size: 36)),
+        ),
+      ),
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.35),
+          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+        ),
+        child: Row(children: [
+          Expanded(child: Text(widget.folderName,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11))),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+            child: Text('${ligas.length}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 9)),
+          ),
+        ]),
+      ),
+    ],
+  );
+
+  Widget _iconContent(List<String> ligas) => Stack(
+    children: [
+      Positioned(right: -6, bottom: -6,
+        child: Icon(Icons.folder_open_rounded, size: 60, color: Colors.white.withValues(alpha: 0.07))),
+      Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.folder_open_rounded, color: Colors.white70, size: 24),
+            const Spacer(),
+            Text(widget.folderName, maxLines: 2,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12, height: 1.2)),
+            const SizedBox(height: 4),
+            Text('${ligas.length} torneos',
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.55), fontSize: 10)),
+          ],
+        ),
+      ),
+    ],
+  );
 }
 
 // ── Footer ────────────────────────────────────────────────────────────────────

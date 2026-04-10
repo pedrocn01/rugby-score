@@ -9,7 +9,6 @@ const _fallbackTheme = LeagueTheme(
   background: Color(0xFFE8F5EE),
 );
 
-/// Card de liga en formato tile (para grillas).
 Widget leagueCard(BuildContext context, String nombre) {
   final theme = leagueThemes[nombre] ?? _fallbackTheme;
   return _LeagueCard(nombre: nombre, theme: theme);
@@ -44,9 +43,38 @@ class _LeagueCardState extends State<_LeagueCard> {
 
   @override
   Widget build(BuildContext context) {
-    final primary = widget.theme.primary;
-    final accent  = widget.theme.accent;
+    final primary  = widget.theme.primary;
+    final accent   = widget.theme.accent;
+    final isMobile = MediaQuery.of(context).size.width < 700;
 
+    // ── Mobile: widget estático simple (sin AnimatedScale ni hover) ───────
+    if (isMobile) {
+      return GestureDetector(
+        onTap: _navigate,
+        child: RepaintBoundary(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end:   Alignment.bottomRight,
+                colors: [primary, Color.lerp(primary, Colors.black, 0.38)!],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color:      primary.withValues(alpha: 0.22),
+                  blurRadius: 6,
+                  offset:     const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: _CardContent(nombre: widget.nombre, accent: accent),
+          ),
+        ),
+      );
+    }
+
+    // ── Desktop: hover effects completos ──────────────────────────────────
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit:  (_) => setState(() => _hovered = false),
@@ -78,16 +106,11 @@ class _LeagueCardState extends State<_LeagueCard> {
             ),
             child: Stack(
               children: [
-                // ── Watermark ───────────────────────────────────────────
                 Positioned(
                   right: -12, bottom: -12,
-                  child: Icon(
-                    Icons.sports_rugby_rounded,
-                    size:  90,
-                    color: Colors.white.withValues(alpha: 0.07),
-                  ),
+                  child: Icon(Icons.sports_rugby_rounded, size: 90,
+                    color: Colors.white.withValues(alpha: 0.07)),
                 ),
-                // ── Brillo en hover ─────────────────────────────────────
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 160),
                   decoration: BoxDecoration(
@@ -102,66 +125,72 @@ class _LeagueCardState extends State<_LeagueCard> {
                     ),
                   ),
                 ),
-                // ── Contenido ───────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Accent pill / badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(
-                          color:        accent.withValues(alpha: 0.25),
-                          borderRadius: BorderRadius.circular(20),
-                          border:       Border.all(color: accent.withValues(alpha: 0.4), width: 1),
-                        ),
-                        child: Icon(Icons.sports_rugby_rounded, size: 12, color: accent),
-                      ),
-                      const Spacer(),
-                      // Nombre
-                      Text(
-                        widget.nombre,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color:        Colors.white,
-                          fontWeight:   FontWeight.w900,
-                          fontSize:     13.5,
-                          height:       1.25,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      // Arrow indicador
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 1.5,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                                  Colors.white.withValues(alpha: 0.3),
-                                  Colors.white.withValues(alpha: 0.0),
-                                ]),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            size:  13,
-                            color: Colors.white.withValues(alpha: 0.6),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                _CardContent(nombre: widget.nombre, accent: accent),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ── Contenido compartido entre mobile y desktop ───────────────────────────────
+
+class _CardContent extends StatelessWidget {
+  final String nombre;
+  final Color  accent;
+  const _CardContent({required this.nombre, required this.accent});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+            decoration: BoxDecoration(
+              color:        accent.withValues(alpha: 0.25),
+              borderRadius: BorderRadius.circular(20),
+              border:       Border.all(color: accent.withValues(alpha: 0.4), width: 1),
+            ),
+            child: Icon(Icons.sports_rugby_rounded, size: 12, color: accent),
+          ),
+          const Spacer(),
+          Text(
+            nombre,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color:        Colors.white,
+              fontWeight:   FontWeight.w900,
+              fontSize:     13.5,
+              height:       1.25,
+              letterSpacing: 0.2,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 1.5,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      Colors.white.withValues(alpha: 0.3),
+                      Colors.white.withValues(alpha: 0.0),
+                    ]),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              Icon(Icons.arrow_forward_rounded, size: 13,
+                color: Colors.white.withValues(alpha: 0.6)),
+            ],
+          ),
+        ],
       ),
     );
   }
