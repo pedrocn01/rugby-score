@@ -28,5 +28,50 @@ const Map<String, String> clubLogoUrls = {
   'La Plata':            'https://upload.wikimedia.org/wikipedia/en/thumb/d/d7/La_Plata_Rugby_Club_Crest.svg/120px-La_Plata_Rugby_Club_Crest.svg.png',
 };
 
-/// Devuelve la URL del logo de un club, o null si no hay.
-String? clubLogo(String teamName) => clubLogoUrls[teamName];
+// ─── Logos de selecciones / federaciones internacionales ──────────────────────
+// Fuente: flagcdn.com (banderas de alta calidad, dominio público)
+
+const Map<String, String> _countryLogoUrls = {
+  // Seis Naciones
+  'Ireland':           'https://flagcdn.com/w80/ie.png',
+  'France':            'https://flagcdn.com/w80/fr.png',
+  'England':           'https://flagcdn.com/w80/gb-eng.png',
+  'Scotland':          'https://flagcdn.com/w80/gb-sct.png',
+  'Wales':             'https://flagcdn.com/w80/gb-wls.png',
+  'Italy':             'https://flagcdn.com/w80/it.png',
+  // Rugby Championship
+  'Argentina':         'https://flagcdn.com/w80/ar.png',
+  'Australia':         'https://flagcdn.com/w80/au.png',
+  'New Zealand':       'https://flagcdn.com/w80/nz.png',
+  'South Africa':      'https://flagcdn.com/w80/za.png',
+  // Circuito 7s — otros países frecuentes
+  'Fiji':              'https://flagcdn.com/w80/fj.png',
+  'USA':               'https://flagcdn.com/w80/us.png',
+  'Canada':            'https://flagcdn.com/w80/ca.png',
+  'Uruguay':           'https://flagcdn.com/w80/uy.png',
+  'Japan':             'https://flagcdn.com/w80/jp.png',
+  'Spain':             'https://flagcdn.com/w80/es.png',
+  'Portugal':          'https://flagcdn.com/w80/pt.png',
+  'Georgia':           'https://flagcdn.com/w80/ge.png',
+  'Romania':           'https://flagcdn.com/w80/ro.png',
+  'Kenya':             'https://flagcdn.com/w80/ke.png',
+  'Hong Kong':         'https://flagcdn.com/w80/hk.png',
+  'Chile':             'https://flagcdn.com/w80/cl.png',
+  'Samoa':             'https://flagcdn.com/w80/ws.png',
+  'Tonga':             'https://flagcdn.com/w80/to.png',
+  'Korea':             'https://flagcdn.com/w80/kr.png',
+  'Great Britain':     'https://flagcdn.com/w80/gb.png',
+  'United States':     'https://flagcdn.com/w80/us.png',
+  'Brazil':            'https://flagcdn.com/w80/br.png',
+  'Germany':           'https://flagcdn.com/w80/de.png',
+  'Netherlands':       'https://flagcdn.com/w80/nl.png',
+  'Belgium':           'https://flagcdn.com/w80/be.png',
+  'Russia':            'https://flagcdn.com/w80/ru.png',
+  'Zimbabwe':          'https://flagcdn.com/w80/zw.png',
+  'Namibia':           'https://flagcdn.com/w80/na.png',
+  'Uganda':            'https://flagcdn.com/w80/ug.png',
+};
+
+/// Devuelve la URL del logo de un club o selección, o null si no hay.
+String? clubLogo(String teamName) =>
+    clubLogoUrls[teamName] ?? _countryLogoUrls[teamName];

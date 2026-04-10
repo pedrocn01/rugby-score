@@ -265,12 +265,15 @@ class _DetalleLigaState extends State<DetalleLiga> {
   Widget build(BuildContext context) {
     final bool onlyTabla      = soloTablaLeagues.contains(widget.nombreLiga);
     final bool onlyResultados = soloResultadosLeagues.contains(widget.nombreLiga);
+    final bool isSevens       = sevensLeagues.contains(widget.nombreLiga);
 
     final List<Tab> tabs = onlyTabla
         ? [const Tab(text: 'TABLA')]
         : onlyResultados
             ? [const Tab(text: 'RESULTADOS')]
-            : const [Tab(text: 'RESULTADOS'), Tab(text: 'TABLA'), Tab(text: 'PRÓXIMOS')];
+            : isSevens
+                ? const [Tab(text: 'RESULTADOS'), Tab(text: 'PRÓXIMOS')]
+                : const [Tab(text: 'RESULTADOS'), Tab(text: 'TABLA'), Tab(text: 'PRÓXIMOS')];
 
     return DefaultTabController(
       length: tabs.length,
@@ -342,7 +345,9 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   return TabBarView(
                     children: onlyResultados
                         ? [_listaResultados(jugados)]
-                        : [_listaResultados(jugados), _tablaWidget(), _listaProximos(proximos)],
+                        : isSevens
+                            ? [_listaResultados(jugados), _listaProximos(proximos)]
+                            : [_listaResultados(jugados), _tablaWidget(), _listaProximos(proximos)],
                   );
                 },
               ),
