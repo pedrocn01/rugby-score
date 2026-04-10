@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/proximos_page.dart';
 import '../pages/live_page.dart';
+import 'rugby_logo.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -18,21 +19,14 @@ class AppDrawer extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 28, 20, 32),
               child: Row(
                 children: [
-                  Container(
-                    width: 38, height: 38,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1B4332),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(Icons.sports_rugby_rounded, color: Colors.white, size: 20),
-                  ),
-                  const SizedBox(width: 12),
+                  const RugbyLogo(size: 48, color: Colors.white),
+                  const SizedBox(width: 14),
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('RUGBY SCORE',
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 2.0)),
-                      SizedBox(height: 2),
+                      SizedBox(height: 3),
                       Text('Resultados · Tablas · Fixtures',
                         style: TextStyle(color: Color(0xFF4A7C59), fontSize: 9, letterSpacing: 1.0)),
                     ],

@@ -33,25 +33,34 @@
 const ALLOWED_ENDPOINTS = ['games', 'standings'];
 const API_ORIGIN        = 'https://v1.rugby.api-sports.io';
 
-// ── TTL según día de la semana ────────────────────────────────────────────
-// getUTCDay(): 0=Dom 1=Lun 2=Mar 3=Mié 4=Jue 5=Vie 6=Sáb
-function getTTL() {
+// ── TTL base según día de la semana ──────────────────────────────────────
+function getBaseTTL() {
   const day = new Date().getUTCDay();
+  if (day === 5 || day === 6 || day === 0) return 10 * 60;   // Vie/Sáb/Dom → 10 min
+  if (day === 1)                            return 60 * 60;   // Lun → 1 hora
+  if (day === 4)                            return 2 * 60 * 60; // Jue → 2 horas
+  return 24 * 60 * 60;                                        // Mar/Mié → 24 horas
+}
 
-  if (day === 5 || day === 6 || day === 0) {
-    // Viernes, Sábado, Domingo → días de partido
-    return 10 * 60;          // 10 minutos
+// ── TTL inteligente: si hay partidos activos HOY, usar 5 min ─────────────
+function getSmartTTL(body) {
+  try {
+    const data = JSON.parse(body);
+    if (!Array.isArray(data.response)) return getBaseTTL();
+
+    const todayUTC = new Date().toISOString().substring(0, 10);
+    const finishedStatuses = new Set(['FT', 'AET', 'PEN', 'Canc', 'AWD', 'Susp', 'ABD']);
+
+    const hasActiveToday = data.response.some(game => {
+      const gameDate = (game.date || '').substring(0, 10);
+      const status   = game.status?.short ?? '';
+      return gameDate === todayUTC && !finishedStatuses.has(status);
+    });
+
+    return hasActiveToday ? 5 * 60 : getBaseTTL(); // 5 min si hay acción hoy
+  } catch {
+    return getBaseTTL();
   }
-  if (day === 1) {
-    // Lunes → resultados del finde ya cargados
-    return 60 * 60;          // 1 hora
-  }
-  if (day === 4) {
-    // Jueves → hay partidos de Champions/URC/etc de noche
-    return 2 * 60 * 60;      // 2 horas
-  }
-  // Martes, Miércoles → semana tranquila
-  return 24 * 60 * 60;       // 24 horas
 }
 
 // ── Handler principal ─────────────────────────────────────────────────────
@@ -94,7 +103,7 @@ export default {
     });
 
     const body = await apiResp.text();
-    const ttl  = getTTL();
+    const ttl  = getSmartTTL(body);
 
     const response = new Response(body, {
       status:  apiResp.status,

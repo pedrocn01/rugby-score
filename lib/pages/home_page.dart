@@ -3,6 +3,7 @@ import '../config/leagues.dart';
 import '../config/logos.dart';
 import '../widgets/league_card.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/rugby_logo.dart';
 import 'carpeta_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -41,31 +42,45 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           SliverAppBar(
             pinned:          true,
             expandedHeight:  110,
-            backgroundColor: const Color(0xFF0A1F13),
+            backgroundColor: const Color(0xFF1B4332),
             elevation:       0,
+            iconTheme:       const IconThemeData(color: Colors.white),
+            leading: Builder(
+              builder: (ctx) => IconButton(
+                icon: const Icon(Icons.menu_rounded, color: Colors.white, size: 26),
+                onPressed: () => Scaffold.of(ctx).openDrawer(),
+              ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-              title: Column(
+              titlePadding: const EdgeInsets.only(left: 56, bottom: 14),
+              title: Row(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text(
-                    'RUGBY SCORE',
-                    style: TextStyle(
-                      color:        Colors.white,
-                      fontWeight:   FontWeight.w900,
-                      fontSize:     18,
-                      letterSpacing: 3.5,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Resultados · Tablas · Fixtures',
-                    style: TextStyle(
-                      color:        Colors.white.withValues(alpha: 0.45),
-                      fontSize:     9,
-                      letterSpacing: 1.5,
-                    ),
+                  const RugbyLogo(size: 34, color: Colors.white),
+                  const SizedBox(width: 10),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'RUGBY SCORE',
+                        style: TextStyle(
+                          color:        Colors.white,
+                          fontWeight:   FontWeight.w900,
+                          fontSize:     16,
+                          letterSpacing: 3.0,
+                        ),
+                      ),
+                      Text(
+                        'Resultados · Tablas · Fixtures',
+                        style: TextStyle(
+                          color:        Colors.white.withValues(alpha: 0.55),
+                          fontSize:     8,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -77,7 +92,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       gradient: LinearGradient(
                         begin:  Alignment.topLeft,
                         end:    Alignment.bottomRight,
-                        colors: [Color(0xFF071A0E), Color(0xFF1B4332)],
+                        colors: [Color(0xFF1B4332), Color(0xFF2D6A4F)],
                       ),
                     ),
                   ),
