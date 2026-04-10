@@ -40,7 +40,7 @@ class MatchCache {
 
       final results = await Future.wait(
         entries.map((e) => service
-            .fetchMatches(e.value)
+            .fetchMatches(e.value, noCache: force)
             .catchError((_) => <dynamic>[])),
       );
 
@@ -86,9 +86,15 @@ class MatchCache {
         if (s != 'NS') continue;
         final rawDate = m['date'] as String? ?? '';
         if (rawDate.length < 10) continue;
-        final dateStr = rawDate.substring(0, 10);
-        final matchDate = DateTime.tryParse(dateStr);
-        if (matchDate == null || matchDate.isBefore(today)) continue;
+        // Convertir a hora local para agrupar por la fecha correcta (evita desfase UTC)
+        final utcDt = DateTime.tryParse(rawDate);
+        if (utcDt == null) continue;
+        final localDt = utcDt.toLocal();
+        final matchDate = DateTime(localDt.year, localDt.month, localDt.day);
+        if (matchDate.isBefore(today)) continue;
+        final dateStr = '${localDt.year.toString().padLeft(4, '0')}-'
+            '${localDt.month.toString().padLeft(2, '0')}-'
+            '${localDt.day.toString().padLeft(2, '0')}';
         byDate.putIfAbsent(dateStr, () => []);
         byDate[dateStr]!.add(MatchEntry(league: entry.key, match: m));
       }

@@ -38,7 +38,7 @@ function getBaseTTL() {
   const day = new Date().getUTCDay();
   if (day === 5 || day === 6 || day === 0) return 10 * 60;   // Vie/Sáb/Dom → 10 min
   if (day === 1)                            return 60 * 60;   // Lun → 1 hora
-  if (day === 4)                            return 2 * 60 * 60; // Jue → 2 horas
+  if (day === 4)                            return 30 * 60;   // Jue → 30 min
   return 24 * 60 * 60;                                        // Mar/Mié → 24 horas
 }
 
@@ -84,13 +84,16 @@ export default {
     }
 
     // ── Intentar servir desde cache ───────────────────────────────────────
+    const forceRefresh = request.headers.get('X-Force-Fresh') === '1';
     const cache     = caches.default;
     const cacheKey  = request.url;          // URL completa como clave
 
-    const cached = await cache.match(cacheKey);
-    if (cached) {
-      // Cache HIT: devolver sin tocar la API
-      return addCorsHeaders(cached, 'HIT');
+    if (!forceRefresh) {
+      const cached = await cache.match(cacheKey);
+      if (cached) {
+        // Cache HIT: devolver sin tocar la API
+        return addCorsHeaders(cached, 'HIT');
+      }
     }
 
     // ── Cache MISS: llamar a la API ───────────────────────────────────────
@@ -112,7 +115,7 @@ export default {
         'Cache-Control':                `public, max-age=${ttl}`,
         'Access-Control-Allow-Origin':  '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key',
+        'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key, X-Force-Fresh',
         'X-Cache':                      'MISS',
         'X-Cache-TTL':                  `${ttl}s`,
       },
@@ -136,7 +139,7 @@ function corsResponse(body, status = 200) {
       'Content-Type':                 'application/json',
       'Access-Control-Allow-Origin':  '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key',
+      'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key, X-Force-Fresh',
     },
   });
 }

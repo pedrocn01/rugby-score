@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 86">
+  <rect width="72" height="86" rx="12" fill="#1B4332"/>
+  <!-- Postes H de rugby -->
+  <line x1="20" y1="5" x2="20" y2="58" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="52" y1="5" x2="52" y2="58" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="20" y1="43" x2="52" y2="43" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Pelota de rugby -->
+  <path d="M16,74 Q36,63 56,74 Q36,85 16,74 Z" fill="white"/>
+</svg>

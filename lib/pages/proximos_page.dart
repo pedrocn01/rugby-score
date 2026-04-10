@@ -28,7 +28,7 @@ class _ProximosPageState extends State<ProximosPage> {
           // ── AppBar ──────────────────────────────────────────────────────
           SliverAppBar(
             pinned: true,
-            backgroundColor: const Color(0xFF0A1F13),
+            backgroundColor: const Color(0xFF1B4332),
             elevation: 0,
             leading: Builder(
               builder: (ctx) => IconButton(
