@@ -11,11 +11,24 @@ class ProximosPage extends StatefulWidget {
 
 class _ProximosPageState extends State<ProximosPage> {
   late Future<Map<String, List<dynamic>>> _future;
+  bool _refreshing = false;
 
   @override
   void initState() {
     super.initState();
-    _future = MatchCache.instance.fetchAll();
+    _future = MatchCache.instance.fetchAll(force: true);
+  }
+
+  Future<void> _refresh() async {
+    if (_refreshing) return;
+    setState(() => _refreshing = true);
+    final data = await MatchCache.instance.fetchAll(force: true);
+    if (mounted) {
+      setState(() {
+        _refreshing = false;
+        _future = Future.value(data);
+      });
+    }
   }
 
   @override
@@ -46,6 +59,19 @@ class _ProximosPageState extends State<ProximosPage> {
                   style: TextStyle(color: Color(0xFF4A7C59), fontSize: 9, letterSpacing: 1.5)),
               ],
             ),
+            actions: [
+              _refreshing
+                  ? const Padding(
+                      padding: EdgeInsets.all(14),
+                      child: SizedBox(width: 20, height: 20,
+                        child: CircularProgressIndicator(color: Colors.white70, strokeWidth: 2)),
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.refresh_rounded, color: Colors.white70),
+                      onPressed: _refresh,
+                      tooltip: 'Actualizar',
+                    ),
+            ],
           ),
 
           // ── Contenido ───────────────────────────────────────────────────

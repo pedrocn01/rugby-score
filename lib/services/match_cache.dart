@@ -80,6 +80,8 @@ class MatchCache {
     final today = DateTime(now.year, now.month, now.day);
     final byDate = <String, List<MatchEntry>>{};
 
+    final cutoff = DateTime.now().subtract(const Duration(minutes: 10));
+
     for (final entry in _data.entries) {
       for (final m in entry.value) {
         final s = m['status']?['short'] as String? ?? '';
@@ -89,6 +91,8 @@ class MatchCache {
         // Convertir a hora local para agrupar por la fecha correcta (evita desfase UTC)
         final utcDt = DateTime.tryParse(rawDate);
         if (utcDt == null) continue;
+        // Excluir partidos cuya hora ya pasó (el status NS puede estar desactualizado en caché)
+        if (utcDt.isBefore(cutoff)) continue;
         final localDt = utcDt.toLocal();
         final matchDate = DateTime(localDt.year, localDt.month, localDt.day);
         if (matchDate.isBefore(today)) continue;
