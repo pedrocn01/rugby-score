@@ -43,21 +43,19 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           // ─── Header ────────────────────────────────────────────────────────
           SliverAppBar(
             pinned:          true,
-            backgroundColor: Colors.white,
-            elevation:       1,
-            shadowColor:     Colors.black12,
-            surfaceTintColor: Colors.transparent,
-            iconTheme:       const IconThemeData(color: Color(0xFF1B4332)),
+            backgroundColor: const Color(0xFF1B4332),
+            elevation:       0,
+            iconTheme:       const IconThemeData(color: Colors.white),
             leading: Builder(
               builder: (ctx) => IconButton(
-                icon: const Icon(Icons.menu_rounded, color: Color(0xFF1B4332), size: 26),
+                icon: const Icon(Icons.menu_rounded, color: Colors.white, size: 26),
                 onPressed: () => Scaffold.of(ctx).openDrawer(),
               ),
             ),
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const RugbyLogo(size: 32, color: Color(0xFF1B4332)),
+                const RugbyLogo(size: 32, color: Colors.white),
                 const SizedBox(width: 10),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -66,7 +64,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     const Text(
                       'RUGBY SCORE',
                       style: TextStyle(
-                        color:        Color(0xFF1B4332),
+                        color:        Colors.white,
                         fontWeight:   FontWeight.w900,
                         fontSize:     15,
                         letterSpacing: 3.0,
@@ -75,7 +73,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     Text(
                       'Resultados · Tablas · Fixtures',
                       style: TextStyle(
-                        color:        const Color(0xFF1B4332).withValues(alpha: 0.5),
+                        color:        Colors.white.withValues(alpha: 0.6),
                         fontSize:     8,
                         letterSpacing: 1.5,
                       ),

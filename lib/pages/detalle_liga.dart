@@ -278,12 +278,25 @@ class _DetalleLigaState extends State<DetalleLiga> {
         backgroundColor: const Color(0xFFF5F5F5),
         drawer: const AppDrawer(),
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
           title: Text(
             widget.nombreLiga,
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
           ),
           backgroundColor: widget.theme.primary,
           iconTheme: const IconThemeData(color: Colors.white),
+          actions: [
+            Builder(
+              builder: (ctx) => IconButton(
+                icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                onPressed: () => Scaffold.of(ctx).openDrawer(),
+              ),
+            ),
+          ],
           bottom: TabBar(
             indicatorColor:       widget.theme.accent,
             indicatorWeight:      3,

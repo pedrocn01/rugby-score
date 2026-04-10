@@ -40,9 +40,22 @@ class _CarpetaPageState extends State<CarpetaPage> with SingleTickerProviderStat
           SliverAppBar(
             pinned:          true,
             expandedHeight:  110,
-            backgroundColor: const Color(0xFF0A1F13),
+            backgroundColor: const Color(0xFF1B4332),
             elevation:       0,
+            automaticallyImplyLeading: false,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 24),
+              onPressed: () => Navigator.pop(context),
+            ),
             iconTheme:       const IconThemeData(color: Colors.white),
+            actions: [
+              Builder(
+                builder: (ctx) => IconButton(
+                  icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                  onPressed: () => Scaffold.of(ctx).openDrawer(),
+                ),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 56, bottom: 18),
               title: Text(
