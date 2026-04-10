@@ -23,18 +23,17 @@ class RugbyService {
     defaultValue: 'ae0c789862dd0f66a7f3fd261e879f3b', // solo para dev local
   );
 
-  Map<String, String> _headers({bool noCache = false}) => {
+  Map<String, String> get _headers => {
     'Accept': 'application/json',
     if (_apiKey.isNotEmpty) 'x-apisports-key': _apiKey,
-    if (noCache) 'X-Force-Fresh': '1',
   };
 
   int _seasonFor(int leagueId) => leagueSeasons[leagueId] ?? 2025;
 
-  Future<List<dynamic>> fetchMatches(int leagueId, {bool noCache = false}) async {
+  Future<List<dynamic>> fetchMatches(int leagueId) async {
     try {
       final uri = Uri.parse('$_apiBase/games?league=$leagueId&season=${_seasonFor(leagueId)}');
-      final response = await http.get(uri, headers: _headers(noCache: noCache));
+      final response = await http.get(uri, headers: _headers);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data is Map && data.containsKey('response')) {
@@ -50,7 +49,7 @@ class RugbyService {
   Future<List<List<dynamic>>> fetchStandings(int leagueId) async {
     try {
       final uri = Uri.parse('$_apiBase/standings?league=$leagueId&season=${_seasonFor(leagueId)}');
-      final response = await http.get(uri, headers: _headers());
+      final response = await http.get(uri, headers: _headers);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data is Map && data.containsKey('response')) {

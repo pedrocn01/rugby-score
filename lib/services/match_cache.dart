@@ -40,7 +40,7 @@ class MatchCache {
 
       final results = await Future.wait(
         entries.map((e) => service
-            .fetchMatches(e.value, noCache: force)
+            .fetchMatches(e.value)
             .catchError((_) => <dynamic>[])),
       );
 
