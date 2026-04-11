@@ -5,6 +5,7 @@ import '../widgets/app_drawer.dart';
 import '../config/themes.dart';
 import '../data/static_data.dart';
 import '../models/team_stats.dart';
+import '../services/match_cache.dart';
 import '../services/rugby_service.dart';
 
 class DetalleLiga extends StatefulWidget {
@@ -39,6 +40,13 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   void _loadData({bool noCache = false}) {
+    if (computedSevensAccumulated.contains(widget.nombreLiga)) {
+      _matchesFuture   = Future.value([]);
+      _standingsFuture = MatchCache.instance
+          .fetchAll(force: noCache)
+          .then((_) => MatchCache.instance.getAccumulatedSevensStandings());
+      return;
+    }
     if (widget.isStatic) {
       _matchesFuture  = Future.value(StaticDataService.getMatches(widget.nombreLiga));
       _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
@@ -556,7 +564,15 @@ class _DetalleLigaState extends State<DetalleLiga> {
         if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
 
         final grupos = snapshot.data ?? [];
-        if (grupos.isEmpty) return _emptyState('Tabla no disponible para esta liga');
+        if (grupos.isEmpty) return _emptyState('Tabla no disponible — aún no hay etapas completadas');
+
+        // Tabla especial para el acumulado del circuito 7s
+        if (computedSevensAccumulated.contains(widget.nombreLiga)) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: _tablaSevensAcumulada(grupos[0]),
+          );
+        }
 
         final tieneGrupos   = grupos.length > 1;
         final ocultarLeyenda = widget.nombreLiga == 'Seis Naciones' || widget.nombreLiga == 'The Rugby Championship';
@@ -697,6 +713,89 @@ class _DetalleLigaState extends State<DetalleLiga> {
           );
         }).toList(),
       ),
+    );
+  }
+
+  // ── Tabla acumulada Circuito 7s (puntos por posición SVNS) ─────────────────
+
+  Widget _tablaSevensAcumulada(List<dynamic> tabla) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Encabezado
+        Container(
+          decoration: BoxDecoration(
+            color: widget.theme.primary,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              const SizedBox(width: 28, child: Text('#',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12))),
+              const Expanded(child: Text('Selección',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12))),
+              SizedBox(width: 52, child: Text('Etapas',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11))),
+              const SizedBox(width: 44, child: Text('Pts SVNS',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11))),
+            ],
+          ),
+        ),
+        // Filas
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(14)),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.07), blurRadius: 8, offset: const Offset(0, 2))],
+          ),
+          child: Column(
+            children: tabla.asMap().entries.map<Widget>((eq) {
+              final i      = eq.key;
+              final equipo = eq.value;
+              final pos    = equipo['position'] ?? i + 1;
+              final nombre = equipo['team']?['name'] ?? '-';
+              final logoUrl = equipo['team']?['logo']?.toString();
+              final etapas = equipo['games']?['played'] ?? 0;
+              final pts    = equipo['points'] ?? 0;
+              final isLast = i == tabla.length - 1;
+              final rowBg  = i.isOdd ? const Color(0xFFFAFAFA) : Colors.white;
+
+              return Container(
+                decoration: BoxDecoration(
+                  color: rowBg,
+                  border: Border(
+                    bottom: isLast ? BorderSide.none : const BorderSide(color: Color(0xFFEEEEEE), width: 1),
+                  ),
+                  borderRadius: isLast ? const BorderRadius.vertical(bottom: Radius.circular(14)) : BorderRadius.zero,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                child: Row(
+                  children: [
+                    SizedBox(width: 28, child: Text('$pos',
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
+                    _teamLogoSmall(nombre, apiLogoUrl: logoUrl),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(nombre,
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
+                    SizedBox(width: 52, child: Text('$etapas',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 44, child: Text('$pts',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Color(0xFF1A1A1A)))),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text('Puntos por posición final en cada etapa (sistema SVNS)',
+          style: TextStyle(fontSize: 10, color: Colors.grey[500], fontStyle: FontStyle.italic)),
+      ],
     );
   }
 

@@ -3,7 +3,34 @@
     "allow": [
       "Bash(git init:*)",
       "Bash(git branch:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)",
+      "Bash(npx wrangler:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://rugby-proxy.pedrocastronevares.workers.dev/games?league=54&season=2025\")",
+      "Bash(curl -s \"https://rugby-proxy.pedrocastronevares.workers.dev/games?league=54&season=2025\")",
+      "Bash(curl -s -I \"https://rugby-proxy.pedrocastronevares.workers.dev/games?league=54&season=2025\")",
+      "WebFetch(domain:api.urba.org.ar)",
+      "WebFetch(domain:urba.org.ar)",
+      "WebFetch(domain:www.urba.org.ar)",
+      "Bash(curl -s \"https://fixture.urba.org.ar/home?id=2025177\")",
+      "Bash(curl -s -L \"https://fixture.urba.org.ar/home?id=2025177\")",
+      "Bash(curl -s \"https://fixture.urba.org.ar/_next/static/chunks/app/home/page-3c0d7ad8cd05cac1.js\")",
+      "Bash(curl -s \"https://fixture.urba.org.ar/_next/static/chunks/595-4b922346f75d59f8.js\")",
+      "Bash(curl -s \"https://fixture.urba.org.ar/_next/static/chunks/62-e474d92e0a452ec4.js\")",
+      "Bash(curl -s \"https://fixture.urba.org.ar/_next/static/chunks/69-e49094d5b0284b58.js\")",
+      "Bash(grep -o 'https://[^\"\\\\\\\\]*')",
+      "Bash(curl -s -H \"RSC: 1\" -H \"Next-Router-State-Tree: %5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%5D%7D%5D%7D%2Cnull%2Cnull%2Ctrue%5D\" \"https://fixture.urba.org.ar/home?id=2025177\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://fixture.urba.org.ar/api/fixture?id=2025177\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://fixture.urba.org.ar/api/torneo?id=2025177\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://fixture.urba.org.ar/api/partidos?id=2025177\")",
+      "Read(//c/Users/Pedro Castro Nevares/.claude/projects/c--src-Proyectos-rugby-app/**)",
+      "Read(//c/Users/Pedro Castro Nevares/.claude/projects/**)",
+      "Bash(flutter build:*)",
+      "Bash(flutter --version)",
+      "WebFetch(domain:www.urba.com.ar)"
     ]
   }
 }

@@ -86,6 +86,11 @@ const Set<String> soloTablaLeagues = {
   'Acumulado 7s',
 };
 
+// ─── Tabla acumulada calculada desde datos de la API (no estática) ────────
+const Set<String> computedSevensAccumulated = {
+  'Acumulado 7s',
+};
+
 // ─── Ligas que solo muestran la pestaña RESULTADOS (fase de grupos/pools) ─
 const Set<String> soloResultadosLeagues = {};
 

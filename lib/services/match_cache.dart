@@ -74,6 +74,142 @@ class MatchCache {
     return result;
   }
 
+  // ── Puntos SVNS por posición final (posición 1-based → índice 0-based) ────
+  static const _svnsPoints = [20, 14, 10, 7, 5, 4, 3, 2, 1, 1, 1, 1];
+
+  /// Tabla acumulada del Circuito 7s calculada automáticamente desde resultados de la API.
+  /// Los puntos se asignan según la posición final en cada etapa (sistema SVNS).
+  List<List<dynamic>> getAccumulatedSevensStandings() {
+    final Map<String, int> totalPts    = {};
+    final Map<String, int> etapas      = {};
+    final Map<String, int> etapasGanadas = {};
+
+    for (final league in sevensLeagues) {
+      final matches = _data[league] ?? [];
+      if (matches.isEmpty) continue;
+      final placements = _computeTournamentPlacements(matches);
+      if (placements.isEmpty) continue;
+
+      for (final entry in placements.entries) {
+        final team = entry.key;
+        final pos  = entry.value; // 1-based
+        final pts  = (pos >= 1 && pos <= _svnsPoints.length) ? _svnsPoints[pos - 1] : 0;
+        totalPts[team]       = (totalPts[team] ?? 0) + pts;
+        etapas[team]         = (etapas[team] ?? 0) + 1;
+        if (pos == 1) etapasGanadas[team] = (etapasGanadas[team] ?? 0) + 1;
+      }
+    }
+
+    if (totalPts.isEmpty) return [];
+
+    final sorted = totalPts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return [
+      sorted.asMap().entries.map<dynamic>((e) => {
+        'position': e.key + 1,
+        'team':     {'name': e.value.key},
+        'games': {
+          'played': etapas[e.value.key] ?? 0,
+          'win':    {'total': etapasGanadas[e.value.key] ?? 0},
+          'draw':   {'total': 0},
+          'lose':   {'total': 0},
+        },
+        'points':      e.value.value,
+        'description': null,
+      }).toList(),
+    ];
+  }
+
+  /// Determina la posición final (1-based) de cada equipo en un torneo 7s
+  /// analizando los resultados de los partidos de Copa (cup knockout).
+  Map<String, int> _computeTournamentPlacements(List<dynamic> matches) {
+    final Map<String, int> placements = {};
+
+    // Solo partidos jugados
+    final finished = matches.where((m) => m['scores']?['home'] != null).toList();
+    if (finished.isEmpty) return {};
+
+    // Recoger todos los equipos del torneo
+    final allTeams = <String>{};
+    for (final m in finished) {
+      final h = m['teams']?['home']?['name']?.toString();
+      final a = m['teams']?['away']?['name']?.toString();
+      if (h != null && h.isNotEmpty) allTeams.add(h);
+      if (a != null && a.isNotEmpty) allTeams.add(a);
+    }
+    if (allTeams.isEmpty) return {};
+
+    String? winner(dynamic m) {
+      final hs = m['scores']?['home'];
+      final as_ = m['scores']?['away'];
+      if (hs == null || as_ == null) return null;
+      final h = m['teams']?['home']?['name']?.toString() ?? '';
+      final a = m['teams']?['away']?['name']?.toString() ?? '';
+      return (hs as num) >= (as_ as num) ? h : a;
+    }
+
+    String? loser(dynamic m) {
+      final hs = m['scores']?['home'];
+      final as_ = m['scores']?['away'];
+      if (hs == null || as_ == null) return null;
+      final h = m['teams']?['home']?['name']?.toString() ?? '';
+      final a = m['teams']?['away']?['name']?.toString() ?? '';
+      return (hs as num) < (as_ as num) ? h : a;
+    }
+
+    // Clasificar partidos por fase
+    for (final m in finished) {
+      final week = m['week']?.toString().toLowerCase() ?? '';
+      if (week == 'cup final') {
+        final w = winner(m); final l = loser(m);
+        if (w != null) placements[w] = 1;
+        if (l != null) placements[l] = 2;
+      } else if (week.contains('bronze') || week.contains('3rd') || week.contains('third')) {
+        final w = winner(m); final l = loser(m);
+        if (w != null) placements.putIfAbsent(w, () => 3);
+        if (l != null) placements.putIfAbsent(l, () => 4);
+      } else if (week == '5th place' || week.contains('5th') || week.contains('fifth')) {
+        final w = winner(m); final l = loser(m);
+        if (w != null) placements.putIfAbsent(w, () => 5);
+        if (l != null) placements.putIfAbsent(l, () => 6);
+      } else if (week == '7th place' || week.contains('7th') || week.contains('seventh')) {
+        final w = winner(m); final l = loser(m);
+        if (w != null) placements.putIfAbsent(w, () => 7);
+        if (l != null) placements.putIfAbsent(l, () => 8);
+      }
+    }
+
+    // SF losers no asignados → posiciones 5-8
+    int nextPos = placements.isEmpty ? 1
+        : placements.values.fold(0, (a, b) => a > b ? a : b) + 1;
+    nextPos = nextPos.clamp(5, 99);
+
+    for (final m in finished) {
+      final week = m['week']?.toString().toLowerCase() ?? '';
+      if (week.contains('cup') && week.contains('semi')) {
+        final l = loser(m);
+        if (l != null) placements.putIfAbsent(l, () => nextPos++);
+      }
+    }
+
+    // QF losers no asignados
+    for (final m in finished) {
+      final week = m['week']?.toString().toLowerCase() ?? '';
+      if (week.contains('cup') && week.contains('quarter')) {
+        final l = loser(m);
+        if (l != null) placements.putIfAbsent(l, () => nextPos++);
+      }
+    }
+
+    // Equipos que solo jugaron pools → posiciones restantes
+    for (final team in allTeams) {
+      placements.putIfAbsent(team, () => nextPos++);
+    }
+
+    return placements;
+  }
+
   /// Partidos de hoy (todos los estados) + próximos días (solo NS), agrupados por fecha
   Map<String, List<MatchEntry>> getUpcoming() {
     final now = DateTime.now();

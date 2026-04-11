@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Rugby Score — Logos v2</title>
+<style>
+  body { background: #111; font-family: sans-serif; display: flex; flex-wrap: wrap; gap: 36px; padding: 40px; justify-content: center; }
+  .option { background: #1a1a1a; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 14px; width: 200px; border: 1px solid #2a2a2a; }
+  .label { color: #4A9C6F; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+  .desc  { color: #777; font-size: 11px; text-align: center; line-height: 1.6; }
+  .row   { display: flex; gap: 12px; align-items: center; }
+  .bg-dark  { background: #0A1F13; border-radius: 10px; padding: 14px; display:flex; align-items:center; justify-content:center; }
+  .bg-light { background: #ffffff; border-radius: 10px; padding: 14px; display:flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+
+<!-- ══ A: Postes correctos + pelota realista ══ -->
+<div class="option">
+  <div class="label">A</div>
+  <div class="row">
+    <div class="bg-dark">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Postes: crossbar ABAJO, palos largos arriba -->
+        <line x1="24" y1="4"  x2="24" y2="44" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <line x1="48" y1="4"  x2="48" y2="44" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <line x1="24" y1="44" x2="48" y2="44" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <!-- Palo central corto debajo del crossbar -->
+        <line x1="36" y1="44" x2="36" y2="54" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <!-- Pelota rugby más realista: oval alargado -->
+        <ellipse cx="36" cy="67" rx="18" ry="11" fill="#1B4332" stroke="#4A9C6F" stroke-width="1.8"/>
+        <!-- Extremos puntiagudos -->
+        <path d="M18 67 Q36 56 54 67 Q36 78 18 67Z" fill="#1B4332"/>
+        <!-- Costura central -->
+        <line x1="18" y1="67" x2="54" y2="67" stroke="#4A9C6F" stroke-width="1" opacity="0.6"/>
+        <!-- Costuras curvas -->
+        <path d="M36 57 Q42 67 36 77" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.6"/>
+        <path d="M36 57 Q30 67 36 77" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.6"/>
+        <!-- Puntadas en el centro -->
+        <line x1="33" y1="64" x2="39" y2="64" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="33" y1="67" x2="39" y2="67" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="33" y1="70" x2="39" y2="70" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="bg-light">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <line x1="24" y1="4"  x2="24" y2="44" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <line x1="48" y1="4"  x2="48" y2="44" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <line x1="24" y1="44" x2="48" y2="44" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <line x1="36" y1="44" x2="36" y2="54" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <path d="M18 67 Q36 56 54 67 Q36 78 18 67Z" fill="#1B4332"/>
+        <line x1="18" y1="67" x2="54" y2="67" stroke="#4A9C6F" stroke-width="1" opacity="0.7"/>
+        <path d="M36 57 Q42 67 36 77" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.7"/>
+        <path d="M36 57 Q30 67 36 77" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.7"/>
+        <line x1="33" y1="64" x2="39" y2="64" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="33" y1="67" x2="39" y2="67" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="33" y1="70" x2="39" y2="70" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Postes correctos<br>+ pelota con puntadas</div>
+</div>
+
+<!-- ══ B: Pelota volando entre los palos ══ -->
+<div class="option">
+  <div class="label">B</div>
+  <div class="row">
+    <div class="bg-dark">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Postes -->
+        <line x1="14" y1="4"  x2="14" y2="40" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="58" y1="4"  x2="58" y2="40" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="14" y1="40" x2="58" y2="40" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="36" y1="40" x2="36" y2="50" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Pelota inclinada volando entre los palos -->
+        <g transform="rotate(-25, 36, 28)">
+          <path d="M22 28 Q36 20 50 28 Q36 36 22 28Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="1.5"/>
+          <line x1="22" y1="28" x2="50" y2="28" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+          <path d="M36 21 Q40 28 36 35" fill="none" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+          <path d="M36 21 Q32 28 36 35" fill="none" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+          <line x1="33" y1="26" x2="39" y2="26" stroke="#4A9C6F" stroke-width="1" stroke-linecap="round"/>
+          <line x1="33" y1="28" x2="39" y2="28" stroke="#4A9C6F" stroke-width="1" stroke-linecap="round"/>
+          <line x1="33" y1="30" x2="39" y2="30" stroke="#4A9C6F" stroke-width="1" stroke-linecap="round"/>
+        </g>
+        <!-- Trayectoria punteada -->
+        <path d="M36 65 Q20 50 28 30" fill="none" stroke="#4A9C6F" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
+        <!-- RS abajo -->
+        <text x="36" y="75" text-anchor="middle" fill="#4A9C6F" font-size="10" font-weight="700" font-family="sans-serif" letter-spacing="3">RS</text>
+      </svg>
+    </div>
+    <div class="bg-light">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <line x1="14" y1="4"  x2="14" y2="40" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="58" y1="4"  x2="58" y2="40" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="14" y1="40" x2="58" y2="40" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="36" y1="40" x2="36" y2="50" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <g transform="rotate(-25, 36, 28)">
+          <path d="M22 28 Q36 20 50 28 Q36 36 22 28Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="1.5"/>
+          <line x1="22" y1="28" x2="50" y2="28" stroke="#4A9C6F" stroke-width="0.8" opacity="0.6"/>
+          <path d="M36 21 Q40 28 36 35" fill="none" stroke="#4A9C6F" stroke-width="0.8" opacity="0.6"/>
+          <path d="M36 21 Q32 28 36 35" fill="none" stroke="#4A9C6F" stroke-width="0.8" opacity="0.6"/>
+          <line x1="33" y1="26" x2="39" y2="26" stroke="#4A9C6F" stroke-width="1" stroke-linecap="round"/>
+          <line x1="33" y1="28" x2="39" y2="28" stroke="#4A9C6F" stroke-width="1" stroke-linecap="round"/>
+          <line x1="33" y1="30" x2="39" y2="30" stroke="#4A9C6F" stroke-width="1" stroke-linecap="round"/>
+        </g>
+        <text x="36" y="75" text-anchor="middle" fill="#2D6A4F" font-size="10" font-weight="700" font-family="sans-serif" letter-spacing="3">RS</text>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Pelota volando<br>entre los palos + RS</div>
+</div>
+
+<!-- ══ C: Minimalista geométrico ══ -->
+<div class="option">
+  <div class="label">C</div>
+  <div class="row">
+    <div class="bg-dark">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Postes muy limpios -->
+        <line x1="22" y1="6"  x2="22" y2="38" stroke="#4A9C6F" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="50" y1="6"  x2="50" y2="38" stroke="#4A9C6F" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="22" y1="38" x2="50" y2="38" stroke="#4A9C6F" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="36" y1="38" x2="36" y2="50" stroke="#4A9C6F" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- Pelota solo forma, sin detalles -->
+        <path d="M18 65 Q36 53 54 65 Q36 77 18 65Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="bg-light">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <line x1="22" y1="6"  x2="22" y2="38" stroke="#1B4332" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="50" y1="6"  x2="50" y2="38" stroke="#1B4332" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="22" y1="38" x2="50" y2="38" stroke="#1B4332" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="36" y1="38" x2="36" y2="50" stroke="#1B4332" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M18 65 Q36 53 54 65 Q36 77 18 65Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Minimalista<br>solo formas limpias</div>
+</div>
+
+<!-- ══ D: Ícono cuadrado de app ══ -->
+<div class="option">
+  <div class="label">D</div>
+  <div class="row">
+    <div class="bg-dark">
+      <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Fondo cuadrado redondeado -->
+        <rect width="80" height="80" rx="18" fill="#1B4332"/>
+        <!-- Postes blancos -->
+        <line x1="24" y1="10" x2="24" y2="38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="56" y1="10" x2="56" y2="38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="24" y1="38" x2="56" y2="38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="38" x2="40" y2="48" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <!-- Pelota blanca -->
+        <path d="M20 63 Q40 52 60 63 Q40 74 20 63Z" fill="white" opacity="0.95"/>
+        <line x1="20" y1="63" x2="60" y2="63" stroke="#1B4332" stroke-width="0.8" opacity="0.4"/>
+        <path d="M40 53 Q46 63 40 73" fill="none" stroke="#1B4332" stroke-width="0.8" opacity="0.4"/>
+        <path d="M40 53 Q34 63 40 73" fill="none" stroke="#1B4332" stroke-width="0.8" opacity="0.4"/>
+      </svg>
+    </div>
+    <div class="bg-light">
+      <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="18" fill="#1B4332"/>
+        <line x1="24" y1="10" x2="24" y2="38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="56" y1="10" x2="56" y2="38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="24" y1="38" x2="56" y2="38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="38" x2="40" y2="48" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M20 63 Q40 52 60 63 Q40 74 20 63Z" fill="white"/>
+        <line x1="20" y1="63" x2="60" y2="63" stroke="#1B4332" stroke-width="0.8" opacity="0.4"/>
+        <path d="M40 53 Q46 63 40 73" fill="none" stroke="#1B4332" stroke-width="0.8" opacity="0.4"/>
+        <path d="M40 53 Q34 63 40 73" fill="none" stroke="#1B4332" stroke-width="0.8" opacity="0.4"/>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Ícono de app<br>fondo verde, b/n</div>
+</div>
+
+<!-- ══ E: Postes + pelota + nombre completo ══ -->
+<div class="option">
+  <div class="label">E</div>
+  <div class="row">
+    <div class="bg-dark">
+      <svg width="130" height="70" viewBox="0 0 130 70" xmlns="http://www.w3.org/2000/svg">
+        <!-- Postes izquierda compactos -->
+        <line x1="14" y1="4"  x2="14" y2="30" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="30" y1="4"  x2="30" y2="30" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="14" y1="30" x2="30" y2="30" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="22" y1="30" x2="22" y2="38" stroke="#4A9C6F" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Pelota debajo -->
+        <path d="M10 54 Q22 45 34 54 Q22 63 10 54Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="1.5"/>
+        <line x1="10" y1="54" x2="34" y2="54" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+        <!-- Divisor vertical -->
+        <line x1="44" y1="10" x2="44" y2="62" stroke="#2a2a2a" stroke-width="1"/>
+        <!-- Texto -->
+        <text x="52" y="28" fill="white" font-size="15" font-weight="900" font-family="Georgia, serif" letter-spacing="1.5">RUGBY</text>
+        <text x="52" y="50" fill="#4A9C6F" font-size="14" font-weight="700" font-family="sans-serif" letter-spacing="4">SCORE</text>
+      </svg>
+    </div>
+  </div>
+  <div class="row">
+    <div class="bg-light">
+      <svg width="130" height="70" viewBox="0 0 130 70" xmlns="http://www.w3.org/2000/svg">
+        <line x1="14" y1="4"  x2="14" y2="30" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="30" y1="4"  x2="30" y2="30" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="14" y1="30" x2="30" y2="30" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="22" y1="30" x2="22" y2="38" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M10 54 Q22 45 34 54 Q22 63 10 54Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="1.5"/>
+        <line x1="10" y1="54" x2="34" y2="54" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+        <line x1="44" y1="10" x2="44" y2="62" stroke="#ddd" stroke-width="1"/>
+        <text x="52" y="28" fill="#1B4332" font-size="15" font-weight="900" font-family="Georgia, serif" letter-spacing="1.5">RUGBY</text>
+        <text x="52" y="50" fill="#2D6A4F" font-size="14" font-weight="700" font-family="sans-serif" letter-spacing="4">SCORE</text>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Postes + pelota<br>+ nombre completo</div>
+</div>
+
+<!-- ══ F: Solo postes, muy limpio ══ -->
+<div class="option">
+  <div class="label">F</div>
+  <div class="row">
+    <div class="bg-dark">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Postes estilizados con degradado -->
+        <defs>
+          <linearGradient id="gpost" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4A9C6F"/>
+            <stop offset="100%" stop-color="#1B4332"/>
+          </linearGradient>
+        </defs>
+        <line x1="20" y1="4"  x2="20" y2="42" stroke="url(#gpost)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="52" y1="4"  x2="52" y2="42" stroke="url(#gpost)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="20" y1="42" x2="52" y2="42" stroke="#4A9C6F" stroke-width="4" stroke-linecap="round"/>
+        <line x1="36" y1="42" x2="36" y2="54" stroke="#1B4332" stroke-width="4" stroke-linecap="round"/>
+        <!-- Pelota stylizada — diamante angosto -->
+        <path d="M36 58 L54 67 L36 76 L18 67 Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="18" y1="67" x2="54" y2="67" stroke="#4A9C6F" stroke-width="1" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="bg-light">
+      <svg width="72" height="80" viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="4"  x2="20" y2="42" stroke="#1B4332" stroke-width="4" stroke-linecap="round"/>
+        <line x1="52" y1="4"  x2="52" y2="42" stroke="#1B4332" stroke-width="4" stroke-linecap="round"/>
+        <line x1="20" y1="42" x2="52" y2="42" stroke="#1B4332" stroke-width="4" stroke-linecap="round"/>
+        <line x1="36" y1="42" x2="36" y2="54" stroke="#2D6A4F" stroke-width="4" stroke-linecap="round"/>
+        <path d="M36 58 L54 67 L36 76 L18 67 Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="18" y1="67" x2="54" y2="67" stroke="#4A9C6F" stroke-width="1" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Postes degradado<br>+ pelota geométrica</div>
+</div>
+
+</body>
+</html>

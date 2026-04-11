@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Rugby Score — Logos v3</title>
+<style>
+  body { background: #111; font-family: sans-serif; display: flex; flex-wrap: wrap; gap: 36px; padding: 40px; justify-content: center; }
+  .option { background: #1a1a1a; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 14px; width: 200px; border: 1px solid #2a2a2a; }
+  .label { color: #4A9C6F; font-size: 11px; font-weight: 700; letter-spacing: 2px; }
+  .desc  { color: #777; font-size: 11px; text-align: center; line-height: 1.6; }
+  .row   { display: flex; gap: 12px; align-items: center; }
+  .dk { background: #0A1F13; border-radius: 10px; padding: 14px; display:flex; align-items:center; justify-content:center; }
+  .lt { background: #fff;    border-radius: 10px; padding: 14px; display:flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+
+<!--
+  POSTES DE RUGBY — H verdadera:
+  - Dos palos que van de arriba hasta abajo
+  - Travesaño conectándolos a ~35% desde abajo
+  - Los palos continúan ARRIBA del travesaño (parte larga)
+  - Los palos continúan ABAJO del travesaño (parte corta)
+-->
+
+<!-- ══ A: H limpia + pelota puntiaguda debajo ══ -->
+<div class="option">
+  <div class="label">A</div>
+  <div class="row">
+    <div class="dk">
+      <svg width="72" height="86" viewBox="0 0 72 86" xmlns="http://www.w3.org/2000/svg">
+        <!-- Palo izquierdo: sube desde y=60 hasta y=4 -->
+        <line x1="20" y1="4"  x2="20" y2="60" stroke="#4A9C6F" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- Palo derecho -->
+        <line x1="52" y1="4"  x2="52" y2="60" stroke="#4A9C6F" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- Travesaño a y=44 (cerca del fondo, tipo rugby) -->
+        <line x1="20" y1="44" x2="52" y2="44" stroke="#4A9C6F" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- Pelota puntiaguda debajo -->
+        <path d="M16 75 Q36 64 56 75 Q36 86 16 75Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="1.8"/>
+        <line x1="16" y1="75" x2="56" y2="75" stroke="#4A9C6F" stroke-width="1" opacity="0.45"/>
+        <path d="M36 65 Q42 75 36 85" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.45"/>
+        <path d="M36 65 Q30 75 36 85" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.45"/>
+        <line x1="32" y1="72" x2="40" y2="72" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="32" y1="75" x2="40" y2="75" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="32" y1="78" x2="40" y2="78" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="lt">
+      <svg width="72" height="86" viewBox="0 0 72 86" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="4"  x2="20" y2="60" stroke="#1B4332" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="52" y1="4"  x2="52" y2="60" stroke="#1B4332" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="20" y1="44" x2="52" y2="44" stroke="#1B4332" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M16 75 Q36 64 56 75 Q36 86 16 75Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="1.8"/>
+        <line x1="16" y1="75" x2="56" y2="75" stroke="#4A9C6F" stroke-width="1" opacity="0.5"/>
+        <path d="M36 65 Q42 75 36 85" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.5"/>
+        <path d="M36 65 Q30 75 36 85" fill="none" stroke="#4A9C6F" stroke-width="1" opacity="0.5"/>
+        <line x1="32" y1="72" x2="40" y2="72" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="32" y1="75" x2="40" y2="75" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="32" y1="78" x2="40" y2="78" stroke="#4A9C6F" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">H rugby + pelota<br>con puntadas</div>
+</div>
+
+<!-- ══ B: Ícono cuadrado de app ══ -->
+<div class="option">
+  <div class="label">B — ícono app</div>
+  <div class="row">
+    <div class="dk">
+      <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="18" fill="#1B4332"/>
+        <!-- H rugby en blanco -->
+        <line x1="22" y1="8"  x2="22" y2="54" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <line x1="58" y1="8"  x2="58" y2="54" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <line x1="22" y1="40" x2="58" y2="40" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <!-- Pelota blanca abajo -->
+        <path d="M18 68 Q40 58 62 68 Q40 78 18 68Z" fill="white" opacity="0.92"/>
+        <line x1="18" y1="68" x2="62" y2="68" stroke="#1B4332" stroke-width="0.8" opacity="0.35"/>
+        <path d="M40 59 Q46 68 40 77" fill="none" stroke="#1B4332" stroke-width="0.8" opacity="0.35"/>
+        <path d="M40 59 Q34 68 40 77" fill="none" stroke="#1B4332" stroke-width="0.8" opacity="0.35"/>
+      </svg>
+    </div>
+    <div class="lt">
+      <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="18" fill="#1B4332"/>
+        <line x1="22" y1="8"  x2="22" y2="54" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <line x1="58" y1="8"  x2="58" y2="54" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <line x1="22" y1="40" x2="58" y2="40" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <path d="M18 68 Q40 58 62 68 Q40 78 18 68Z" fill="white" opacity="0.92"/>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Para ícono de app<br>verde con blanco</div>
+</div>
+
+<!-- ══ C: H + pelota inclinada (patada) ══ -->
+<div class="option">
+  <div class="label">C</div>
+  <div class="row">
+    <div class="dk">
+      <svg width="72" height="86" viewBox="0 0 72 86" xmlns="http://www.w3.org/2000/svg">
+        <!-- H rugby -->
+        <line x1="18" y1="4"  x2="18" y2="58" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <line x1="54" y1="4"  x2="54" y2="58" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <line x1="18" y1="42" x2="54" y2="42" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <!-- Pelota inclinada como si la pataron -->
+        <g transform="rotate(-20, 36, 25)">
+          <path d="M22 25 Q36 17 50 25 Q36 33 22 25Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="1.8"/>
+          <line x1="22" y1="25" x2="50" y2="25" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+          <path d="M36 18 Q41 25 36 32" fill="none" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+          <path d="M36 18 Q31 25 36 32" fill="none" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+          <line x1="33" y1="23" x2="39" y2="23" stroke="#4A9C6F" stroke-width="1.1" stroke-linecap="round"/>
+          <line x1="33" y1="25" x2="39" y2="25" stroke="#4A9C6F" stroke-width="1.1" stroke-linecap="round"/>
+          <line x1="33" y1="27" x2="39" y2="27" stroke="#4A9C6F" stroke-width="1.1" stroke-linecap="round"/>
+        </g>
+        <!-- Trayectoria -->
+        <path d="M26 60 Q14 42 24 20" fill="none" stroke="#4A9C6F" stroke-width="1" stroke-dasharray="3,3" opacity="0.35"/>
+        <!-- RS abajo -->
+        <text x="36" y="82" text-anchor="middle" fill="#4A9C6F" font-size="11" font-weight="800" font-family="sans-serif" letter-spacing="4">RS</text>
+      </svg>
+    </div>
+    <div class="lt">
+      <svg width="72" height="86" viewBox="0 0 72 86" xmlns="http://www.w3.org/2000/svg">
+        <line x1="18" y1="4"  x2="18" y2="58" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <line x1="54" y1="4"  x2="54" y2="58" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <line x1="18" y1="42" x2="54" y2="42" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <g transform="rotate(-20, 36, 25)">
+          <path d="M22 25 Q36 17 50 25 Q36 33 22 25Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="1.8"/>
+          <line x1="22" y1="25" x2="50" y2="25" stroke="#4A9C6F" stroke-width="0.8" opacity="0.5"/>
+          <line x1="33" y1="23" x2="39" y2="23" stroke="#4A9C6F" stroke-width="1.1" stroke-linecap="round"/>
+          <line x1="33" y1="25" x2="39" y2="25" stroke="#4A9C6F" stroke-width="1.1" stroke-linecap="round"/>
+          <line x1="33" y1="27" x2="39" y2="27" stroke="#4A9C6F" stroke-width="1.1" stroke-linecap="round"/>
+        </g>
+        <text x="36" y="82" text-anchor="middle" fill="#2D6A4F" font-size="11" font-weight="800" font-family="sans-serif" letter-spacing="4">RS</text>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">Pelota volando<br>entre los palos + RS</div>
+</div>
+
+<!-- ══ D: H minimalista gruesa ══ -->
+<div class="option">
+  <div class="label">D — minimalista</div>
+  <div class="row">
+    <div class="dk">
+      <svg width="72" height="86" viewBox="0 0 72 86" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="4"  x2="20" y2="62" stroke="#4A9C6F" stroke-width="5" stroke-linecap="round"/>
+        <line x1="52" y1="4"  x2="52" y2="62" stroke="#4A9C6F" stroke-width="5" stroke-linecap="round"/>
+        <line x1="20" y1="46" x2="52" y2="46" stroke="#4A9C6F" stroke-width="5" stroke-linecap="round"/>
+        <!-- Pelota simple sin detalles -->
+        <path d="M14 76 Q36 66 58 76 Q36 86 14 76Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="lt">
+      <svg width="72" height="86" viewBox="0 0 72 86" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="4"  x2="20" y2="62" stroke="#1B4332" stroke-width="5" stroke-linecap="round"/>
+        <line x1="52" y1="4"  x2="52" y2="62" stroke="#1B4332" stroke-width="5" stroke-linecap="round"/>
+        <line x1="20" y1="46" x2="52" y2="46" stroke="#1B4332" stroke-width="5" stroke-linecap="round"/>
+        <path d="M14 76 Q36 66 58 76 Q36 86 14 76Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">H gruesa + pelota<br>solo formas</div>
+</div>
+
+<!-- ══ E: H + nombre horizontal ══ -->
+<div class="option">
+  <div class="label">E — con nombre</div>
+  <div class="row">
+    <div class="dk">
+      <svg width="150" height="70" viewBox="0 0 150 70" xmlns="http://www.w3.org/2000/svg">
+        <!-- H rugby compacta izquierda -->
+        <line x1="12" y1="4"  x2="12" y2="54" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <line x1="32" y1="4"  x2="32" y2="54" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <line x1="12" y1="40" x2="32" y2="40" stroke="#4A9C6F" stroke-width="3" stroke-linecap="round"/>
+        <!-- Pelota pequeña debajo -->
+        <path d="M8 64 Q22 57 36 64 Q22 71 8 64Z" fill="#1B4332" stroke="#4A9C6F" stroke-width="1.5"/>
+        <!-- Divisor -->
+        <line x1="46" y1="8" x2="46" y2="64" stroke="#2a2a2a" stroke-width="1.5"/>
+        <!-- Texto -->
+        <text x="56" y="30" fill="white" font-size="17" font-weight="900" font-family="Georgia, serif" letter-spacing="1">RUGBY</text>
+        <text x="57" y="54" fill="#4A9C6F" font-size="15" font-weight="700" font-family="sans-serif" letter-spacing="5">SCORE</text>
+      </svg>
+    </div>
+  </div>
+  <div class="row">
+    <div class="lt">
+      <svg width="150" height="70" viewBox="0 0 150 70" xmlns="http://www.w3.org/2000/svg">
+        <line x1="12" y1="4"  x2="12" y2="54" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <line x1="32" y1="4"  x2="32" y2="54" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <line x1="12" y1="40" x2="32" y2="40" stroke="#1B4332" stroke-width="3" stroke-linecap="round"/>
+        <path d="M8 64 Q22 57 36 64 Q22 71 8 64Z" fill="#1B4332" stroke="#2D6A4F" stroke-width="1.5"/>
+        <line x1="46" y1="8" x2="46" y2="64" stroke="#ddd" stroke-width="1.5"/>
+        <text x="56" y="30" fill="#1B4332" font-size="17" font-weight="900" font-family="Georgia, serif" letter-spacing="1">RUGBY</text>
+        <text x="57" y="54" fill="#2D6A4F" font-size="15" font-weight="700" font-family="sans-serif" letter-spacing="5">SCORE</text>
+      </svg>
+    </div>
+  </div>
+  <div class="desc">H + pelota<br>+ nombre completo</div>
+</div>
+
+</body>
+</html>
