@@ -155,8 +155,8 @@ class _LiveCard extends StatelessWidget {
     final m            = entry.match;
     final home         = m['teams']?['home']?['name'] as String? ?? 'Local';
     final away         = m['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final homeLogoUrl  = m['teams']?['home']?['logo'] as String?;
-    final awayLogoUrl  = m['teams']?['away']?['logo'] as String?;
+    final homeLogoUrl  = m['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl  = m['teams']?['away']?['logo']?.toString();
     final homeScore    = m['scores']?['home'] ?? '-';
     final awayScore    = m['scores']?['away'] ?? '-';
     final status       = m['status']?['short'] as String? ?? '';

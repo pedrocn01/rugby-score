@@ -78,18 +78,18 @@ String? clubLogo(String teamName) =>
     clubLogoUrls[teamName] ?? _countryLogoUrls[teamName];
 
 // ─── Logos de ligas / torneos (home tiles) ────────────────────────────────
-// Fuente: TheSportsDB CDN (r2.thesportsdb.com)
+// Fuente: Wikimedia Commons / Wikipedia (CORS habilitado, dominio público)
 
 const Map<String, String> leagueLogoUrls = {
-  'Top 14':                    'https://r2.thesportsdb.com/images/media/league/badge/xrsqtw1452903237.png',
-  'Premiership':               'https://r2.thesportsdb.com/images/media/league/badge/r59qxy1755025703.png',
-  'United Rugby Championship': 'https://r2.thesportsdb.com/images/media/league/badge/o6dhfo1716481482.png',
-  'Champions Cup':             'https://r2.thesportsdb.com/images/media/league/badge/kohne11716546580.png',
-  'Challenge Cup':             'https://r2.thesportsdb.com/images/media/league/badge/ewua6c1716755405.png',
-  'Super Rugby Pacific':       'https://r2.thesportsdb.com/images/media/league/badge/alpxhe1675871443.png',
-  'Seis Naciones':             'https://r2.thesportsdb.com/images/media/league/badge/7h1wr91738670253.png',
-  'The Rugby Championship':    'https://r2.thesportsdb.com/images/media/league/badge/dy0n4c1716684531.png',
-  'Super Rugby Américas':      'https://r2.thesportsdb.com/images/media/league/badge/gz76vv1717091774.png',
+  'Top 14':                    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Top_14_Logo.svg/200px-Top_14_Logo.svg.png',
+  'Premiership':               'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Logo_of_Premiership_Rugby_2018.svg/330px-Logo_of_Premiership_Rugby_2018.svg.png',
+  'United Rugby Championship': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/United_Rugby_Championship_logo.svg/250px-United_Rugby_Championship_logo.svg.png',
+  'Champions Cup':             'https://upload.wikimedia.org/wikipedia/en/thumb/6/65/InvestecChampionsCupLogo.svg/250px-InvestecChampionsCupLogo.svg.png',
+  'Challenge Cup':             'https://upload.wikimedia.org/wikipedia/en/thumb/0/03/EPCRchallengecuplogo.svg/250px-EPCRchallengecuplogo.svg.png',
+  'Super Rugby Pacific':       'https://upload.wikimedia.org/wikipedia/en/2/25/Super_Rugby_Pacific_logo.png',
+  'Seis Naciones':             'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/SixNationsRugbyCup.svg/250px-SixNationsRugbyCup.svg.png',
+  'The Rugby Championship':    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Rugby_Championship_logo_%28white_background%29.png/250px-The_Rugby_Championship_logo_%28white_background%29.png',
+  'Super Rugby Américas':      'https://upload.wikimedia.org/wikipedia/en/2/27/Super_Rugby_Americas_logo.png',
   'URBA Top 14':               'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Urba_logo.png/200px-Urba_logo.png',
 };
 

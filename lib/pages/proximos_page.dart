@@ -246,8 +246,8 @@ class _ProximoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final home         = match['teams']?['home']?['name'] as String? ?? 'Local';
     final away         = match['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final homeLogoUrl  = match['teams']?['home']?['logo'] as String?;
-    final awayLogoUrl  = match['teams']?['away']?['logo'] as String?;
+    final homeLogoUrl  = match['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl  = match['teams']?['away']?['logo']?.toString();
     final hora         = _formatHora(match['date'] as String?);
     final status       = match['status']?['short'] as String? ?? 'NS';
     final homeScore    = match['scores']?['home'];

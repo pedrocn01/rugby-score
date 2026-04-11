@@ -401,8 +401,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
   Widget _cardResultado(dynamic partido) {
     final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
     final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
-    final homeLogoUrl = partido['teams']?['home']?['logo'] as String?;
-    final awayLogoUrl = partido['teams']?['away']?['logo'] as String?;
+    final homeLogoUrl = partido['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl = partido['teams']?['away']?['logo']?.toString();
     final homeScore   = partido['scores']?['home'] ?? '-';
     final awayScore   = partido['scores']?['away'] ?? '-';
     final homePT1     = partido['periods']?['first']?['home'];
@@ -649,7 +649,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
           final equipo = eq.value;
           final pos     = equipo['position'] ?? i + 1;
           final nombre  = equipo['team']?['name'] ?? '-';
-          final logoUrl = equipo['team']?['logo'] as String?;
+          final logoUrl = equipo['team']?['logo']?.toString();
           final pj      = equipo['games']?['played'] ?? '-';
           final g      = equipo['games']?['win']?['total'] ?? '-';
           final e      = equipo['games']?['draw']?['total'] ?? '-';
@@ -742,8 +742,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
   Widget _cardProximo(dynamic partido) {
     final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
     final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
-    final homeLogoUrl = partido['teams']?['home']?['logo'] as String?;
-    final awayLogoUrl = partido['teams']?['away']?['logo'] as String?;
+    final homeLogoUrl = partido['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl = partido['teams']?['away']?['logo']?.toString();
     final fecha       = _formatFecha(partido['date']);
     final hora        = _formatHora(partido['date']);
 
