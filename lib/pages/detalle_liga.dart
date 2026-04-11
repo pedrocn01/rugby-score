@@ -243,9 +243,20 @@ class _DetalleLigaState extends State<DetalleLiga> {
       'pool c':             'POOL C',
       'pool d':             'POOL D',
       // 7s Cup knockouts
-      'cup quarter-finals': 'CUARTOS — CUP',
-      'cup semi-finals':    'SEMIFINALES — CUP',
-      'cup final':          'FINAL — CUP',
+      'cup quarter-finals':   'CUARTOS — CUP',
+      'cup semi-finals':      'SEMIFINALES — CUP',
+      'cup final':            'FINAL — CUP',
+      // 7s otras ramas
+      '5th place':            '5º PUESTO',
+      '7th place':            '7º PUESTO',
+      '9th place':            '9º PUESTO',
+      'plate quarter-finals': 'CUARTOS — PLATE',
+      'plate semi-finals':    'SEMIFINALES — PLATE',
+      'plate final':          'FINAL — PLATE',
+      'bowl semi-finals':     'SEMIFINALES — BOWL',
+      'bowl final':           'FINAL — BOWL',
+      'shield final':         'FINAL — SHIELD',
+      'challenge final':      'FINAL — CHALLENGE',
     };
     return fases[week.toLowerCase()] ?? week.toUpperCase();
   }
@@ -257,9 +268,36 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   List<String> _ordenarJornadas(Iterable<String> jornadas, {bool proximosAscendente = false}) {
+    // 7s: final primero, pools al final
+    // Liga regular: fecha más reciente primero (descendente)
     const ordenFases = [
-      'final', 'semi-finals', 'quarter-finals',
-      'round of 16', 'round-of-16', 'playoffs', 'octavos',
+      // Copa (7s Cup knockout) — primero
+      'cup final',
+      'cup semi-finals',
+      'cup quarter-finals',
+      // Finales de otras ramas (7s)
+      'bronze final',
+      '5th place',
+      '7th place',
+      '9th place',
+      'plate final',
+      'plate semi-finals',
+      'plate quarter-finals',
+      'bowl final',
+      'bowl semi-finals',
+      // Liga regular
+      'final',
+      'semi-finals',
+      'quarter-finals',
+      'round of 16',
+      'round-of-16',
+      'playoffs',
+      'octavos',
+      // Pools 7s — al final
+      'pool a',
+      'pool b',
+      'pool c',
+      'pool d',
     ];
     final lista = jornadas.toList();
     lista.sort((a, b) {
@@ -270,7 +308,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
       if (ib != null) return proximosAscendente ? 1 : -1;
       final oa = ordenFases.indexOf(a.toLowerCase());
       final ob = ordenFases.indexOf(b.toLowerCase());
-      return (oa == -1 ? 99 : oa).compareTo(ob == -1 ? 99 : ob);
+      if (oa == -1 && ob == -1) return a.compareTo(b);
+      return (oa == -1 ? 999 : oa).compareTo(ob == -1 ? 999 : ob);
     });
     return lista;
   }

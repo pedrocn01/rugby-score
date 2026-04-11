@@ -189,10 +189,10 @@ class _FolderTileState extends State<_FolderTile> {
   bool _hovered = false;
 
   Color get _primary => widget.folderName == 'Circuito 7s'
-      ? const Color(0xFF0D1B2A)
+      ? const Color(0xFFFF6B00)
       : const Color(0xFF1B4332);
   Color get _dark => widget.folderName == 'Circuito 7s'
-      ? const Color(0xFF000A14)
+      ? const Color(0xFFCC4400)
       : const Color(0xFF071A0E);
 
   @override
