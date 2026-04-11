@@ -27,6 +27,38 @@ const Map<String, String> clubLogoUrls = {
   'Champagnat':          'https://upload.wikimedia.org/wikipedia/en/thumb/6/60/Club_champagnat_logo.png/120px-Club_champagnat_logo.png',
   'Buenos Aires C&RC':   'https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Buenos_Aires_CRC_Crest.svg/120px-Buenos_Aires_CRC_Crest.svg.png',
   'La Plata':            'https://upload.wikimedia.org/wikipedia/en/thumb/d/d7/La_Plata_Rugby_Club_Crest.svg/120px-La_Plata_Rugby_Club_Crest.svg.png',
+
+  // ── Super Rugby Pacific ────────────────────────────────────────────────
+  'Crusaders':           'https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Crusaders_logo.svg/120px-Crusaders_logo.svg.png',
+  'Blues':               'https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/The_Blues_Logo.svg/120px-The_Blues_Logo.svg.png',
+  'Chiefs':              'https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Chiefs_Logo.svg/120px-Chiefs_Logo.svg.png',
+  'Highlanders':         'https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/Highlanders_Logo.svg/120px-Highlanders_Logo.svg.png',
+  'Hurricanes':          'https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Hurricanes_Logo.svg/120px-Hurricanes_Logo.svg.png',
+  'Brumbies':            'https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/ACT_Brumbies_logo.svg/120px-ACT_Brumbies_logo.svg.png',
+  'Waratahs':            'https://upload.wikimedia.org/wikipedia/en/thumb/0/0a/NSW_Waratahs_logo.svg/120px-NSW_Waratahs_logo.svg.png',
+  'Reds':                'https://upload.wikimedia.org/wikipedia/en/thumb/2/22/Queensland_Reds_logo.svg/120px-Queensland_Reds_logo.svg.png',
+  'Western Force':       'https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Western_Force_logo.svg/120px-Western_Force_logo.svg.png',
+  'Moana Pasifika':      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Moana_Pasifika_logo.svg/120px-Moana_Pasifika_logo.svg.png',
+  'Fijian Drua':         'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Fijian_Drua_logo.svg/120px-Fijian_Drua_logo.svg.png',
+
+  // ── United Rugby Championship ──────────────────────────────────────────
+  'Zebre Parma':         'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Zebre_rugby.svg/120px-Zebre_rugby.svg.png',
+  'Zebre':               'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Zebre_rugby.svg/120px-Zebre_rugby.svg.png',
+  'Cardiff Rugby':       'https://upload.wikimedia.org/wikipedia/en/thumb/1/11/Cardiff_Rugby_crest_2022.png/120px-Cardiff_Rugby_crest_2022.png',
+  'Cardiff':             'https://upload.wikimedia.org/wikipedia/en/thumb/1/11/Cardiff_Rugby_crest_2022.png/120px-Cardiff_Rugby_crest_2022.png',
+  'Benetton Rugby':      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Benetton_Rugby_logo.svg/120px-Benetton_Rugby_logo.svg.png',
+  'Benetton':            'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Benetton_Rugby_logo.svg/120px-Benetton_Rugby_logo.svg.png',
+  'Dragons RFC':         'https://upload.wikimedia.org/wikipedia/en/thumb/4/44/Newport_Gwent_Dragons_logo.svg/120px-Newport_Gwent_Dragons_logo.svg.png',
+  'Dragons':             'https://upload.wikimedia.org/wikipedia/en/thumb/4/44/Newport_Gwent_Dragons_logo.svg/120px-Newport_Gwent_Dragons_logo.svg.png',
+  'Scarlets':            'https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Scarlets_RFC_logo.svg/120px-Scarlets_RFC_logo.svg.png',
+  'Edinburgh Rugby':     'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Edinburgh_Rugby_logo.svg/120px-Edinburgh_Rugby_logo.svg.png',
+  'Edinburgh':           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Edinburgh_Rugby_logo.svg/120px-Edinburgh_Rugby_logo.svg.png',
+  'Ospreys':             'https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/Ospreys_2020.png/120px-Ospreys_2020.png',
+
+  // ── Super Rugby Américas ───────────────────────────────────────────────
+  'Cobras':              'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
+  'Brasil Cobras':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
+  'Cobras Brasil':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
 };
 
 // ─── Logos de selecciones / federaciones internacionales ──────────────────────

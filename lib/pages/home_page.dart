@@ -188,8 +188,12 @@ class _FolderTile extends StatefulWidget {
 class _FolderTileState extends State<_FolderTile> {
   bool _hovered = false;
 
-  static const _primary = Color(0xFF1B4332);
-  static const _dark    = Color(0xFF071A0E);
+  Color get _primary => widget.folderName == 'Circuito 7s'
+      ? const Color(0xFF0D1B2A)
+      : const Color(0xFF1B4332);
+  Color get _dark => widget.folderName == 'Circuito 7s'
+      ? const Color(0xFF000A14)
+      : const Color(0xFF071A0E);
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +230,7 @@ class _FolderTileState extends State<_FolderTile> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [_primary, _dark],

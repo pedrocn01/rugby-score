@@ -512,7 +512,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) {
-    final url = apiLogoUrl ?? clubLogo(teamName);
+    final url = clubLogo(teamName) ?? apiLogoUrl;
     if (url == null) return const SizedBox(width: 20);
     return Image.network(
       url,
@@ -523,7 +523,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) {
-    final url = apiLogoUrl ?? clubLogo(teamName);
+    final url = clubLogo(teamName) ?? apiLogoUrl;
     if (url == null) return const SizedBox.shrink();
     return Image.network(
       url,

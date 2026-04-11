@@ -30,7 +30,7 @@ const Map<String, LeagueTheme> leagueThemes = {
   // ── Internacional ───────────────────────────────────────────────────────
   // Seis Naciones → navy/gold del torneo
   'Seis Naciones':             LeagueTheme(primary: Color(0xFF1A237E), accent: Color(0xFFC8A951), background: Color(0xFFEEF0FF)),
-  'The Rugby Championship':    LeagueTheme(primary: Color(0xFF1B4332), accent: Color(0xFF40916C), background: Color(0xFFE8F5EE)),
+  'The Rugby Championship':    LeagueTheme(primary: Color(0xFF0077B6), accent: Color(0xFF00B4D8), background: Color(0xFFE8F7FF)),
 
   // ── URBA ────────────────────────────────────────────────────────────────
   'URBA Top 14':               LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
