@@ -1,10 +1,11 @@
-// URLs de logos para folders y clubes.
-// Fuente: Wikimedia Commons / Wikipedia (licencia pública).
+// URLs de logos para folders, clubes y ligas.
+// Fuente: Wikimedia Commons / Wikipedia / TheSportsDB (licencia pública).
 
 // ─── Logos de carpetas (home) ─────────────────────────────────────────────
 
 const Map<String, String> folderLogoUrls = {
-  'URBA': 'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Urba_logo.png/200px-Urba_logo.png',
+  'URBA':        'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Urba_logo.png/200px-Urba_logo.png',
+  'Circuito 7s': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/SVNS_Logo_%282023%29.svg/200px-SVNS_Logo_%282023%29.svg.png',
 };
 
 // ─── Logos de clubes URBA ─────────────────────────────────────────────────
@@ -20,7 +21,7 @@ const Map<String, String> clubLogoUrls = {
   'Regatas':             'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Regatas_BV_flaglogo.svg/120px-Regatas_BV_flaglogo.svg.png',
   'Atlético del Rosario':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Atlet_rosario_logo.svg/120px-Atlet_rosario_logo.svg.png',
   'Los Matreros':        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Los_matreros_rc_logo.png/120px-Los_matreros_rc_logo.png',
-  'CUBA':                'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Club_universitario_ba_primer_escudo_1918.png/200px-Club_universitario_ba_primer_escudo_1918.png',
+  'CUBA':                'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Universitario_BA_logo.svg/120px-Universitario_BA_logo.svg.png',
   // Con PNG en Wikipedia /en/
   'Newman':              'https://upload.wikimedia.org/wikipedia/en/thumb/1/1c/Club_newman_escudo.png/120px-Club_newman_escudo.png',
   'Champagnat':          'https://upload.wikimedia.org/wikipedia/en/thumb/6/60/Club_champagnat_logo.png/120px-Club_champagnat_logo.png',
@@ -75,3 +76,22 @@ const Map<String, String> _countryLogoUrls = {
 /// Devuelve la URL del logo de un club o selección, o null si no hay.
 String? clubLogo(String teamName) =>
     clubLogoUrls[teamName] ?? _countryLogoUrls[teamName];
+
+// ─── Logos de ligas / torneos (home tiles) ────────────────────────────────
+// Fuente: TheSportsDB CDN (r2.thesportsdb.com)
+
+const Map<String, String> leagueLogoUrls = {
+  'Top 14':                    'https://r2.thesportsdb.com/images/media/league/badge/xrsqtw1452903237.png',
+  'Premiership':               'https://r2.thesportsdb.com/images/media/league/badge/r59qxy1755025703.png',
+  'United Rugby Championship': 'https://r2.thesportsdb.com/images/media/league/badge/o6dhfo1716481482.png',
+  'Champions Cup':             'https://r2.thesportsdb.com/images/media/league/badge/kohne11716546580.png',
+  'Challenge Cup':             'https://r2.thesportsdb.com/images/media/league/badge/ewua6c1716755405.png',
+  'Super Rugby Pacific':       'https://r2.thesportsdb.com/images/media/league/badge/alpxhe1675871443.png',
+  'Seis Naciones':             'https://r2.thesportsdb.com/images/media/league/badge/7h1wr91738670253.png',
+  'The Rugby Championship':    'https://r2.thesportsdb.com/images/media/league/badge/dy0n4c1716684531.png',
+  'Super Rugby Américas':      'https://r2.thesportsdb.com/images/media/league/badge/gz76vv1717091774.png',
+  'URBA Top 14':               'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Urba_logo.png/200px-Urba_logo.png',
+};
+
+/// Devuelve la URL del logo de una liga/torneo, o null si no hay.
+String? leagueLogo(String leagueName) => leagueLogoUrls[leagueName];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/leagues.dart';
+import '../config/logos.dart';
 import '../config/themes.dart';
 import '../pages/detalle_liga.dart';
 
@@ -10,14 +11,16 @@ const _fallbackTheme = LeagueTheme(
 );
 
 Widget leagueCard(BuildContext context, String nombre) {
-  final theme = leagueThemes[nombre] ?? _fallbackTheme;
-  return _LeagueCard(nombre: nombre, theme: theme);
+  final theme   = leagueThemes[nombre] ?? _fallbackTheme;
+  final logoUrl = leagueLogo(nombre);
+  return _LeagueCard(nombre: nombre, theme: theme, logoUrl: logoUrl);
 }
 
 class _LeagueCard extends StatefulWidget {
   final String nombre;
   final LeagueTheme theme;
-  const _LeagueCard({required this.nombre, required this.theme});
+  final String? logoUrl;
+  const _LeagueCard({required this.nombre, required this.theme, this.logoUrl});
 
   @override
   State<_LeagueCard> createState() => _LeagueCardState();
@@ -68,7 +71,7 @@ class _LeagueCardState extends State<_LeagueCard> {
                 ),
               ],
             ),
-            child: _CardContent(nombre: widget.nombre, accent: accent),
+            child: _CardContent(nombre: widget.nombre, accent: accent, logoUrl: widget.logoUrl),
           ),
         ),
       );
@@ -138,12 +141,53 @@ class _LeagueCardState extends State<_LeagueCard> {
 // ── Contenido compartido entre mobile y desktop ───────────────────────────────
 
 class _CardContent extends StatelessWidget {
-  final String nombre;
-  final Color  accent;
-  const _CardContent({required this.nombre, required this.accent});
+  final String  nombre;
+  final Color   accent;
+  final String? logoUrl;
+  const _CardContent({required this.nombre, required this.accent, this.logoUrl});
 
   @override
   Widget build(BuildContext context) {
+    // ── Con logo: imagen grande + nombre en barra inferior ────────────────
+    if (logoUrl != null) {
+      return Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
+              child: Image.network(
+                logoUrl!,
+                fit: BoxFit.contain,
+                errorBuilder: (ctx, e, s) =>
+                    Icon(Icons.sports_rugby_rounded, size: 36, color: accent),
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.35),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(nombre,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11)),
+                ),
+                Icon(Icons.arrow_forward_rounded, size: 12,
+                  color: Colors.white.withValues(alpha: 0.6)),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    // ── Sin logo: layout original con icono ───────────────────────────────
     return Padding(
       padding: const EdgeInsets.all(14),
       child: Column(
