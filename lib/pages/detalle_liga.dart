@@ -399,19 +399,21 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _cardResultado(dynamic partido) {
-    final homeTeam  = partido['teams']?['home']?['name'] ?? 'Local';
-    final awayTeam  = partido['teams']?['away']?['name'] ?? 'Visitante';
-    final homeScore = partido['scores']?['home'] ?? '-';
-    final awayScore = partido['scores']?['away'] ?? '-';
-    final homePT1   = partido['periods']?['first']?['home'];
-    final awayPT1   = partido['periods']?['first']?['away'];
-    final homePT2   = partido['periods']?['second']?['home'];
-    final awayPT2   = partido['periods']?['second']?['away'];
-    final fecha     = _formatFecha(partido['date']);
-    final hora      = _formatHora(partido['date']);
-    final status    = partido['status']?['short'] ?? '';
-    final homeWon   = (homeScore is int && awayScore is int) && homeScore > awayScore;
-    final awayWon   = (homeScore is int && awayScore is int) && awayScore > homeScore;
+    final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
+    final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
+    final homeLogoUrl = partido['teams']?['home']?['logo'] as String?;
+    final awayLogoUrl = partido['teams']?['away']?['logo'] as String?;
+    final homeScore   = partido['scores']?['home'] ?? '-';
+    final awayScore   = partido['scores']?['away'] ?? '-';
+    final homePT1     = partido['periods']?['first']?['home'];
+    final awayPT1     = partido['periods']?['first']?['away'];
+    final homePT2     = partido['periods']?['second']?['home'];
+    final awayPT2     = partido['periods']?['second']?['away'];
+    final fecha       = _formatFecha(partido['date']);
+    final hora        = _formatHora(partido['date']);
+    final status      = partido['status']?['short'] ?? '';
+    final homeWon     = (homeScore is int && awayScore is int) && homeScore > awayScore;
+    final awayWon     = (homeScore is int && awayScore is int) && awayScore > homeScore;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -438,7 +440,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      _teamLogo(homeTeam, size: 28),
+                      _teamLogo(homeTeam, size: 28, apiLogoUrl: homeLogoUrl),
                       const SizedBox(height: 4),
                       Text(
                         homeTeam,
@@ -466,7 +468,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _teamLogo(awayTeam, size: 28),
+                      _teamLogo(awayTeam, size: 28, apiLogoUrl: awayLogoUrl),
                       const SizedBox(height: 4),
                       Text(
                         awayTeam,
@@ -501,8 +503,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
     );
   }
 
-  Widget _teamLogoSmall(String teamName) {
-    final url = clubLogo(teamName);
+  Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) {
+    final url = apiLogoUrl ?? clubLogo(teamName);
     if (url == null) return const SizedBox(width: 20);
     return Image.network(
       url,
@@ -512,8 +514,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
     );
   }
 
-  Widget _teamLogo(String teamName, {double size = 28}) {
-    final url = clubLogo(teamName);
+  Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) {
+    final url = apiLogoUrl ?? clubLogo(teamName);
     if (url == null) return const SizedBox.shrink();
     return Image.network(
       url,
@@ -645,9 +647,10 @@ class _DetalleLigaState extends State<DetalleLiga> {
         children: tabla.asMap().entries.map<Widget>((eq) {
           final i      = eq.key;
           final equipo = eq.value;
-          final pos    = equipo['position'] ?? i + 1;
-          final nombre = equipo['team']?['name'] ?? '-';
-          final pj     = equipo['games']?['played'] ?? '-';
+          final pos     = equipo['position'] ?? i + 1;
+          final nombre  = equipo['team']?['name'] ?? '-';
+          final logoUrl = equipo['team']?['logo'] as String?;
+          final pj      = equipo['games']?['played'] ?? '-';
           final g      = equipo['games']?['win']?['total'] ?? '-';
           final e      = equipo['games']?['draw']?['total'] ?? '-';
           final p      = equipo['games']?['lose']?['total'] ?? '-';
@@ -681,7 +684,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
             child: Row(
               children: [
                 SizedBox(width: 28, child: Text(pos.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
-                _teamLogoSmall(nombre),
+                _teamLogoSmall(nombre, apiLogoUrl: logoUrl),
                 const SizedBox(width: 6),
                 Expanded(           child: Text(nombre,         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
                 SizedBox(width: 32, child: Text(pj.toString(),  textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
@@ -737,10 +740,12 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _cardProximo(dynamic partido) {
-    final homeTeam = partido['teams']?['home']?['name'] ?? 'Local';
-    final awayTeam = partido['teams']?['away']?['name'] ?? 'Visitante';
-    final fecha    = _formatFecha(partido['date']);
-    final hora     = _formatHora(partido['date']);
+    final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
+    final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
+    final homeLogoUrl = partido['teams']?['home']?['logo'] as String?;
+    final awayLogoUrl = partido['teams']?['away']?['logo'] as String?;
+    final fecha       = _formatFecha(partido['date']);
+    final hora        = _formatHora(partido['date']);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -769,7 +774,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      _teamLogo(homeTeam, size: 28),
+                      _teamLogo(homeTeam, size: 28, apiLogoUrl: homeLogoUrl),
                       const SizedBox(height: 4),
                       Text(homeTeam, textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF1A1A1A))),
                     ],
@@ -789,7 +794,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _teamLogo(awayTeam, size: 28),
+                      _teamLogo(awayTeam, size: 28, apiLogoUrl: awayLogoUrl),
                       const SizedBox(height: 4),
                       Text(awayTeam, textAlign: TextAlign.left, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xFF1A1A1A))),
                     ],
