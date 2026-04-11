@@ -152,12 +152,14 @@ class _LiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final m         = entry.match;
-    final home      = m['teams']?['home']?['name'] as String? ?? 'Local';
-    final away      = m['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final homeScore = m['scores']?['home'] ?? '-';
-    final awayScore = m['scores']?['away'] ?? '-';
-    final status    = m['status']?['short'] as String? ?? '';
+    final m            = entry.match;
+    final home         = m['teams']?['home']?['name'] as String? ?? 'Local';
+    final away         = m['teams']?['away']?['name'] as String? ?? 'Visitante';
+    final homeLogoUrl  = m['teams']?['home']?['logo'] as String?;
+    final awayLogoUrl  = m['teams']?['away']?['logo'] as String?;
+    final homeScore    = m['scores']?['home'] ?? '-';
+    final awayScore    = m['scores']?['away'] ?? '-';
+    final status       = m['status']?['short'] as String? ?? '';
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -202,8 +204,17 @@ class _LiveCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(home, textAlign: TextAlign.right,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (homeLogoUrl != null)
+                        Image.network(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
+                          errorBuilder: (_, e, s) => const SizedBox(height: 32)),
+                      const SizedBox(height: 4),
+                      Text(home, textAlign: TextAlign.right,
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Container(
@@ -219,8 +230,17 @@ class _LiveCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: Text(away, textAlign: TextAlign.left,
-                    style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 14)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (awayLogoUrl != null)
+                        Image.network(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
+                          errorBuilder: (_, e, s) => const SizedBox(height: 32)),
+                      const SizedBox(height: 4),
+                      Text(away, textAlign: TextAlign.left,
+                        style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 13)),
+                    ],
+                  ),
                 ),
               ],
             ),

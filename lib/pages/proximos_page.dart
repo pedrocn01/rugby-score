@@ -244,12 +244,14 @@ class _ProximoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final home      = match['teams']?['home']?['name'] as String? ?? 'Local';
-    final away      = match['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final hora      = _formatHora(match['date'] as String?);
-    final status    = match['status']?['short'] as String? ?? 'NS';
-    final homeScore = match['scores']?['home'];
-    final awayScore = match['scores']?['away'];
+    final home         = match['teams']?['home']?['name'] as String? ?? 'Local';
+    final away         = match['teams']?['away']?['name'] as String? ?? 'Visitante';
+    final homeLogoUrl  = match['teams']?['home']?['logo'] as String?;
+    final awayLogoUrl  = match['teams']?['away']?['logo'] as String?;
+    final hora         = _formatHora(match['date'] as String?);
+    final status       = match['status']?['short'] as String? ?? 'NS';
+    final homeScore    = match['scores']?['home'];
+    final awayScore    = match['scores']?['away'];
 
     const liveStatuses = {'1H', '2H', 'HT', 'ET', 'BT', 'P'};
     const doneStatuses = {'FT', 'AET', 'PEN', 'AWD', 'Canc'};
@@ -302,17 +304,43 @@ class _ProximoCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(home,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: isDone && hasScore && (homeScore > awayScore) ? FontWeight.w800 : FontWeight.w600,
-                    fontSize: 13)),
+                Row(
+                  children: [
+                    if (homeLogoUrl != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: Image.network(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
+                          errorBuilder: (_, e, s) => const SizedBox(width: 18)),
+                      ),
+                    Expanded(
+                      child: Text(home,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: isDone && hasScore && (homeScore > awayScore) ? FontWeight.w800 : FontWeight.w600,
+                          fontSize: 13)),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 4),
-                Text(away,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.65),
-                    fontWeight: isDone && hasScore && (awayScore > homeScore) ? FontWeight.w800 : FontWeight.w500,
-                    fontSize: 13)),
+                Row(
+                  children: [
+                    if (awayLogoUrl != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: Image.network(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
+                          errorBuilder: (_, e, s) => const SizedBox(width: 18)),
+                      ),
+                    Expanded(
+                      child: Text(away,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.65),
+                          fontWeight: isDone && hasScore && (awayScore > homeScore) ? FontWeight.w800 : FontWeight.w500,
+                          fontSize: 13)),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
