@@ -669,11 +669,15 @@ class _DetalleLigaState extends State<DetalleLiga> {
 
               if (!ocultarLeyenda) ...[
                 const SizedBox(height: 12),
-                Row(
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 6,
                   children: [
                     _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica playoffs'),
-                    const SizedBox(width: 16),
-                    _leyendaItem(Colors.red, 'Descenso'),
+                    if (!noRelegationLeagues.contains(widget.nombreLiga)) ...[
+                      _leyendaItem(const Color(0xFFF4A100), 'Playoff promoción'),
+                      _leyendaItem(Colors.red, 'Descenso'),
+                    ],
                   ],
                 ),
               ],
@@ -730,8 +734,13 @@ class _DetalleLigaState extends State<DetalleLiga> {
           Color leftBorder = Colors.transparent;
           Color rowBg      = i.isOdd ? const Color(0xFFFAFAFA) : Colors.white;
 
+          final noRelegation = noRelegationLeagues.contains(widget.nombreLiga);
           if (desc != null) {
-            if (desc.contains('Relegation') && !desc.contains('Playoffs')) {
+            if (desc.contains('Relegation') && desc.contains('Playoffs') && !noRelegation) {
+              // Playoff de promoción/descenso
+              leftBorder = const Color(0xFFF4A100);
+              rowBg      = const Color(0xFFFFFAEE);
+            } else if (desc.contains('Relegation') && !desc.contains('Playoffs') && !noRelegation) {
               leftBorder = Colors.red;
               rowBg      = const Color(0xFFFFF5F5);
             } else if (desc.contains('Playoffs') || desc.contains('Qualified')) {

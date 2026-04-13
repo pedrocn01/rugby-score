@@ -94,6 +94,11 @@ const Set<String> computedSevensAccumulated = {
 // ─── Ligas que solo muestran la pestaña RESULTADOS (fase de grupos/pools) ─
 const Set<String> soloResultadosLeagues = {};
 
+// ─── Ligas donde el descenso está suspendido (no colorear fila) ───────────
+const Set<String> noRelegationLeagues = {
+  'Premiership', // el descenso está suspendido desde 2021
+};
+
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
 const Map<String, List<String>> folders = {
   'URBA': ['URBA Top 14'],
