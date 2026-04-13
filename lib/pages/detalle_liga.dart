@@ -281,6 +281,34 @@ class _DetalleLigaState extends State<DetalleLiga> {
     return sevensLeagues.contains(widget.nombreLiga) ? 'Fase de Grupos' : 'Round of 16';
   }
 
+  /// Reasigna matches con week=null (agrupados como 'Round of 16') a la ronda
+  /// nombrada más cercana por timestamp. Útil cuando la API deja sin semana
+  /// a uno de los dos partidos de una misma fase (ej. una semi en Champions Cup).
+  void _reasignarNullWeeks(Map<String, List<dynamic>> porJornada) {
+    const nullKey = 'Round of 16';
+    if (!porJornada.containsKey(nullKey)) return;
+    // Solo actuar si TODOS los matches de ese bucket son realmente null-week
+    final nullMatches = List<dynamic>.from(porJornada[nullKey]!);
+    if (!nullMatches.every((m) => m['week'] == null)) return;
+    porJornada.remove(nullKey);
+    if (porJornada.isEmpty) { porJornada[nullKey] = nullMatches; return; }
+
+    for (final match in nullMatches) {
+      final ts = match['timestamp'] as int? ?? 0;
+      String best = nullKey;
+      int minDiff = 999999999;
+      for (final entry in porJornada.entries) {
+        for (final m in entry.value) {
+          final mTs = m['timestamp'] as int? ?? 0;
+          if (mTs == 0) continue;
+          final diff = (ts - mTs).abs();
+          if (diff < minDiff) { minDiff = diff; best = entry.key; }
+        }
+      }
+      porJornada.putIfAbsent(best, () => []).add(match);
+    }
+  }
+
   List<String> _ordenarJornadas(Iterable<String> jornadas, {bool proximosAscendente = false}) {
     // 7s: final primero, pools al final
     // Liga regular: fecha más reciente primero (descendente)
@@ -439,6 +467,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
     for (final p in data) {
       porJornada.putIfAbsent(_inferirInstancia(p), () => []).add(p);
     }
+    _reasignarNullWeeks(porJornada);
     final jornadas = _ordenarJornadas(porJornada.keys);
 
     return ListView(
@@ -880,6 +909,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
     for (final p in data) {
       porJornada.putIfAbsent(_inferirInstancia(p), () => []).add(p);
     }
+    _reasignarNullWeeks(porJornada);
     final jornadas = _ordenarJornadas(porJornada.keys, proximosAscendente: true);
 
     return ListView(

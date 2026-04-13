@@ -61,6 +61,52 @@ const Map<String, String> clubLogoUrls = {
   'Cobras':              'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
   'Brasil Cobras':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
   'Cobras Brasil':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
+
+  // ── URC — irlandeses / escoceses ──────────────────────────────────────
+  'Leinster':            'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/LeinsterRugby_logo_2019.svg/200px-LeinsterRugby_logo_2019.svg.png',
+  'Munster':             'https://upload.wikimedia.org/wikipedia/en/thumb/f/fb/Munster_Rugby_logo.svg/200px-Munster_Rugby_logo.svg.png',
+  'Ulster':              'https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/Ulster_Rugby_logo.svg/200px-Ulster_Rugby_logo.svg.png',
+  'Connacht':            'https://upload.wikimedia.org/wikipedia/en/thumb/6/67/ConnachtRugby_2017logo.svg/200px-ConnachtRugby_2017logo.svg.png',
+  'Glasgow Warriors':    'https://upload.wikimedia.org/wikipedia/en/thumb/0/06/Glasgow_Warriors_Logo.svg/200px-Glasgow_Warriors_Logo.svg.png',
+
+  // ── URC — sudafricanos ────────────────────────────────────────────────
+  'Stormers':            'https://upload.wikimedia.org/wikipedia/en/thumb/e/e3/Stormers_logo.svg/200px-Stormers_logo.svg.png',
+  'Lions':               'https://upload.wikimedia.org/wikipedia/en/thumb/e/e6/Lions_rugby_logo_2007.png/200px-Lions_rugby_logo_2007.png',
+  'Bulls':               'https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Bulls_rugby_logo.jpg/200px-Bulls_rugby_logo.jpg',
+  'Sharks':              'https://upload.wikimedia.org/wikipedia/en/thumb/9/9f/Sharks_rugby_union_logo.png/200px-Sharks_rugby_union_logo.png',
+
+  // ── Top 14 francés ───────────────────────────────────────────────────
+  'Stade Toulousain':    'https://upload.wikimedia.org/wikipedia/en/thumb/9/93/StadeToulousainLogo.svg/200px-StadeToulousainLogo.svg.png',
+  'Bordeaux Bèglès':     'https://upload.wikimedia.org/wikipedia/en/thumb/b/b1/UnionBordeauxBeglesLogo.svg/200px-UnionBordeauxBeglesLogo.svg.png',
+  'Bordeaux Begles':     'https://upload.wikimedia.org/wikipedia/en/thumb/b/b1/UnionBordeauxBeglesLogo.svg/200px-UnionBordeauxBeglesLogo.svg.png',
+  'Stade Francais Paris':'https://upload.wikimedia.org/wikipedia/en/thumb/e/ea/Stade_francais_logo18.svg/200px-Stade_francais_logo18.svg.png',
+  'Stade Français Paris':'https://upload.wikimedia.org/wikipedia/en/thumb/e/ea/Stade_francais_logo18.svg/200px-Stade_francais_logo18.svg.png',
+  'Montpellier':         'https://upload.wikimedia.org/wikipedia/en/thumb/d/d9/Logo_Montpellier_H%C3%A9rault_rugby_2013.svg/200px-Logo_Montpellier_H%C3%A9rault_rugby_2013.svg.png',
+  'Clermont':            'https://upload.wikimedia.org/wikipedia/en/thumb/0/03/ASMClermontLogo.svg/200px-ASMClermontLogo.svg.png',
+  'Racing 92':           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Racing_92_%28logo%29.svg/200px-Racing_92_%28logo%29.svg.png',
+  'Castres Olympique':   'https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Castres_olympique_badge.png/200px-Castres_olympique_badge.png',
+  'Stade Rochelais':     'https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/StadeRochelaisLogo.svg/200px-StadeRochelaisLogo.svg.png',
+  'Aviron Bayonnais':    'https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/AvironBayonnaisLogo2022.svg/200px-AvironBayonnaisLogo2022.svg.png',
+  'RC Toulonnais':       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/RCT_LOGO.png/200px-RCT_LOGO.png',
+  'RC Toulon':           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/RCT_LOGO.png/200px-RCT_LOGO.png',
+  'Lyon':                'https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/Lyon_Olympique_Universitaire.svg/200px-Lyon_Olympique_Universitaire.svg.png',
+  'USA Perpignan':       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Usa_perpignan_badge.png/200px-Usa_perpignan_badge.png',
+  'Section Paloise':     'https://upload.wikimedia.org/wikipedia/en/thumb/8/8a/Section_Paloise_2024.png/200px-Section_Paloise_2024.png',
+  'Montauban':           'https://upload.wikimedia.org/wikipedia/en/thumb/3/3f/Us_montauban.png/200px-Us_montauban.png',
+
+  // ── Premiership inglesa ───────────────────────────────────────────────
+  'Northampton Saints':  'https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/Northampton_Saints_Logo.svg/200px-Northampton_Saints_Logo.svg.png',
+  'Bath':                'https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Bath_Rugby_logo.png/200px-Bath_Rugby_logo.png',
+  'Leicester Tigers':    'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Leicester_Tigers_logo.svg/200px-Leicester_Tigers_logo.svg.png',
+  'Exeter Chiefs':       'https://upload.wikimedia.org/wikipedia/en/thumb/b/b7/Exeter_Chiefs_new_logo_2022.png/200px-Exeter_Chiefs_new_logo_2022.png',
+  'Bristol':             'https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Bristol_Bears_logo.svg/200px-Bristol_Bears_logo.svg.png',
+  'Bristol Bears':       'https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Bristol_Bears_logo.svg/200px-Bristol_Bears_logo.svg.png',
+  'Saracens':            'https://upload.wikimedia.org/wikipedia/en/thumb/3/3f/Saracens_F.C._Logo.svg/200px-Saracens_F.C._Logo.svg.png',
+  'Sale Sharks':         'https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/Sale_Sharks_logo.svg/200px-Sale_Sharks_logo.svg.png',
+  'Gloucester':          'https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Gloucester_Rugby_%282018%29_logo.svg/200px-Gloucester_Rugby_%282018%29_logo.svg.png',
+  'Harlequins':          'https://upload.wikimedia.org/wikipedia/en/thumb/9/92/Harlequin_FC_logo.svg/200px-Harlequin_FC_logo.svg.png',
+  'Newcastle Red Bulls': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Newcastle_Red_Bulls_logo.png/200px-Newcastle_Red_Bulls_logo.png',
+  'Newcastle Falcons':   'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Newcastle_Red_Bulls_logo.png/200px-Newcastle_Red_Bulls_logo.png',
 };
 
 // ─── Logos de selecciones / federaciones internacionales ──────────────────────
@@ -108,13 +154,18 @@ const Map<String, String> _countryLogoUrls = {
 };
 
 /// Devuelve la URL del logo de un club o selección, o null si no hay.
-/// Para equipos 7s (ej. "South Africa 7s") busca también sin el sufijo " 7s".
+/// Intenta variantes del nombre stripeando sufijos comunes de la API.
 String? clubLogo(String teamName) {
   final exact = clubLogoUrls[teamName] ?? _countryLogoUrls[teamName];
   if (exact != null) return exact;
-  if (teamName.endsWith(' 7s')) {
-    final base = teamName.substring(0, teamName.length - 3);
-    return clubLogoUrls[base] ?? _countryLogoUrls[base];
+  // Sufijos que la API agrega y no están en nuestro mapa
+  const suffixes = [' 7s', ' PS', ' Eagles', ' Academical', ' Rugby', ' RFC'];
+  for (final s in suffixes) {
+    if (teamName.endsWith(s)) {
+      final base = teamName.substring(0, teamName.length - s.length);
+      final found = clubLogoUrls[base] ?? _countryLogoUrls[base];
+      if (found != null) return found;
+    }
   }
   return null;
 }
@@ -125,7 +176,7 @@ String? clubLogo(String teamName) {
 const Map<String, String> leagueLogoUrls = {
   'Top 14':                    'https://upload.wikimedia.org/wikipedia/en/thumb/d/dd/Logo_Top14_2012.png/200px-Logo_Top14_2012.png',
   'Premiership':               'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Logo_of_Premiership_Rugby_2018.svg/330px-Logo_of_Premiership_Rugby_2018.svg.png',
-  'United Rugby Championship': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/United_Rugby_Championship_logo.svg/200px-United_Rugby_Championship_logo.svg.png',
+  'United Rugby Championship': 'https://upload.wikimedia.org/wikipedia/en/thumb/0/07/United_Rugby_Championship_logo.svg/200px-United_Rugby_Championship_logo.svg.png',
   'Champions Cup':             'https://upload.wikimedia.org/wikipedia/en/thumb/6/65/InvestecChampionsCupLogo.svg/250px-InvestecChampionsCupLogo.svg.png',
   'Challenge Cup':             'https://upload.wikimedia.org/wikipedia/en/thumb/0/03/EPCRchallengecuplogo.svg/250px-EPCRchallengecuplogo.svg.png',
   'Super Rugby Pacific':       'https://upload.wikimedia.org/wikipedia/en/2/25/Super_Rugby_Pacific_logo.png',
