@@ -33,7 +33,10 @@ const Map<String, int> leagueIds = {
   'Seis Naciones':             51,
   'The Rugby Championship':    85,
   'Super Rugby Américas':      41,
-  'URBA Top 14':               -1, // datos estáticos
+  'URBA Top 14':               -1, // tabla viva (api.urba.org.ar), partidos estáticos
+  'URBA Primera A':            -2, // tabla viva (api.urba.org.ar), partidos estáticos
+  'URBA Primera B':            -3, // tabla viva (api.urba.org.ar), partidos estáticos
+  'URBA Primera C':            -4, // tabla viva (api.urba.org.ar), partidos estáticos
   // Circuito 7s
   'Acumulado 7s':              -1, // tabla acumulada estática
   '7s Dubai':                  111,
@@ -48,6 +51,9 @@ const Map<String, int> leagueIds = {
 // ─── Ligas 100% estáticas (partidos + tabla cargados a mano) ──────────────
 const Set<String> staticLeagues = {
   'URBA Top 14',
+  'URBA Primera A',
+  'URBA Primera B',
+  'URBA Primera C',
   'Acumulado 7s',
 };
 
@@ -94,6 +100,9 @@ const Set<String> computedSevensAccumulated = {
 // ─── Ligas cuya tabla viene de la API de URBA (partidos siguen estáticos) ─
 const Set<String> urbaApiStandingsLeagues = {
   'URBA Top 14',
+  'URBA Primera A',
+  'URBA Primera B',
+  'URBA Primera C',
 };
 
 // ─── Ligas que solo muestran la pestaña RESULTADOS (fase de grupos/pools) ─
@@ -108,7 +117,7 @@ const Set<String> noRelegationLeagues = {
 
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
 const Map<String, List<String>> folders = {
-  'URBA': ['URBA Top 14'],
+  'URBA': ['URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
   'Circuito 7s': [
     'Acumulado 7s',
     '7s Dubai',

@@ -5,12 +5,18 @@ import 'package:http/http.dart' as http;
 // Actualizar cuando cambie la temporada (buscar en /api/championships/{year})
 
 const Map<String, int> urbaChampionshipIds = {
-  'URBA Top 14': 2025176,
+  'URBA Top 14':    2025176,
+  'URBA Primera A': 2025177,
+  'URBA Primera B': 2025178,
+  'URBA Primera C': 2025179,
 };
 
 // ─── Cuántos equipos clasifican a playoffs por liga ──────────────────────────
 const Map<String, int> urbaPlayoffSpots = {
-  'URBA Top 14': 4,
+  'URBA Top 14':    4,
+  'URBA Primera A': 4,
+  'URBA Primera B': 4,
+  'URBA Primera C': 4,
 };
 
 class UrbaService {
