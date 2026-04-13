@@ -55,9 +55,12 @@ class UrbaService {
         description = 'Relegation';
       }
 
+      final imageUri = p['team']?['club']?['image_uri'] as String?;
+      final logoUrl  = imageUri != null ? 'https://api.urba.org.ar/$imageUri' : null;
+
       return {
         'position': pos,
-        'team':     {'name': clubName},
+        'team':     {'name': clubName, 'logo': logoUrl},
         'games': {
           'played': p['played'] ?? 0,
           'win':    {'total': p['won']  ?? 0},
@@ -114,13 +117,17 @@ class UrbaService {
       final suspended = m['suspended'] as bool? ?? false;
       final homeScore = m['local_team_score'] as int?;
       final awayScore = m['visit_team_score'] as int?;
-      final homeName  = m['local_team']?['club']?['name'] as String?
-                     ?? m['local_team']?['name'] as String?
-                     ?? '?';
-      final awayName  = m['visit_team']?['club']?['name'] as String?
-                     ?? m['visit_team']?['name'] as String?
-                     ?? '?';
-      final dateStr   = m['playdate'] as String? ?? round['playdate'] as String? ?? '';
+      final homeName    = m['local_team']?['club']?['name'] as String?
+                       ?? m['local_team']?['name'] as String?
+                       ?? '?';
+      final awayName    = m['visit_team']?['club']?['name'] as String?
+                       ?? m['visit_team']?['name'] as String?
+                       ?? '?';
+      final homeImgUri  = m['local_team']?['club']?['image_uri'] as String?;
+      final awayImgUri  = m['visit_team']?['club']?['image_uri'] as String?;
+      final homeLogo    = homeImgUri != null ? 'https://api.urba.org.ar/$homeImgUri' : null;
+      final awayLogo    = awayImgUri != null ? 'https://api.urba.org.ar/$awayImgUri' : null;
+      final dateStr     = m['playdate'] as String? ?? round['playdate'] as String? ?? '';
 
       // Convertir playdate a timestamp Unix para ordenamiento
       final dt        = DateTime.tryParse(dateStr);
@@ -140,8 +147,8 @@ class UrbaService {
           'away': fulfilled ? awayScore : null,
         },
         'teams': {
-          'home': {'name': homeName, 'logo': null},
-          'away': {'name': awayName, 'logo': null},
+          'home': {'name': homeName, 'logo': homeLogo},
+          'away': {'name': awayName, 'logo': awayLogo},
         },
       };
     }).toList();
