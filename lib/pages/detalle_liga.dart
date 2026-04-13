@@ -50,7 +50,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
       return;
     }
     if (urbaApiStandingsLeagues.contains(widget.nombreLiga)) {
-      _matchesFuture   = Future.value(StaticDataService.getMatches(widget.nombreLiga));
+      _matchesFuture   = _urba.fetchMatches(widget.nombreLiga);
       _standingsFuture = _urba.fetchStandings(widget.nombreLiga).then((s) => [s]);
       return;
     }
