@@ -7,6 +7,7 @@ import '../data/static_data.dart';
 import '../models/team_stats.dart';
 import '../services/match_cache.dart';
 import '../services/rugby_service.dart';
+import '../services/urba_service.dart';
 
 class DetalleLiga extends StatefulWidget {
   final String nombreLiga;
@@ -30,6 +31,7 @@ class DetalleLiga extends StatefulWidget {
 
 class _DetalleLigaState extends State<DetalleLiga> {
   final RugbyService _service = RugbyService();
+  final UrbaService  _urba   = UrbaService();
   late Future<List<dynamic>> _matchesFuture;
   late Future<List<List<dynamic>>> _standingsFuture;
 
@@ -45,6 +47,11 @@ class _DetalleLigaState extends State<DetalleLiga> {
       _standingsFuture = MatchCache.instance
           .fetchAll(force: noCache)
           .then((_) => MatchCache.instance.getAccumulatedSevensStandings());
+      return;
+    }
+    if (urbaApiStandingsLeagues.contains(widget.nombreLiga)) {
+      _matchesFuture   = Future.value(StaticDataService.getMatches(widget.nombreLiga));
+      _standingsFuture = _urba.fetchStandings(widget.nombreLiga).then((s) => [s]);
       return;
     }
     if (widget.isStatic) {
@@ -776,7 +783,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
             } else if (desc.contains('Relegation') && !desc.contains('Playoffs') && !noRelegation) {
               leftBorder = Colors.red;
               rowBg      = const Color(0xFFFFF5F5);
-            } else if (desc.contains('Playoffs') || desc.contains('Qualified')) {
+            } else if ((desc.contains('Playoffs') || desc.contains('Qualified')) && !desc.contains('Relegation')) {
               leftBorder = const Color(0xFF2D6A4F);
               rowBg      = const Color(0xFFF0FAF5);
             }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../config/logos.dart';
 import '../services/match_cache.dart';
 import '../widgets/app_drawer.dart';
 
@@ -155,8 +156,8 @@ class _LiveCard extends StatelessWidget {
     final m            = entry.match;
     final home         = m['teams']?['home']?['name'] as String? ?? 'Local';
     final away         = m['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final homeLogoUrl  = m['teams']?['home']?['logo']?.toString();
-    final awayLogoUrl  = m['teams']?['away']?['logo']?.toString();
+    final homeLogoUrl  = clubLogo(home) ?? m['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl  = clubLogo(away) ?? m['teams']?['away']?['logo']?.toString();
     final homeScore    = m['scores']?['home'] ?? '-';
     final awayScore    = m['scores']?['away'] ?? '-';
     final status       = m['status']?['short'] as String? ?? '';

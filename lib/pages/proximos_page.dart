@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/logos.dart';
 import '../services/match_cache.dart';
 import '../widgets/app_drawer.dart';
 
@@ -246,8 +247,8 @@ class _ProximoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final home         = match['teams']?['home']?['name'] as String? ?? 'Local';
     final away         = match['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final homeLogoUrl  = match['teams']?['home']?['logo']?.toString();
-    final awayLogoUrl  = match['teams']?['away']?['logo']?.toString();
+    final homeLogoUrl  = clubLogo(home) ?? match['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl  = clubLogo(away) ?? match['teams']?['away']?['logo']?.toString();
     final hora         = _formatHora(match['date'] as String?);
     final status       = match['status']?['short'] as String? ?? 'NS';
     final homeScore    = match['scores']?['home'];

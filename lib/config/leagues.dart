@@ -91,6 +91,11 @@ const Set<String> computedSevensAccumulated = {
   'Acumulado 7s',
 };
 
+// ─── Ligas cuya tabla viene de la API de URBA (partidos siguen estáticos) ─
+const Set<String> urbaApiStandingsLeagues = {
+  'URBA Top 14',
+};
+
 // ─── Ligas que solo muestran la pestaña RESULTADOS (fase de grupos/pools) ─
 const Set<String> soloResultadosLeagues = {};
 
