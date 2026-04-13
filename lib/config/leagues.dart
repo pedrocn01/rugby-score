@@ -96,7 +96,9 @@ const Set<String> soloResultadosLeagues = {};
 
 // ─── Ligas donde el descenso está suspendido (no colorear fila) ───────────
 const Set<String> noRelegationLeagues = {
-  'Premiership', // el descenso está suspendido desde 2021
+  'Premiership',   // el descenso está suspendido desde 2021
+  'Champions Cup', // no hay descenso en copas europeas
+  'Challenge Cup',
 };
 
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────

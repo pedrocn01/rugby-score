@@ -97,36 +97,36 @@ class StaticDataService {
   static final List<dynamic> _champsCupGrupoA = [
     {'position':1,'team':{'name':'Bordeaux Bèglès'},    'games':{'played':4,'win':{'total':4},'draw':{'total':0},'lose':{'total':0}},'points':19,'description':'Playoffs'},
     {'position':2,'team':{'name':'Bristol'},             'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':14,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Northampton Saints'},  'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':14,'description':null},
-    {'position':4,'team':{'name':'Section Paloise'},     'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':6, 'description':null},
-    {'position':5,'team':{'name':'Bulls'},               'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':4, 'description':null},
+    {'position':3,'team':{'name':'Northampton Saints'},  'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':14,'description':'Playoffs'},
+    {'position':4,'team':{'name':'Section Paloise'},     'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':6, 'description':'Playoffs'},
+    {'position':5,'team':{'name':'Bulls'},               'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':4, 'description':'Challenge Cup'},
     {'position':6,'team':{'name':'Scarlets'},            'games':{'played':4,'win':{'total':0},'draw':{'total':0},'lose':{'total':4}},'points':1, 'description':null},
   ];
 
   static final List<dynamic> _champsCupGrupoB = [
     {'position':1,'team':{'name':'Glasgow Warriors'},  'games':{'played':4,'win':{'total':4},'draw':{'total':0},'lose':{'total':0}},'points':16,'description':'Playoffs'},
     {'position':2,'team':{'name':'Stade Toulousain'},  'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':12,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Saracens'},          'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':10,'description':null},
-    {'position':4,'team':{'name':'Sharks'},            'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':9, 'description':null},
-    {'position':5,'team':{'name':'Sale Sharks'},       'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':9, 'description':null},
+    {'position':3,'team':{'name':'Saracens'},          'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':10,'description':'Playoffs'},
+    {'position':4,'team':{'name':'Sharks'},            'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':9, 'description':'Playoffs'},
+    {'position':5,'team':{'name':'Sale Sharks'},       'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':9, 'description':'Challenge Cup'},
     {'position':6,'team':{'name':'Clermont'},          'games':{'played':4,'win':{'total':0},'draw':{'total':0},'lose':{'total':4}},'points':0, 'description':null},
   ];
 
   static final List<dynamic> _champsCupGrupoC = [
     {'position':1,'team':{'name':'Leinster'},          'games':{'played':4,'win':{'total':4},'draw':{'total':0},'lose':{'total':0}},'points':17,'description':'Playoffs'},
     {'position':2,'team':{'name':'Harlequins'},        'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':14,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Stormers'},          'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':13,'description':null},
-    {'position':4,'team':{'name':'Leicester Tigers'},  'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':5, 'description':null},
-    {'position':5,'team':{'name':'Stade Rochelais'},   'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':5, 'description':null},
+    {'position':3,'team':{'name':'Stormers'},          'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':13,'description':'Playoffs'},
+    {'position':4,'team':{'name':'Leicester Tigers'},  'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':5, 'description':'Playoffs'},
+    {'position':5,'team':{'name':'Stade Rochelais'},   'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':5, 'description':'Challenge Cup'},
     {'position':6,'team':{'name':'Aviron Bayonnais'},  'games':{'played':4,'win':{'total':0},'draw':{'total':0},'lose':{'total':4}},'points':0, 'description':null},
   ];
 
   static final List<dynamic> _champsCupGrupoD = [
     {'position':1,'team':{'name':'Bath'},              'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':15,'description':'Playoffs'},
     {'position':2,'team':{'name':'RC Toulonnais'},     'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':13,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Castres Olympique'}, 'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':null},
-    {'position':4,'team':{'name':'Edinburgh'},         'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':null},
-    {'position':5,'team':{'name':'Munster'},           'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':6, 'description':null},
+    {'position':3,'team':{'name':'Castres Olympique'}, 'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':'Playoffs'},
+    {'position':4,'team':{'name':'Edinburgh'},         'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':'Playoffs'},
+    {'position':5,'team':{'name':'Munster'},           'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':6, 'description':'Challenge Cup'},
     {'position':6,'team':{'name':'Gloucester'},        'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':5, 'description':null},
   ];
 
@@ -135,8 +135,8 @@ class StaticDataService {
   static final List<dynamic> _challengeCupGrupoA = [
     {'position':1,'team':{'name':'Montpellier'},  'games':{'played':4,'win':{'total':4},'draw':{'total':0},'lose':{'total':0}},'points':16,'description':'Playoffs'},
     {'position':2,'team':{'name':'Zebre'},        'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':13,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Connacht'},     'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':12,'description':null},
-    {'position':4,'team':{'name':'Ospreys'},      'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':10,'description':null},
+    {'position':3,'team':{'name':'Connacht'},     'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':12,'description':'Playoffs'},
+    {'position':4,'team':{'name':'Ospreys'},      'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':10,'description':'Playoffs'},
     {'position':5,'team':{'name':'Black Lion'},   'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':4, 'description':null},
     {'position':6,'team':{'name':'Montauban'},    'games':{'played':4,'win':{'total':0},'draw':{'total':0},'lose':{'total':4}},'points':1, 'description':null},
   ];
@@ -144,8 +144,8 @@ class StaticDataService {
   static final List<dynamic> _challengeCupGrupoB = [
     {'position':1,'team':{'name':'Benetton'},           'games':{'played':4,'win':{'total':4},'draw':{'total':0},'lose':{'total':0}},'points':18,'description':'Playoffs'},
     {'position':2,'team':{'name':'Newcastle Red Bulls'}, 'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':12,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Dragons'},             'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':null},
-    {'position':4,'team':{'name':'USA Perpignan'},       'games':{'played':4,'win':{'total':1},'draw':{'total':1},'lose':{'total':2}},'points':8, 'description':null},
+    {'position':3,'team':{'name':'Dragons'},             'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':'Playoffs'},
+    {'position':4,'team':{'name':'USA Perpignan'},       'games':{'played':4,'win':{'total':1},'draw':{'total':1},'lose':{'total':2}},'points':8, 'description':'Playoffs'},
     {'position':5,'team':{'name':'Lions'},               'games':{'played':4,'win':{'total':1},'draw':{'total':1},'lose':{'total':2}},'points':8, 'description':null},
     {'position':6,'team':{'name':'Lyon'},                'games':{'played':4,'win':{'total':0},'draw':{'total':0},'lose':{'total':4}},'points':1, 'description':null},
   ];
@@ -153,8 +153,8 @@ class StaticDataService {
   static final List<dynamic> _challengeCupGrupoC = [
     {'position':1,'team':{'name':'Ulster'},              'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':14,'description':'Playoffs'},
     {'position':2,'team':{'name':'Stade Français Paris'},'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':14,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Exeter Chiefs'},       'games':{'played':4,'win':{'total':2},'draw':{'total':1},'lose':{'total':1}},'points':12,'description':null},
-    {'position':4,'team':{'name':'Cardiff Rugby'},       'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':null},
+    {'position':3,'team':{'name':'Exeter Chiefs'},       'games':{'played':4,'win':{'total':2},'draw':{'total':1},'lose':{'total':1}},'points':12,'description':'Playoffs'},
+    {'position':4,'team':{'name':'Cardiff Rugby'},       'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':8, 'description':'Playoffs'},
     {'position':5,'team':{'name':'Racing 92'},           'games':{'played':4,'win':{'total':1},'draw':{'total':1},'lose':{'total':2}},'points':6, 'description':null},
     {'position':6,'team':{'name':'Cheetahs'},            'games':{'played':4,'win':{'total':0},'draw':{'total':0},'lose':{'total':4}},'points':1, 'description':null},
   ];

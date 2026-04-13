@@ -702,7 +702,9 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   spacing: 16,
                   runSpacing: 6,
                   children: [
-                    _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica playoffs'),
+                    _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica'),
+                    if (widget.nombreLiga == 'Champions Cup')
+                      _leyendaItem(const Color(0xFF0077B6), 'Pasa a Challenge Cup'),
                     if (!noRelegationLeagues.contains(widget.nombreLiga)) ...[
                       _leyendaItem(const Color(0xFFF4A100), 'Playoff promoción'),
                       _leyendaItem(Colors.red, 'Descenso'),
@@ -765,8 +767,10 @@ class _DetalleLigaState extends State<DetalleLiga> {
 
           final noRelegation = noRelegationLeagues.contains(widget.nombreLiga);
           if (desc != null) {
-            if (desc.contains('Relegation') && desc.contains('Playoffs') && !noRelegation) {
-              // Playoff de promoción/descenso
+            if (desc == 'Challenge Cup') {
+              leftBorder = const Color(0xFF0077B6);
+              rowBg      = const Color(0xFFEEF6FF);
+            } else if (desc.contains('Relegation') && desc.contains('Playoffs') && !noRelegation) {
               leftBorder = const Color(0xFFF4A100);
               rowBg      = const Color(0xFFFFFAEE);
             } else if (desc.contains('Relegation') && !desc.contains('Playoffs') && !noRelegation) {
