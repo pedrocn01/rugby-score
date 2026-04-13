@@ -108,8 +108,16 @@ const Map<String, String> _countryLogoUrls = {
 };
 
 /// Devuelve la URL del logo de un club o selección, o null si no hay.
-String? clubLogo(String teamName) =>
-    clubLogoUrls[teamName] ?? _countryLogoUrls[teamName];
+/// Para equipos 7s (ej. "South Africa 7s") busca también sin el sufijo " 7s".
+String? clubLogo(String teamName) {
+  final exact = clubLogoUrls[teamName] ?? _countryLogoUrls[teamName];
+  if (exact != null) return exact;
+  if (teamName.endsWith(' 7s')) {
+    final base = teamName.substring(0, teamName.length - 3);
+    return clubLogoUrls[base] ?? _countryLogoUrls[base];
+  }
+  return null;
+}
 
 // ─── Logos de ligas / torneos (home tiles) ────────────────────────────────
 // Fuente: Wikimedia Commons / Wikipedia (CORS habilitado, dominio público)

@@ -123,16 +123,16 @@ class _DetalleLigaState extends State<DetalleLiga> {
   // ── Cálculo de tabla por pools (7s) ─────────────────────────────────────
 
   List<List<dynamic>> _computePoolStandings(List<dynamic> matches) {
-    // Solo partidos de fase de grupos de la competencia principal
+    // Solo partidos de fase de grupos (week == null o "Pool X")
     final poolMatches = matches.where((p) {
-      final week = p['week']?.toString().toLowerCase() ?? '';
-      return week.startsWith('pool');
+      final week = p['week']?.toString();
+      return week == null || week.toLowerCase().startsWith('pool');
     }).toList();
 
-    // Agrupar por pool
+    // Agrupar por pool. SVNS usa week=null para todos los pools → un solo grupo
     final Map<String, List<dynamic>> byPool = {};
     for (final match in poolMatches) {
-      final pool = match['week']?.toString() ?? 'Pool';
+      final pool = match['week']?.toString() ?? 'Fase de Grupos';
       byPool.putIfAbsent(pool, () => []).add(match);
     }
 
@@ -189,8 +189,9 @@ class _DetalleLigaState extends State<DetalleLiga> {
 
   bool _isMainDrawMatch(dynamic partido) {
     final week = partido['week']?.toString().toLowerCase() ?? '';
-    if (week.isEmpty) return true;
+    if (week.isEmpty) return true;      // null week = pool match SVNS
     if (week.startsWith('pool')) return true;
+    if (week.contains('svns')) return true; // "SVNS City - Final/Semi-finals/etc."
     if (week.contains('cup')) return true;
     if (week.contains('plate')) return false;
     if (week.contains('bowl')) return false;
@@ -228,6 +229,18 @@ class _DetalleLigaState extends State<DetalleLiga> {
   String _labelJornada(String week) {
     final num = int.tryParse(week);
     if (num != null) return 'FECHA $num';
+    // Formato SVNS: "SVNS City - Phase" → extraer fase
+    final w = week.toLowerCase();
+    if (w == 'fase de grupos') return 'FASE DE GRUPOS';
+    if (w.contains('svns')) {
+      if (w.endsWith('- final'))       return 'FINAL';
+      if (w.endsWith('- semi-finals')) return 'SEMIFINALES';
+      if (w.endsWith('- 3rd place'))   return 'TERCER PUESTO';
+      if (w.endsWith('- 5th place'))   return '5º PUESTO';
+      if (w.endsWith('- 7th place'))   return '7º PUESTO';
+      if (w.endsWith('- 9th place'))   return '9º PUESTO';
+      if (w.contains('quarter'))       return 'CUARTOS DE FINAL';
+    }
     const fases = {
       'quarter-finals':     'CUARTOS DE FINAL',
       'semi-finals':        'SEMIFINALES',
@@ -264,7 +277,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
   String _inferirInstancia(dynamic partido) {
     final w = partido['week']?.toString();
     if (w != null && w != 'null') return w;
-    return 'Round of 16';
+    // week null en 7s = partido de fase de grupos
+    return sevensLeagues.contains(widget.nombreLiga) ? 'Fase de Grupos' : 'Round of 16';
   }
 
   List<String> _ordenarJornadas(Iterable<String> jornadas, {bool proximosAscendente = false}) {

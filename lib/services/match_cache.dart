@@ -158,36 +158,54 @@ class MatchCache {
       return (hs as num) < (as_ as num) ? h : a;
     }
 
+    // Helpers para reconocer fases (formato SVNS: "SVNS Dubai - Final", etc.)
+    bool isFinal(String w)   => w == 'cup final' || (w.contains('svns') && w.endsWith('- final'));
+    bool isBronze(String w)  => w.contains('bronze') || w.contains('3rd') || w.contains('third')
+                              || (w.contains('svns') && w.endsWith('- 3rd place'));
+    bool is5th(String w)     => w.contains('5th') || w.contains('fifth')
+                              || (w.contains('svns') && w.endsWith('- 5th place'));
+    bool is7th(String w)     => w.contains('7th') || w.contains('seventh')
+                              || (w.contains('svns') && w.endsWith('- 7th place'));
+    bool is9th(String w)     => w.contains('9th') || (w.contains('svns') && w.endsWith('- 9th place'));
+    bool isSemi(String w)    => (w.contains('cup') && w.contains('semi'))
+                              || (w.contains('svns') && w.contains('semi'));
+    bool isQuarter(String w) => (w.contains('cup') && w.contains('quarter'))
+                              || (w.contains('svns') && w.contains('quarter'));
+
     // Clasificar partidos por fase
     for (final m in finished) {
       final week = m['week']?.toString().toLowerCase() ?? '';
-      if (week == 'cup final') {
+      if (isFinal(week)) {
         final w = winner(m); final l = loser(m);
         if (w != null) placements[w] = 1;
         if (l != null) placements[l] = 2;
-      } else if (week.contains('bronze') || week.contains('3rd') || week.contains('third')) {
+      } else if (isBronze(week)) {
         final w = winner(m); final l = loser(m);
         if (w != null) placements.putIfAbsent(w, () => 3);
         if (l != null) placements.putIfAbsent(l, () => 4);
-      } else if (week == '5th place' || week.contains('5th') || week.contains('fifth')) {
+      } else if (is5th(week)) {
         final w = winner(m); final l = loser(m);
         if (w != null) placements.putIfAbsent(w, () => 5);
         if (l != null) placements.putIfAbsent(l, () => 6);
-      } else if (week == '7th place' || week.contains('7th') || week.contains('seventh')) {
+      } else if (is7th(week)) {
         final w = winner(m); final l = loser(m);
         if (w != null) placements.putIfAbsent(w, () => 7);
         if (l != null) placements.putIfAbsent(l, () => 8);
+      } else if (is9th(week)) {
+        final w = winner(m); final l = loser(m);
+        if (w != null) placements.putIfAbsent(w, () => 9);
+        if (l != null) placements.putIfAbsent(l, () => 10);
       }
     }
 
-    // SF losers no asignados → posiciones 5-8
+    // SF losers no asignados → posiciones siguientes
     int nextPos = placements.isEmpty ? 1
         : placements.values.fold(0, (a, b) => a > b ? a : b) + 1;
     nextPos = nextPos.clamp(5, 99);
 
     for (final m in finished) {
       final week = m['week']?.toString().toLowerCase() ?? '';
-      if (week.contains('cup') && week.contains('semi')) {
+      if (isSemi(week)) {
         final l = loser(m);
         if (l != null) placements.putIfAbsent(l, () => nextPos++);
       }
@@ -196,7 +214,7 @@ class MatchCache {
     // QF losers no asignados
     for (final m in finished) {
       final week = m['week']?.toString().toLowerCase() ?? '';
-      if (week.contains('cup') && week.contains('quarter')) {
+      if (isQuarter(week)) {
         final l = loser(m);
         if (l != null) placements.putIfAbsent(l, () => nextPos++);
       }
