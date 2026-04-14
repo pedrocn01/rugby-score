@@ -39,7 +39,9 @@ class _DetalleLigaState extends State<DetalleLiga> {
   @override
   void initState() {
     super.initState();
-    _loadData(noCache: false);
+    // Para ligas con datos en vivo (no estáticas) siempre fuerza refresh al abrir,
+    // así el Worker de Cloudflare no sirve un caché viejo con estado NS.
+    _loadData(noCache: !widget.isStatic);
   }
 
   void _loadData({bool noCache = false}) {

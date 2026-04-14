@@ -48,16 +48,30 @@ function getSmartTTL(body) {
     const data = JSON.parse(body);
     if (!Array.isArray(data.response)) return getBaseTTL();
 
-    const todayUTC = new Date().toISOString().substring(0, 10);
+    const now  = Date.now();
+    const liveStatuses     = new Set(['1H', '2H', 'HT', 'ET', 'BT', 'P']);
     const finishedStatuses = new Set(['FT', 'AET', 'PEN', 'Canc', 'AWD', 'Susp', 'ABD']);
 
-    const hasActiveToday = data.response.some(game => {
-      const gameDate = (game.date || '').substring(0, 10);
-      const status   = game.status?.short ?? '';
-      return gameDate === todayUTC && !finishedStatuses.has(status);
-    });
+    for (const game of data.response) {
+      const status    = game.status?.short ?? '';
+      const gameStart = new Date(game.date || 0).getTime();
+      const msSince   = now - gameStart;
+      const msUntil   = gameStart - now;
 
-    return hasActiveToday ? 5 * 60 : getBaseTTL(); // 5 min si hay acción hoy
+      // Partido en vivo → 2 minutos
+      if (liveStatuses.has(status)) return 2 * 60;
+
+      // Partido que arranca en menos de 30 min → 5 minutos
+      if (!finishedStatuses.has(status) && msUntil >= 0 && msUntil < 30 * 60 * 1000)
+        return 5 * 60;
+
+      // Partido no terminado que empezó hace menos de 3h (puede estar en juego aunque
+      // la API todavía no actualizó el estado, o es una partida que cruzó medianoche UTC)
+      if (!finishedStatuses.has(status) && msSince >= 0 && msSince < 3 * 60 * 60 * 1000)
+        return 5 * 60;
+    }
+
+    return getBaseTTL();
   } catch {
     return getBaseTTL();
   }
