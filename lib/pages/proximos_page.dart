@@ -149,9 +149,12 @@ class _DateHeader extends StatelessWidget {
     final today  = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
 
+    final yesterday = today.subtract(const Duration(days: 1));
     String label;
     if (date.isAtSameMomentAs(today)) {
       label = 'HOY';
+    } else if (date.isAtSameMomentAs(yesterday)) {
+      label = 'AYER';
     } else if (date.isAtSameMomentAs(tomorrow)) {
       label = 'MAÑANA';
     } else {

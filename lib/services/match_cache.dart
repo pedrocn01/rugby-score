@@ -228,12 +228,15 @@ class MatchCache {
     return placements;
   }
 
-  /// Partidos de hoy (todos los estados) + próximos días (solo NS), agrupados por fecha
+  /// Partidos de ayer (FT) + hoy (todos) + próximos días (NS), agrupados por fecha
   Map<String, List<MatchEntry>> getUpcoming() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
     final tomorrow = today.add(const Duration(days: 1));
     final byDate = <String, List<MatchEntry>>{};
+
+    const doneStatuses = {'FT', 'AET', 'PEN', 'AWD', 'Canc'};
 
     for (final entry in _data.entries) {
       for (final m in entry.value) {
@@ -246,12 +249,15 @@ class MatchCache {
         final localDt = utcDt.toLocal();
         final matchDate = DateTime(localDt.year, localDt.month, localDt.day);
 
+        // Ayer: solo partidos terminados
         // Hoy: mostrar todos (jugados, en vivo, próximos)
         // Días futuros: solo partidos no iniciados (NS)
+        final isYesterday = matchDate.isAtSameMomentAs(yesterday);
         final isToday = matchDate.isAtSameMomentAs(today);
-        if (isToday) {
-          // Incluir todo excepto partidos de días anteriores
-          if (matchDate.isBefore(today)) continue;
+        if (isYesterday) {
+          if (!doneStatuses.contains(s)) continue;
+        } else if (isToday) {
+          // incluir todo
         } else {
           // Días futuros: solo NS
           if (s != 'NS') continue;

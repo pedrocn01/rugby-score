@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/leagues.dart';
 import '../config/logos.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/urba_logo.dart';
 import '../config/themes.dart';
 import '../data/static_data.dart';
 import '../models/team_stats.dart';
@@ -348,10 +349,18 @@ class _DetalleLigaState extends State<DetalleLiga> {
       'pool c',
       'pool d',
     ];
+    // Extrae el número de strings como "Fecha 3", "Round 5", "Jornada 2", "3", etc.
+    int? numericKey(String s) {
+      final direct = int.tryParse(s.trim());
+      if (direct != null) return direct;
+      final m = RegExp(r'\b(\d+)\b').firstMatch(s);
+      return m != null ? int.tryParse(m.group(1)!) : null;
+    }
+
     final lista = jornadas.toList();
     lista.sort((a, b) {
-      final ia = int.tryParse(a);
-      final ib = int.tryParse(b);
+      final ia = numericKey(a);
+      final ib = numericKey(b);
       if (ia != null && ib != null) return proximosAscendente ? ia.compareTo(ib) : ib.compareTo(ia);
       if (ia != null) return proximosAscendente ? -1 : 1;
       if (ib != null) return proximosAscendente ? 1 : -1;
@@ -390,10 +399,11 @@ class _DetalleLigaState extends State<DetalleLiga> {
             icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text(
-            widget.nombreLiga,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
-          ),
+          title: urbaLogoWidget(widget.nombreLiga, size: 38) ??
+              Text(
+                widget.nombreLiga,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+              ),
           backgroundColor: widget.theme.primary,
           iconTheme: const IconThemeData(color: Colors.white),
           actions: [

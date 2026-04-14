@@ -3,6 +3,7 @@ import '../config/leagues.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
 import '../pages/detalle_liga.dart';
+import 'urba_logo.dart';
 
 const _fallbackTheme = LeagueTheme(
   primary:    Color(0xFF1B4332),
@@ -148,7 +149,45 @@ class _CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ── Con logo: imagen grande + nombre en barra inferior ────────────────
+    final urbaLogo = urbaLogoWidget(nombre);
+
+    // ── Logo custom URBA ───────────────────────────────────────────────────
+    if (urbaLogo != null) {
+      return Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
+                child: urbaLogo,
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.35),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(nombre,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11)),
+                ),
+                Icon(Icons.arrow_forward_rounded, size: 12,
+                  color: Colors.white.withValues(alpha: 0.6)),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    // ── Con logo URL: imagen grande + nombre en barra inferior ────────────
     if (logoUrl != null) {
       return Column(
         children: [
