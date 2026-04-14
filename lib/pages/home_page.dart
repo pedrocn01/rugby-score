@@ -7,6 +7,7 @@ import '../widgets/app_drawer.dart';
 import '../widgets/rugby_logo.dart';
 import 'carpeta_page.dart';
 import 'detalle_liga.dart';
+import 'search_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -52,6 +53,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 onPressed: () => Scaffold.of(ctx).openDrawer(),
               ),
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search_rounded, color: Colors.white),
+                tooltip: 'Buscar equipo',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SearchPage()),
+                ),
+              ),
+            ],
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
