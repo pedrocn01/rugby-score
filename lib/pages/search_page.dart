@@ -187,7 +187,7 @@ class _EmptyPrompt extends StatelessWidget {
         Text('Escribí el nombre de un equipo',
           style: TextStyle(color: Colors.white38, fontSize: 14)),
         SizedBox(height: 6),
-        Text('Ej: "Hindú", "Crusaders", "Bath"',
+        Text('Ej: "CUBA", "Crusaders", "Bath"',
           style: TextStyle(color: Colors.white24, fontSize: 12)),
       ],
     ),
