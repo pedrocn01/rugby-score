@@ -59,10 +59,14 @@ const Map<String, String> clubLogoUrls = {
   'Edinburgh':           'https://upload.wikimedia.org/wikipedia/en/thumb/e/e3/Edinburgh_Rugby_logo_2018.svg/200px-Edinburgh_Rugby_logo_2018.svg.png',
   'Ospreys':             'https://upload.wikimedia.org/wikipedia/en/thumb/2/2c/Ospreys_Rugby_logo.svg/200px-Ospreys_Rugby_logo.svg.png',
 
-  // ── Super Rugby Américas ───────────────────────────────────────────────
-  'Cobras':              'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
-  'Brasil Cobras':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
-  'Cobras Brasil':       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Cobras_Brazil_logo.png/120px-Cobras_Brazil_logo.png',
+  // ── Super Rugby Américas / URC ────────────────────────────────────────
+  'Cobras':              'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
+  'Brasil Cobras':       'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
+  'Cobras Brasil':       'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
+  'Cobras XV':           'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
+  'Black Lions':         'https://r2.thesportsdb.com/images/media/team/badge/2oikfe1759204626.png',
+  'Cheetahs':            'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
+  'Free State Cheetahs': 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
 
   // ── URC — irlandeses / escoceses ──────────────────────────────────────
   'Leinster':            'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/LeinsterRugby_logo_2019.svg/200px-LeinsterRugby_logo_2019.svg.png',

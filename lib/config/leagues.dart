@@ -110,9 +110,12 @@ const Set<String> soloResultadosLeagues = {};
 
 // ─── Ligas donde el descenso está suspendido (no colorear fila) ───────────
 const Set<String> noRelegationLeagues = {
-  'Premiership',   // el descenso está suspendido desde 2021
-  'Champions Cup', // no hay descenso en copas europeas
+  'Premiership',            // el descenso está suspendido desde 2021
+  'Champions Cup',          // no hay descenso en copas europeas
   'Challenge Cup',
+  'United Rugby Championship', // franquicias, sin descenso
+  'Super Rugby Pacific',    // franquicias, sin descenso
+  'Super Rugby Américas',   // franquicias, sin descenso
 };
 
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────

@@ -188,18 +188,30 @@ class _CardContent extends StatelessWidget {
     }
 
     // ── Con logo URL: imagen grande + nombre en barra inferior ────────────
+    // Logos con diseño oscuro sobre fondo transparente → filtro blanco para que
+    // contrasten sobre el gradiente oscuro de la tarjeta.
+    const whiteFilterLeagues = {'Champions Cup', 'Challenge Cup'};
+    final useWhiteFilter = whiteFilterLeagues.contains(nombre);
+
     if (logoUrl != null) {
+      Widget logoWidget = Image.network(
+        logoUrl!,
+        fit: BoxFit.contain,
+        errorBuilder: (ctx, e, s) =>
+            Icon(Icons.sports_rugby_rounded, size: 36, color: accent),
+      );
+      if (useWhiteFilter) {
+        logoWidget = ColorFiltered(
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          child: logoWidget,
+        );
+      }
       return Column(
         children: [
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
-              child: Image.network(
-                logoUrl!,
-                fit: BoxFit.contain,
-                errorBuilder: (ctx, e, s) =>
-                    Icon(Icons.sports_rugby_rounded, size: 36, color: accent),
-              ),
+              child: logoWidget,
             ),
           ),
           Container(
