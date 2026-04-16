@@ -7,7 +7,8 @@ class StaticDataService {
       'URBA Primera A' => _urbaPrimeraAMatches,
       'URBA Primera B' => _urbaPrimeraBMatches,
       'URBA Primera C' => _urbaPrimeraCMatches,
-      'Acumulado 7s'   => [],
+      'Acumulado 7s'          => [],
+      'Nations Championship'  => _nationsChampionshipMatches,
       _ => [],
     };
   }
@@ -184,4 +185,59 @@ class StaticDataService {
   // ── URBA PRIMERA C (agregar datos cuando estén disponibles) ─────────────
   static final List<dynamic> _urbaPrimeraCMatches   = [];
   static final List<dynamic> _urbaPrimeraCStandings = [];
+
+  // ── NATIONS CHAMPIONSHIP 2026 ─────────────────────────────────────────────
+  // Fixture scrapeado de Wikipedia. Sin API disponible aún.
+  // Actualizar scores cuando se jueguen los partidos.
+  static final List<dynamic> _nationsChampionshipMatches = [
+    // ─── Ronda 1 — 4 julio 2026 ───────────────────────────────────────────
+    {'week':'Ronda 1','date':'2026-07-04T06:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Japan'},'away':{'name':'Italy'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 1','date':'2026-07-04T05:05:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'New Zealand'},'away':{'name':'France'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 1','date':'2026-07-04T05:05:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Australia'},'away':{'name':'Ireland'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 1','date':'2026-07-04T14:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Fiji'},'away':{'name':'Wales'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 1','date':'2026-07-04T14:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'South Africa'},'away':{'name':'England'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 1','date':'2026-07-04T18:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Argentina'},'away':{'name':'Scotland'}},'scores':{'home':null,'away':null}},
+    // ─── Ronda 2 — 11 julio 2026 ──────────────────────────────────────────
+    {'week':'Ronda 2','date':'2026-07-11T06:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Japan'},'away':{'name':'Ireland'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 2','date':'2026-07-11T05:05:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'New Zealand'},'away':{'name':'Italy'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 2','date':'2026-07-11T05:05:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Australia'},'away':{'name':'France'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 2','date':'2026-07-11T14:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Fiji'},'away':{'name':'England'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 2','date':'2026-07-11T14:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'South Africa'},'away':{'name':'Scotland'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 2','date':'2026-07-11T18:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Argentina'},'away':{'name':'Wales'}},'scores':{'home':null,'away':null}},
+    // ─── Ronda 3 — 18 julio 2026 ──────────────────────────────────────────
+    {'week':'Ronda 3','date':'2026-07-18T06:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Japan'},'away':{'name':'France'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 3','date':'2026-07-18T05:05:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'New Zealand'},'away':{'name':'Ireland'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 3','date':'2026-07-18T05:05:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Australia'},'away':{'name':'Italy'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 3','date':'2026-07-18T14:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Fiji'},'away':{'name':'Scotland'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 3','date':'2026-07-18T14:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'South Africa'},'away':{'name':'Wales'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 3','date':'2026-07-18T18:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Argentina'},'away':{'name':'England'}},'scores':{'home':null,'away':null}},
+    // ─── Ronda 4 — 6-8 noviembre 2026 ────────────────────────────────────
+    {'week':'Ronda 4','date':'2026-11-06T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Ireland'},'away':{'name':'Argentina'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 4','date':'2026-11-06T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'France'},'away':{'name':'Fiji'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 4','date':'2026-11-07T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Wales'},'away':{'name':'Japan'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 4','date':'2026-11-07T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Italy'},'away':{'name':'South Africa'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 4','date':'2026-11-07T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Scotland'},'away':{'name':'New Zealand'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 4','date':'2026-11-08T16:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'England'},'away':{'name':'Australia'}},'scores':{'home':null,'away':null}},
+    // ─── Ronda 5 — 13-15 noviembre 2026 ──────────────────────────────────
+    {'week':'Ronda 5','date':'2026-11-13T21:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'France'},'away':{'name':'South Africa'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 5','date':'2026-11-14T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Wales'},'away':{'name':'New Zealand'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 5','date':'2026-11-14T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Italy'},'away':{'name':'Argentina'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 5','date':'2026-11-14T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Ireland'},'away':{'name':'Fiji'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 5','date':'2026-11-14T15:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'England'},'away':{'name':'Japan'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 5','date':'2026-11-15T15:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Scotland'},'away':{'name':'Australia'}},'scores':{'home':null,'away':null}},
+    // ─── Ronda 6 — 21 noviembre 2026 ─────────────────────────────────────
+    {'week':'Ronda 6','date':'2026-11-21T21:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'France'},'away':{'name':'Argentina'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 6','date':'2026-11-21T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Ireland'},'away':{'name':'South Africa'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 6','date':'2026-11-21T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Italy'},'away':{'name':'Fiji'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 6','date':'2026-11-21T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Scotland'},'away':{'name':'Japan'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 6','date':'2026-11-21T20:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'Wales'},'away':{'name':'Australia'}},'scores':{'home':null,'away':null}},
+    {'week':'Ronda 6','date':'2026-11-21T16:00:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'England'},'away':{'name':'New Zealand'}},'scores':{'home':null,'away':null}},
+    // ─── Finales — 27-29 noviembre 2026 (Twickenham) ─────────────────────
+    {'week':'Finales','date':'2026-11-27T16:40:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'11 Norte'},'away':{'name':'11 Sur'}},'scores':{'home':null,'away':null}},
+    {'week':'Finales','date':'2026-11-27T20:10:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'5 Norte'},'away':{'name':'5 Sur'}},'scores':{'home':null,'away':null}},
+    {'week':'Finales','date':'2026-11-28T13:10:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'9 Norte'},'away':{'name':'9 Sur'}},'scores':{'home':null,'away':null}},
+    {'week':'Finales','date':'2026-11-28T16:40:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'3 Norte'},'away':{'name':'3 Sur'}},'scores':{'home':null,'away':null}},
+    {'week':'Finales','date':'2026-11-29T13:10:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'7 Norte'},'away':{'name':'7 Sur'}},'scores':{'home':null,'away':null}},
+    {'week':'Finales','date':'2026-11-29T16:40:00+00:00','status':{'short':'NS'},'teams':{'home':{'name':'1 Norte'},'away':{'name':'1 Sur'}},'scores':{'home':null,'away':null}},
+  ];
 }

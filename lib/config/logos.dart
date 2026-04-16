@@ -191,6 +191,7 @@ const Map<String, String> leagueLogoUrls = {
   'Seis Naciones':             'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/SixNationsRugbyCup.svg/250px-SixNationsRugbyCup.svg.png',
   'The Rugby Championship':    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Rugby_Championship_logo_%28white_background%29.png/250px-The_Rugby_Championship_logo_%28white_background%29.png',
   'Super Rugby Américas':      'https://upload.wikimedia.org/wikipedia/en/2/27/Super_Rugby_Americas_logo.png',
+  'Nations Championship':      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/2026_Nations_Championship_pictogram.svg/150px-2026_Nations_Championship_pictogram.svg.png',
   'URBA Top 14':               'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Urba_logo.png/200px-Urba_logo.png',
 };
 

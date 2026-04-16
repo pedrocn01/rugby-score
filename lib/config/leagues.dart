@@ -37,6 +37,7 @@ const Map<String, int> leagueIds = {
   'URBA Primera A':            -2, // tabla viva (api.urba.org.ar), partidos estáticos
   'URBA Primera B':            -3, // tabla viva (api.urba.org.ar), partidos estáticos
   'URBA Primera C':            -4, // tabla viva (api.urba.org.ar), partidos estáticos
+  'Nations Championship':     -10, // sin API — fixture estático scrapeado de Wikipedia
   // Circuito 7s
   'Acumulado 7s':              -1, // tabla acumulada estática
   '7s Dubai':                  111,
@@ -55,6 +56,7 @@ const Set<String> staticLeagues = {
   'URBA Primera B',
   'URBA Primera C',
   'Acumulado 7s',
+  'Nations Championship',
 };
 
 // ─── Ligas con partidos de la API pero tabla estática ─────────────────────
@@ -138,5 +140,5 @@ const Map<String, List<String>> sections = {
   'LOCALES':       ['URBA'],
   'EUROPA':        ['Top 14', 'Premiership', 'United Rugby Championship', 'Champions Cup', 'Challenge Cup'],
   'SUPER RUGBY':   ['Super Rugby Pacific', 'Super Rugby Américas'],
-  'INTERNACIONAL': ['Seis Naciones', 'The Rugby Championship', 'Circuito 7s'],
+  'INTERNACIONAL': ['Nations Championship', 'Seis Naciones', 'The Rugby Championship', 'Circuito 7s'],
 };
