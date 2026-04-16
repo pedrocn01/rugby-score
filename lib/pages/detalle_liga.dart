@@ -617,24 +617,40 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) {
-    final url = clubLogo(teamName) ?? apiLogoUrl;
+    final staticUrl = clubLogo(teamName);
+    final url = staticUrl ?? apiLogoUrl;
     if (url == null) return const SizedBox(width: 20);
     return Image.network(
       url,
       width: 20, height: 20,
       fit: BoxFit.contain,
-      errorBuilder: (ctx, err, st) => const SizedBox(width: 20),
+      errorBuilder: (_, e, s) {
+        // Si el URL estático falla, intentar con el logo de la API como fallback
+        if (staticUrl != null && apiLogoUrl != null) {
+          return Image.network(apiLogoUrl, width: 20, height: 20, fit: BoxFit.contain,
+            errorBuilder: (_, e2, s2) => const SizedBox(width: 20));
+        }
+        return const SizedBox(width: 20);
+      },
     );
   }
 
   Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) {
-    final url = clubLogo(teamName) ?? apiLogoUrl;
+    final staticUrl = clubLogo(teamName);
+    final url = staticUrl ?? apiLogoUrl;
     if (url == null) return const SizedBox.shrink();
     return Image.network(
       url,
       width: size, height: size,
       fit: BoxFit.contain,
-      errorBuilder: (ctx, err, st) => const SizedBox.shrink(),
+      errorBuilder: (_, e, s) {
+        // Si el URL estático falla, intentar con el logo de la API como fallback
+        if (staticUrl != null && apiLogoUrl != null) {
+          return Image.network(apiLogoUrl, width: size, height: size, fit: BoxFit.contain,
+            errorBuilder: (_, e2, s2) => const SizedBox.shrink());
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 

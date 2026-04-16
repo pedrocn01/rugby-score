@@ -135,14 +135,29 @@ export default {
       },
     });
 
-    // Guardar en cache solo si la API respondió OK
-    if (apiResp.ok) {
+    // Guardar en cache solo si la API respondió OK Y sin errores en el cuerpo.
+    // api-sports devuelve HTTP 200 incluso para errores (ej: rate limit excedido),
+    // con { "errors": { "requests": "..." }, "response": [] }.
+    // Si cacheamos eso, todos los usuarios ven resultados vacíos hasta que el cache expire.
+    if (apiResp.ok && !hasApiErrors(body)) {
       await cache.put(cacheKey, response.clone());
     }
 
     return response;
   },
 };
+
+// ── Detecta errores en respuesta de api-sports ───────────────────────────────
+// api-sports devuelve HTTP 200 con { "errors": {...}, "response": [] } cuando
+// se alcanza el límite diario u ocurre otro error interno. No cachear eso.
+function hasApiErrors(bodyText) {
+  try {
+    const errors = JSON.parse(bodyText)?.errors;
+    return errors && !Array.isArray(errors) && Object.keys(errors).length > 0;
+  } catch {
+    return false;
+  }
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
