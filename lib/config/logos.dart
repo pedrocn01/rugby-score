@@ -60,12 +60,12 @@ const Map<String, String> clubLogoUrls = {
   'Ospreys':             'https://upload.wikimedia.org/wikipedia/en/thumb/2/2c/Ospreys_Rugby_logo.svg/200px-Ospreys_Rugby_logo.svg.png',
 
   // ── Super Rugby Américas / URC ────────────────────────────────────────
-  'Cobras':              'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
-  'Brasil Cobras':       'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
-  'Cobras Brasil':       'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
-  'Cobras XV':           'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
-  'Black Lions':         'https://r2.thesportsdb.com/images/media/team/badge/2oikfe1759204626.png',
-  'Black Lion':          'https://r2.thesportsdb.com/images/media/team/badge/2oikfe1759204626.png',
+  'Cobras':              'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
+  'Brasil Cobras':       'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
+  'Cobras Brasil':       'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
+  'Cobras XV':           'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
+  'Black Lions':         'https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Black_lion_rugby_logo.png/200px-Black_lion_rugby_logo.png',
+  'Black Lion':          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Black_lion_rugby_logo.png/200px-Black_lion_rugby_logo.png',
   'Cheetahs':            'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
   'Free State Cheetahs': 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
 
@@ -191,7 +191,7 @@ const Map<String, String> leagueLogoUrls = {
   'Seis Naciones':             'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/SixNationsRugbyCup.svg/250px-SixNationsRugbyCup.svg.png',
   'The Rugby Championship':    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Rugby_Championship_logo_%28white_background%29.png/250px-The_Rugby_Championship_logo_%28white_background%29.png',
   'Super Rugby Américas':      'https://upload.wikimedia.org/wikipedia/en/2/27/Super_Rugby_Americas_logo.png',
-  'Nations Championship':      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/2026_Nations_Championship_pictogram.svg/150px-2026_Nations_Championship_pictogram.svg.png',
+  'Nations Championship':      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/2026_Nations_Championship_pictogram.svg/200px-2026_Nations_Championship_pictogram.svg.png',
   'URBA Top 14':               'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Urba_logo.png/200px-Urba_logo.png',
 };
 

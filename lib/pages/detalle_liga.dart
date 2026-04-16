@@ -305,13 +305,23 @@ class _DetalleLigaState extends State<DetalleLiga> {
     if (!porJornada.containsKey(nullKey)) return;
     // Solo actuar si TODOS los matches de ese bucket son realmente null-week
     final nullMatches = List<dynamic>.from(porJornada[nullKey]!);
-    if (!nullMatches.every((m) => m['week'] == null)) return;
+    if (!nullMatches.every((m) => m['week'] == null || m['week'] == 'null')) return;
     porJornada.remove(nullKey);
     if (porJornada.isEmpty) { porJornada[nullKey] = nullMatches; return; }
 
+    // Bucket de fallback: la fase con mayor timestamp promedio (la más reciente)
+    String fallbackKey = porJornada.keys.first;
+    int maxTs = 0;
+    for (final entry in porJornada.entries) {
+      for (final m in entry.value) {
+        final mTs = m['timestamp'] as int? ?? 0;
+        if (mTs > maxTs) { maxTs = mTs; fallbackKey = entry.key; }
+      }
+    }
+
     for (final match in nullMatches) {
       final ts = match['timestamp'] as int? ?? 0;
-      String best = nullKey;
+      String best = fallbackKey; // si no hay timestamp, va a la fase más reciente
       int minDiff = 999999999;
       for (final entry in porJornada.entries) {
         for (final m in entry.value) {
