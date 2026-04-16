@@ -1,0 +1,8 @@
+#!/bin/bash
+# Copiá este archivo como run_dev.sh y completá tus claves.
+# run_dev.sh está en .gitignore — nunca se sube a Git.
+
+flutter run -d chrome \
+  --dart-define=API_BASE_URL=https://v1.rugby.api-sports.io \
+  --dart-define=API_KEY=TU_CLAVE_API_SPORTS_AQUI \
+  --dart-define=APP_SECRET=

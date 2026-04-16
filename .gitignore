@@ -14,3 +14,13 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Secretos y configuración sensible — NUNCA subir a Git
+.env
+.env.local
+.env.*.local
+secrets.dart
+lib/config/secrets.dart
+*.key
+*.keystore
+run_dev.sh
