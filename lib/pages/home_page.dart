@@ -200,12 +200,20 @@ class _FolderTile extends StatefulWidget {
 class _FolderTileState extends State<_FolderTile> {
   bool _hovered = false;
 
-  Color get _primary => widget.folderName == 'Circuito 7s'
-      ? const Color(0xFFFF6B00)
-      : const Color(0xFF1B4332);
-  Color get _dark => widget.folderName == 'Circuito 7s'
-      ? const Color(0xFFCC4400)
-      : const Color(0xFF071A0E);
+  Color get _primary {
+    switch (widget.folderName) {
+      case 'Circuito 7s':        return const Color(0xFFFF6B00);
+      case 'Torneo del Interior': return const Color(0xFF004B87);
+      default:                   return const Color(0xFF1B4332);
+    }
+  }
+  Color get _dark {
+    switch (widget.folderName) {
+      case 'Circuito 7s':        return const Color(0xFFCC4400);
+      case 'Torneo del Interior': return const Color(0xFF001D3D);
+      default:                   return const Color(0xFF071A0E);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -325,7 +333,8 @@ class _FolderTileState extends State<_FolderTile> {
       Expanded(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
-          child: SvgPicture.asset(assetPath, fit: BoxFit.contain),
+          child: SvgPicture.asset(assetPath, fit: BoxFit.contain,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
         ),
       ),
       Container(
