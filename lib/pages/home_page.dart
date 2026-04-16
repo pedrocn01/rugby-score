@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../config/leagues.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
@@ -208,8 +209,9 @@ class _FolderTileState extends State<_FolderTile> {
 
   @override
   Widget build(BuildContext context) {
-    final ligas    = folders[widget.folderName]!;
-    final logoUrl  = folderLogoUrls[widget.folderName];
+    final ligas      = folders[widget.folderName]!;
+    final logoUrl    = folderLogoUrls[widget.folderName];
+    final logoAsset  = folderLogoAssets[widget.folderName];
     final isMobile = MediaQuery.of(context).size.width < 700;
 
     void onTap() {
@@ -247,7 +249,7 @@ class _FolderTileState extends State<_FolderTile> {
               colors: [_primary, _dark],
             ),
           ),
-          child: logoUrl != null ? _logoContent(logoUrl, ligas) : _iconContent(ligas),
+          child: logoAsset != null ? _logoAssetContent(logoAsset, ligas) : logoUrl != null ? _logoContent(logoUrl, ligas) : _iconContent(ligas),
         ),
       );
     }
@@ -281,7 +283,7 @@ class _FolderTileState extends State<_FolderTile> {
                 ),
               ],
             ),
-            child: logoUrl != null ? _logoContent(logoUrl, ligas) : _iconContent(ligas),
+            child: logoAsset != null ? _logoAssetContent(logoAsset, ligas) : logoUrl != null ? _logoContent(logoUrl, ligas) : _iconContent(ligas),
           ),
         ),
       ),
@@ -295,6 +297,35 @@ class _FolderTileState extends State<_FolderTile> {
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
           child: Image.network(logoUrl, fit: BoxFit.contain,
             errorBuilder: (ctx, e, s) => const Icon(Icons.folder_open_rounded, color: Colors.white54, size: 36)),
+        ),
+      ),
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.35),
+          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+        ),
+        child: Row(children: [
+          Expanded(child: Text(widget.folderName,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11))),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+            child: Text('${ligas.length}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 9)),
+          ),
+        ]),
+      ),
+    ],
+  );
+
+  Widget _logoAssetContent(String assetPath, List<String> ligas) => Column(
+    children: [
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
+          child: SvgPicture.asset(assetPath, fit: BoxFit.contain),
         ),
       ),
       Container(

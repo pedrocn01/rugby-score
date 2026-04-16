@@ -8,6 +8,11 @@ const Map<String, String> folderLogoUrls = {
   'Circuito 7s': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/SVNS_Logo_%282023%29.svg/200px-SVNS_Logo_%282023%29.svg.png',
 };
 
+// Logos locales (assets SVG) — usan SvgPicture.asset en vez de Image.network
+const Map<String, String> folderLogoAssets = {
+  'Torneo del Interior': 'assets/logos/torneo_interior.svg',
+};
+
 // ─── Logos de clubes URBA ─────────────────────────────────────────────────
 
 const Map<String, String> clubLogoUrls = {

@@ -123,6 +123,7 @@ const Set<String> noRelegationLeagues = {
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
 const Map<String, List<String>> folders = {
   'URBA': ['URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
+  'Torneo del Interior': [],
   'Circuito 7s': [
     'Acumulado 7s',
     '7s Dubai',
@@ -137,7 +138,7 @@ const Map<String, List<String>> folders = {
 
 // ─── Secciones del home ───────────────────────────────────────────────────
 const Map<String, List<String>> sections = {
-  'LOCALES':       ['URBA'],
+  'LOCALES':       ['URBA', 'Torneo del Interior'],
   'EUROPA':        ['Top 14', 'Premiership', 'United Rugby Championship', 'Champions Cup', 'Challenge Cup'],
   'SUPER RUGBY':   ['Super Rugby Pacific', 'Super Rugby Américas'],
   'INTERNACIONAL': ['Nations Championship', 'Seis Naciones', 'The Rugby Championship', 'Circuito 7s'],
