@@ -89,11 +89,15 @@ class _DetalleLigaState extends State<DetalleLiga> {
       final as_ = match['scores']?['away'];
       if (hs == null || as_ == null) continue;
 
-      final home = match['teams']['home']['name'] as String;
-      final away = match['teams']['away']['name'] as String;
+      final home        = match['teams']['home']['name'] as String;
+      final away        = match['teams']['away']['name'] as String;
+      final homeLogo    = match['teams']['home']['logo']?.toString();
+      final awayLogo    = match['teams']['away']['logo']?.toString();
 
       stats.putIfAbsent(home, () => TeamStats(home));
       stats.putIfAbsent(away, () => TeamStats(away));
+      stats[home]!.logoUrl ??= homeLogo;
+      stats[away]!.logoUrl ??= awayLogo;
 
       stats[home]!.pj++;
       stats[away]!.pj++;
@@ -117,7 +121,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
     return [
       sorted.asMap().entries.map((e) => {
         'position': e.key + 1,
-        'team': {'name': e.value.name},
+        'team': {'name': e.value.name, 'logo': e.value.logoUrl},
         'games': {
           'played': e.value.pj,
           'win':    {'total': e.value.g},
@@ -721,12 +725,21 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   spacing: 16,
                   runSpacing: 6,
                   children: [
-                    _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica'),
-                    if (widget.nombreLiga == 'Champions Cup')
-                      _leyendaItem(const Color(0xFF0077B6), 'Pasa a Challenge Cup'),
-                    if (!noRelegationLeagues.contains(widget.nombreLiga)) ...[
-                      _leyendaItem(const Color(0xFFF4A100), 'Playoff promoción'),
+                    if (urbaFirstLeagues.contains(widget.nombreLiga)) ...[
+                      _leyendaItem(const Color(0xFF2D6A4F), 'Ascenso directo'),
+                      _leyendaItem(const Color(0xFFF4A100), 'Playoff de ascenso'),
                       _leyendaItem(Colors.red, 'Descenso'),
+                    ] else if (urbaTop14Leagues.contains(widget.nombreLiga)) ...[
+                      _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica playoffs'),
+                      _leyendaItem(Colors.red, 'Descenso'),
+                    ] else ...[
+                      _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica'),
+                      if (widget.nombreLiga == 'Champions Cup')
+                        _leyendaItem(const Color(0xFF0077B6), 'Pasa a Challenge Cup'),
+                      if (!noRelegationLeagues.contains(widget.nombreLiga)) ...[
+                        _leyendaItem(const Color(0xFFF4A100), 'Playoff promoción'),
+                        _leyendaItem(Colors.red, 'Descenso'),
+                      ],
                     ],
                   ],
                 ),

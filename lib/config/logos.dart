@@ -65,6 +65,7 @@ const Map<String, String> clubLogoUrls = {
   'Cobras Brasil':       'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
   'Cobras XV':           'https://r2.thesportsdb.com/images/media/team/badge/fue9z01738944174.png',
   'Black Lions':         'https://r2.thesportsdb.com/images/media/team/badge/2oikfe1759204626.png',
+  'Black Lion':          'https://r2.thesportsdb.com/images/media/team/badge/2oikfe1759204626.png',
   'Cheetahs':            'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
   'Free State Cheetahs': 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
 

@@ -2,6 +2,7 @@
 /// desde los resultados de partidos (sin llamar al endpoint de standings).
 class TeamStats {
   final String name;
+  String? logoUrl;
   int pj = 0; // partidos jugados
   int g  = 0; // ganados
   int e  = 0; // empatados

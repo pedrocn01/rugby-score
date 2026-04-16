@@ -11,13 +11,12 @@ const Map<String, int> urbaChampionshipIds = {
   'URBA Primera C': 2025179,
 };
 
-// ─── Cuántos equipos clasifican a playoffs por liga ──────────────────────────
-const Map<String, int> urbaPlayoffSpots = {
-  'URBA Top 14':    4,
-  'URBA Primera A': 4,
-  'URBA Primera B': 4,
-  'URBA Primera C': 4,
-};
+// ─── Clasificación de la tabla por liga ──────────────────────────────────────
+//
+// URBA Top 14 : 4 Playoffs · 2 descensos directos
+// URBA Primera A/B/C: 1 Ascenso directo · pos 2-5 Playoff de ascenso · 2 descensos
+const Set<String> urbaTop14Leagues = {'URBA Top 14'};
+const Set<String> urbaFirstLeagues = {'URBA Primera A', 'URBA Primera B', 'URBA Primera C'};
 
 class UrbaService {
   static const _base = 'https://api.urba.org.ar/api';
@@ -38,8 +37,7 @@ class UrbaService {
     final positions = ((jsonDecode(res.body)['positions']) as List<dynamic>? ?? [])
       ..sort((a, b) => (a['position'] as int).compareTo(b['position'] as int));
 
-    final playoffSpots = urbaPlayoffSpots[leagueName] ?? 4;
-    final total        = positions.length;
+    final total = positions.length;
 
     return positions.map<dynamic>((p) {
       final pos      = p['position'] as int;
@@ -47,12 +45,20 @@ class UrbaService {
                     ?? p['team']?['name'] as String?
                     ?? '?';
       String? description;
-      if (pos <= playoffSpots) {
-        description = 'Playoffs';
-      } else if (pos == total - 1) {
-        description = 'Relegation Playoffs';
-      } else if (pos == total) {
-        description = 'Relegation';
+      if (urbaTop14Leagues.contains(leagueName)) {
+        if (pos <= 4) {
+          description = 'Playoffs';
+        } else if (pos >= total - 1) {
+          description = 'Relegation';
+        }
+      } else if (urbaFirstLeagues.contains(leagueName)) {
+        if (pos == 1) {
+          description = 'Qualified';
+        } else if (pos <= 5) {
+          description = 'Relegation Playoffs';
+        } else if (pos >= total - 1) {
+          description = 'Relegation';
+        }
       }
 
       final imageUri = p['team']?['club']?['image_uri'] as String?;
