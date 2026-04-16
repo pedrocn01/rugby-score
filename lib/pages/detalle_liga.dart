@@ -39,9 +39,11 @@ class _DetalleLigaState extends State<DetalleLiga> {
   @override
   void initState() {
     super.initState();
-    // Para ligas con datos en vivo (no estáticas) siempre fuerza refresh al abrir,
-    // así el Worker de Cloudflare no sirve un caché viejo con estado NS.
-    _loadData(noCache: !widget.isStatic);
+    // El Worker de Cloudflare cachea las respuestas con TTL inteligente
+    // (10 min en fines de semana, 24h en días sin partidos). Todos los usuarios
+    // comparten ese cache → api-sports recibe 1 llamada por TTL, no 1 por usuario.
+    // Solo forzar refresh cuando el usuario lo pide explícitamente (_refresh).
+    _loadData();
   }
 
   void _loadData({bool noCache = false}) {
