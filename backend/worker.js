@@ -2,53 +2,63 @@
  * Rugby Score — Cloudflare Worker proxy con cache inteligente
  *
  * ┌─────────────────────────────────────────────────────────────────┐
- * │  La API key NUNCA llega al navegador del usuario.               │
+ * │  La API key de api-sports NUNCA llega al navegador del usuario. │
  * │  El Worker la inyecta acá, del lado del servidor.               │
  * └─────────────────────────────────────────────────────────────────┘
  *
- * Endpoints expuestos:
- *   GET /games?league=XX&season=XXXX
- *   GET /standings?league=XX&season=XXXX
+ * ── Estrategia de cache ───────────────────────────────────────────
  *
- * Estrategia de cache (Cloudflare edge cache, gratis):
- *   Mar–Jue  → 24 horas   (no hay partidos, los datos no cambian)
- *   Vie–Dom  →  10 min    (días de partido, datos frescos)
- *   Lun      →  1 hora    (resultados del fin de semana ya fijos)
+ *  /standings → siempre 24 horas.
+ *    La tabla de posiciones solo cambia al terminar una fecha completa.
+ *    No tiene sentido refrescarla cada 10 minutos un sábado.
  *
- *   Con esto, 7.500 requests/día alcanzan para usuarios ilimitados:
- *   la API solo se consulta cuando el cache vence, no por cada usuario.
+ *  /games (inteligente según estado de partidos):
+ *    · Partido en vivo            →  2 minutos
+ *    · Partido arranca en < 30min →  5 minutos
+ *    · Partido reciente sin FT    →  5 minutos  (API tarda en actualizar)
+ *    · Sin partidos activos       → 24 horas    ← clave: evita requests innecesarios
  *
- * Setup (una sola vez):
- *   1. npm install -g wrangler
- *   2. wrangler login
- *   3. wrangler secret put API_KEY    ← pegá tu key de api-sports.io
- *   4. wrangler deploy                ← te da la URL del Worker
+ *  Con esto, una liga sin partidos hoy NO gasta requests,
+ *  independientemente del día de la semana.
  *
- * Build Flutter producción:
- *   flutter build web --release \
- *     --dart-define=API_BASE_URL=https://rugby-proxy.TU_USUARIO.workers.dev \
- *     --dart-define=API_KEY=
+ * ── Seguridad ────────────────────────────────────────────────────
+ *
+ *  Todos los requests deben incluir el header X-App-Secret con el
+ *  valor configurado como secreto en Cloudflare (APP_SECRET).
+ *  Si APP_SECRET no está configurado, el Worker permite todo
+ *  (modo desarrollo/migración).
+ *
+ * ── Setup ────────────────────────────────────────────────────────
+ *
+ *  1. npm install -g wrangler
+ *  2. wrangler login
+ *  3. wrangler secret put API_KEY      ← key de api-sports.io
+ *  4. wrangler secret put APP_SECRET   ← string aleatorio largo, mismo
+ *                                         que --dart-define=APP_SECRET=
+ *  5. wrangler deploy                  ← devuelve la URL del Worker
+ *
+ *  Build Flutter producción:
+ *    flutter build web --release \
+ *      --dart-define=API_BASE_URL=https://rugby-proxy.TU_SUBDOMAIN.workers.dev \
+ *      --dart-define=API_KEY= \
+ *      --dart-define=APP_SECRET=el_mismo_string_del_paso_4
  */
 
 const ALLOWED_ENDPOINTS = ['games', 'standings'];
 const API_ORIGIN        = 'https://v1.rugby.api-sports.io';
 
-// ── TTL base según día de la semana ──────────────────────────────────────
-function getBaseTTL() {
-  const day = new Date().getUTCDay();
-  if (day === 5 || day === 6 || day === 0) return 10 * 60;   // Vie/Sáb/Dom → 10 min
-  if (day === 1)                            return 60 * 60;   // Lun → 1 hora
-  if (day === 4)                            return 30 * 60;   // Jue → 30 min
-  return 24 * 60 * 60;                                        // Mar/Mié → 24 horas
-}
+// TTL base para cualquier respuesta sin partidos activos
+const BASE_TTL = 24 * 60 * 60; // 24 horas
 
-// ── TTL inteligente: si hay partidos activos HOY, usar 5 min ─────────────
-function getSmartTTL(body) {
+// ── TTL inteligente para /games ───────────────────────────────────────────────
+// Solo refresca rápido cuando hay partidos activos o por comenzar.
+// Si no hay nada activo → 24h, sin importar el día de la semana.
+function getGamesTTL(body) {
   try {
     const data = JSON.parse(body);
-    if (!Array.isArray(data.response)) return getBaseTTL();
+    if (!Array.isArray(data.response)) return BASE_TTL;
 
-    const now  = Date.now();
+    const now             = Date.now();
     const liveStatuses     = new Set(['1H', '2H', 'HT', 'ET', 'BT', 'P']);
     const finishedStatuses = new Set(['FT', 'AET', 'PEN', 'Canc', 'AWD', 'Susp', 'ABD']);
 
@@ -61,23 +71,46 @@ function getSmartTTL(body) {
       // Partido en vivo → 2 minutos
       if (liveStatuses.has(status)) return 2 * 60;
 
-      // Partido que arranca en menos de 30 min → 5 minutos
+      // Partido arranca en menos de 30 min → 5 minutos
       if (!finishedStatuses.has(status) && msUntil >= 0 && msUntil < 30 * 60 * 1000)
         return 5 * 60;
 
-      // Partido no terminado que empezó hace menos de 3h (puede estar en juego aunque
-      // la API todavía no actualizó el estado, o es una partida que cruzó medianoche UTC)
+      // Partido no terminado que empezó hace menos de 3h (la API puede tardar
+      // en actualizar el estado, el partido puede seguir en juego)
       if (!finishedStatuses.has(status) && msSince >= 0 && msSince < 3 * 60 * 60 * 1000)
         return 5 * 60;
     }
 
-    return getBaseTTL();
+    // Sin partidos activos → 24 horas (no gastar requests)
+    return BASE_TTL;
   } catch {
-    return getBaseTTL();
+    return BASE_TTL;
   }
 }
 
-// ── Handler principal ─────────────────────────────────────────────────────
+// ── Detecta errores en respuesta de api-sports ────────────────────────────────
+// api-sports devuelve HTTP 200 con { "errors": {...}, "response": [] } cuando
+// se alcanza el límite diario u ocurre otro error interno. No cachear eso.
+function hasApiErrors(bodyText) {
+  try {
+    const errors = JSON.parse(bodyText)?.errors;
+    return errors && !Array.isArray(errors) && Object.keys(errors).length > 0;
+  } catch {
+    return false;
+  }
+}
+
+// ── Validación de seguridad ────────────────────────────────────────────────────
+// Verifica que el request viene de la app y no de un scraper externo.
+// Usa el secreto APP_SECRET configurado en Cloudflare.
+// Si APP_SECRET no está configurado → permite todo (modo dev/migración).
+function isAuthorized(request, env) {
+  const secret = env.APP_SECRET;
+  if (!secret) return true; // no configurado → modo desarrollo
+  return request.headers.get('X-App-Secret') === secret;
+}
+
+// ── Handler principal ──────────────────────────────────────────────────────────
 export default {
   async fetch(request, env) {
 
@@ -90,6 +123,11 @@ export default {
       return corsResponse(JSON.stringify({ error: 'Método no permitido' }), 405);
     }
 
+    // Validar que el request viene de la app
+    if (!isAuthorized(request, env)) {
+      return corsResponse(JSON.stringify({ error: 'No autorizado' }), 403);
+    }
+
     const url      = new URL(request.url);
     const endpoint = url.pathname.replace(/^\/+/, '');
 
@@ -97,20 +135,19 @@ export default {
       return corsResponse(JSON.stringify({ error: 'Endpoint no permitido' }), 403);
     }
 
-    // ── Intentar servir desde cache ───────────────────────────────────────
+    // ── Intentar servir desde cache ────────────────────────────────────────
     const forceRefresh = request.headers.get('X-Force-Fresh') === '1';
-    const cache     = caches.default;
-    const cacheKey  = request.url;          // URL completa como clave
+    const cache        = caches.default;
+    const cacheKey     = request.url;
 
     if (!forceRefresh) {
       const cached = await cache.match(cacheKey);
       if (cached) {
-        // Cache HIT: devolver sin tocar la API
         return addCorsHeaders(cached, 'HIT');
       }
     }
 
-    // ── Cache MISS: llamar a la API ───────────────────────────────────────
+    // ── Cache MISS: llamar a la API ────────────────────────────────────────
     const apiUrl  = `${API_ORIGIN}/${endpoint}${url.search}`;
     const apiResp = await fetch(apiUrl, {
       headers: {
@@ -120,7 +157,9 @@ export default {
     });
 
     const body = await apiResp.text();
-    const ttl  = getSmartTTL(body);
+
+    // TTL según endpoint: standings siempre 24h, games según estado de partidos
+    const ttl = endpoint === 'standings' ? BASE_TTL : getGamesTTL(body);
 
     const response = new Response(body, {
       status:  apiResp.status,
@@ -129,16 +168,13 @@ export default {
         'Cache-Control':                `public, max-age=${ttl}`,
         'Access-Control-Allow-Origin':  '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key, X-Force-Fresh',
+        'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key, X-Force-Fresh, X-App-Secret',
         'X-Cache':                      'MISS',
         'X-Cache-TTL':                  `${ttl}s`,
       },
     });
 
-    // Guardar en cache solo si la API respondió OK Y sin errores en el cuerpo.
-    // api-sports devuelve HTTP 200 incluso para errores (ej: rate limit excedido),
-    // con { "errors": { "requests": "..." }, "response": [] }.
-    // Si cacheamos eso, todos los usuarios ven resultados vacíos hasta que el cache expire.
+    // Cachear solo si la API respondió OK y sin errores en el cuerpo
     if (apiResp.ok && !hasApiErrors(body)) {
       await cache.put(cacheKey, response.clone());
     }
@@ -147,19 +183,7 @@ export default {
   },
 };
 
-// ── Detecta errores en respuesta de api-sports ───────────────────────────────
-// api-sports devuelve HTTP 200 con { "errors": {...}, "response": [] } cuando
-// se alcanza el límite diario u ocurre otro error interno. No cachear eso.
-function hasApiErrors(bodyText) {
-  try {
-    const errors = JSON.parse(bodyText)?.errors;
-    return errors && !Array.isArray(errors) && Object.keys(errors).length > 0;
-  } catch {
-    return false;
-  }
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────────────────────
 
 function corsResponse(body, status = 200) {
   return new Response(body, {
@@ -168,12 +192,11 @@ function corsResponse(body, status = 200) {
       'Content-Type':                 'application/json',
       'Access-Control-Allow-Origin':  '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key, X-Force-Fresh',
+      'Access-Control-Allow-Headers': 'Content-Type, x-apisports-key, X-Force-Fresh, X-App-Secret',
     },
   });
 }
 
-// Agrega CORS a una respuesta cacheada (que ya los tiene, pero por si acaso)
 function addCorsHeaders(response, cacheStatus) {
   const headers = new Headers(response.headers);
   headers.set('Access-Control-Allow-Origin', '*');

@@ -23,10 +23,15 @@ class RugbyService {
     defaultValue: 'ae0c789862dd0f66a7f3fd261e879f3b', // solo para dev local
   );
 
+  // Secreto compartido con el Worker para bloquear acceso externo.
+  // En producción: --dart-define=APP_SECRET=el_mismo_valor_del_wrangler_secret
+  static const _appSecret = String.fromEnvironment('APP_SECRET', defaultValue: '');
+
   Map<String, String> _buildHeaders({bool noCache = false}) => {
     'Accept': 'application/json',
-    if (_apiKey.isNotEmpty) 'x-apisports-key': _apiKey,
-    if (noCache) 'X-Force-Fresh': '1',
+    if (_apiKey.isNotEmpty)    'x-apisports-key': _apiKey,
+    if (_appSecret.isNotEmpty) 'X-App-Secret':    _appSecret,
+    if (noCache)               'X-Force-Fresh':   '1',
   };
 
   int _seasonFor(int leagueId) => leagueSeasons[leagueId] ?? 2025;

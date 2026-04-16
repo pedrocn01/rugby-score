@@ -13,4 +13,7 @@ export PATH="$PATH:$FLUTTER_ROOT/bin"
 
 flutter config --enable-web
 flutter pub get
-flutter build web --release --dart-define=API_BASE_URL="${API_BASE_URL:-}" --dart-define=API_KEY=
+flutter build web --release \
+  --dart-define=API_BASE_URL="${API_BASE_URL:-}" \
+  --dart-define=API_KEY= \
+  --dart-define=APP_SECRET="${APP_SECRET:-}"
