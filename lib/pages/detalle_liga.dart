@@ -91,10 +91,11 @@ class _DetalleLigaState extends State<DetalleLiga> {
       final as_ = match['scores']?['away'];
       if (hs == null || as_ == null) continue;
 
-      final home        = match['teams']['home']['name'] as String;
-      final away        = match['teams']['away']['name'] as String;
-      final homeLogo    = match['teams']['home']['logo']?.toString();
-      final awayLogo    = match['teams']['away']['logo']?.toString();
+      final home        = match['teams']?['home']?['name'] as String? ?? '';
+      final away        = match['teams']?['away']?['name'] as String? ?? '';
+      if (home.isEmpty || away.isEmpty) continue;
+      final homeLogo    = match['teams']?['home']?['logo']?.toString();
+      final awayLogo    = match['teams']?['away']?['logo']?.toString();
 
       stats.putIfAbsent(home, () => TeamStats(home));
       stats.putIfAbsent(away, () => TeamStats(away));
@@ -161,8 +162,9 @@ class _DetalleLigaState extends State<DetalleLiga> {
         final as_ = match['scores']?['away'];
         if (hs == null || as_ == null) continue;
 
-        final home = match['teams']['home']['name'] as String;
-        final away = match['teams']['away']['name'] as String;
+        final home = match['teams']?['home']?['name'] as String? ?? '';
+        final away = match['teams']?['away']?['name'] as String? ?? '';
+        if (home.isEmpty || away.isEmpty) continue;
 
         stats.putIfAbsent(home, () => TeamStats(home));
         stats.putIfAbsent(away, () => TeamStats(away));

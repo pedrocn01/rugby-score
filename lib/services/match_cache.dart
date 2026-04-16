@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../config/leagues.dart';
 import 'rugby_service.dart';
 
@@ -41,7 +42,10 @@ class MatchCache {
       final results = await Future.wait(
         entries.map((e) => service
             .fetchMatches(e.value, noCache: force)
-            .catchError((_) => <dynamic>[])),
+            .catchError((err) {
+              debugPrint('❌ MatchCache: error cargando ${e.key}: $err');
+              return <dynamic>[];
+            })),
       );
 
       for (int i = 0; i < entries.length; i++) {

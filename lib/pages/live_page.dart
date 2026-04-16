@@ -14,6 +14,7 @@ class LivePage extends StatefulWidget {
 class _LivePageState extends State<LivePage> {
   List<MatchEntry> _live = [];
   bool _loading = true;
+  bool _fetching = false;
   Timer? _timer;
 
   @override
@@ -31,13 +32,19 @@ class _LivePageState extends State<LivePage> {
   }
 
   Future<void> _load() async {
+    if (_fetching) return;
+    _fetching = true;
     setState(() => _loading = true);
-    await MatchCache.instance.fetchAll(force: true);
-    if (mounted) {
-      setState(() {
-        _live    = MatchCache.instance.getLive();
-        _loading = false;
-      });
+    try {
+      await MatchCache.instance.fetchAll(force: true);
+      if (mounted) {
+        setState(() {
+          _live    = MatchCache.instance.getLive();
+          _loading = false;
+        });
+      }
+    } finally {
+      _fetching = false;
     }
   }
 

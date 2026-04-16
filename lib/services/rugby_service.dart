@@ -30,7 +30,8 @@ class RugbyService {
   Future<List<dynamic>> fetchMatches(int leagueId, {bool noCache = false}) async {
     try {
       final uri = Uri.parse('$_apiBase/games?league=$leagueId&season=${_seasonFor(leagueId)}');
-      final response = await http.get(uri, headers: _buildHeaders(noCache: noCache));
+      final response = await http.get(uri, headers: _buildHeaders(noCache: noCache))
+          .timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data is Map && data.containsKey('response')) {
@@ -46,7 +47,8 @@ class RugbyService {
   Future<List<List<dynamic>>> fetchStandings(int leagueId) async {
     try {
       final uri = Uri.parse('$_apiBase/standings?league=$leagueId&season=${_seasonFor(leagueId)}');
-      final response = await http.get(uri, headers: _buildHeaders());
+      final response = await http.get(uri, headers: _buildHeaders())
+          .timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data is Map && data.containsKey('response')) {
