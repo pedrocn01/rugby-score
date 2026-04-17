@@ -715,6 +715,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
         final grupoLabels = switch (widget.nombreLiga) {
           'Champions Cup' => ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'],
           'Challenge Cup' => ['GRUPO A', 'GRUPO B', 'GRUPO C'],
+          'TDI A 2026'   => ['ZONA 1', 'ZONA 2', 'ZONA 3', 'ZONA 4'],
           _ when sevensLeagues.contains(widget.nombreLiga) =>
             List.generate(grupos.length, (i) => 'POOL ${String.fromCharCode(65 + i)}'),
           _ => <String>[],

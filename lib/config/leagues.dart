@@ -38,6 +38,7 @@ const Map<String, int> leagueIds = {
   'URBA Primera B':            -3, // tabla viva (api.urba.org.ar), partidos estáticos
   'URBA Primera C':            -4, // tabla viva (api.urba.org.ar), partidos estáticos
   'Nations Championship':     -10, // sin API — fixture estático scrapeado de Wikipedia
+  'TDI A 2026':               -20, // Torneo del Interior A — fixture estático cargado a mano
   // Circuito 7s
   'Acumulado 7s':              -1, // tabla acumulada estática
   '7s Dubai':                  111,
@@ -57,6 +58,7 @@ const Set<String> staticLeagues = {
   'URBA Primera C',
   'Acumulado 7s',
   'Nations Championship',
+  'TDI A 2026',
 };
 
 // ─── Ligas con partidos de la API pero tabla estática ─────────────────────
@@ -123,7 +125,7 @@ const Set<String> noRelegationLeagues = {
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
 const Map<String, List<String>> folders = {
   'URBA': ['URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
-  'Torneo del Interior': [],
+  'Torneo del Interior': ['TDI A 2026'],
   'Circuito 7s': [
     'Acumulado 7s',
     '7s Dubai',
