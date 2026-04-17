@@ -120,6 +120,20 @@ const Map<String, String> clubLogoUrls = {
   'Harlequins':          'https://upload.wikimedia.org/wikipedia/en/thumb/9/92/Harlequin_FC_logo.svg/200px-Harlequin_FC_logo.svg.png',
   'Newcastle Red Bulls': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Newcastle_Red_Bulls_logo.png/200px-Newcastle_Red_Bulls_logo.png',
   'Newcastle Falcons':   'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Newcastle_Red_Bulls_logo.png/200px-Newcastle_Red_Bulls_logo.png',
+
+  // ── Torneo del Interior (TDI) ─────────────────────────────────────────────
+  'Tucumán Rugby':              'https://upload.wikimedia.org/wikipedia/en/thumb/2/25/Tucuman_Rugby_Club_Crest.svg/200px-Tucuman_Rugby_Club_Crest.svg.png',
+  'Gimnasia y Esgrima de Rosario': 'https://upload.wikimedia.org/wikipedia/en/thumb/5/59/Club_ger_logo.png/200px-Club_ger_logo.png',
+  'Marista RC':                 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f5/Marista_rc_escudo.png/200px-Marista_rc_escudo.png',
+  'Duendes RC':                 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d0/Duendes_Rugby_Club_Crest.svg/200px-Duendes_Rugby_Club_Crest.svg.png',
+  'Jockey Club de Rosario':     'https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Jockey_rosario_logo.png/200px-Jockey_rosario_logo.png',
+  'Tala RC':                    'https://upload.wikimedia.org/wikipedia/en/thumb/0/08/Tala_Rugby_Club_Crest.svg/200px-Tala_Rugby_Club_Crest.svg.png',
+  'Córdoba Athletic':           'https://upload.wikimedia.org/wikipedia/en/thumb/3/39/Cordoba_Athletic_Club_Crest.svg/200px-Cordoba_Athletic_Club_Crest.svg.png',
+  'Universitario de Córdoba':   'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Universitario_cba_logo.svg/200px-Universitario_cba_logo.svg.png',
+  'Jockey Club de Córdoba':     'https://upload.wikimedia.org/wikipedia/en/thumb/b/b1/Jockey_club_cba_logo.png/200px-Jockey_club_cba_logo.png',
+  'La Tablada':                 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7f/Club_La_Tablada_Crest.svg/200px-Club_La_Tablada_Crest.svg.png',
+  'Santa Fe Rugby':             'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Santa_Fe_Rugby_Club_Crest.svg/200px-Santa_Fe_Rugby_Club_Crest.svg.png',
+  'Estudiantes de Paraná':      'https://upload.wikimedia.org/wikipedia/en/thumb/8/87/Estudiantes_parana_logo.png/200px-Estudiantes_parana_logo.png',
 };
 
 // ─── Logos de selecciones / federaciones internacionales ──────────────────────
