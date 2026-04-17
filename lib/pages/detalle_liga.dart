@@ -108,9 +108,11 @@ class _DetalleLigaState extends State<DetalleLiga> {
       if (hs > as_) {
         stats[home]!.g++;  stats[away]!.p++;
         stats[home]!.pts += 4;
+        if ((hs - as_) <= 7) stats[away]!.pts += 1; // bonus defensivo
       } else if (as_ > hs) {
         stats[away]!.g++;  stats[home]!.p++;
         stats[away]!.pts += 4;
+        if ((as_ - hs) <= 7) stats[home]!.pts += 1; // bonus defensivo
       } else {
         stats[home]!.e++;  stats[away]!.e++;
         stats[home]!.pts += 2;

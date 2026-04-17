@@ -63,13 +63,13 @@ const Set<String> staticLeagues = {
 
 // ─── Ligas con partidos de la API pero tabla estática ─────────────────────
 const Set<String> staticStandingsOnly = {
-  'Super Rugby Pacific',
   'Champions Cup',
   'Challenge Cup',
 };
 
 // ─── Ligas cuya tabla se calcula a partir de los partidos de la API ───────
 const Set<String> computeStandingsLeagues = {
+  'Super Rugby Pacific',
   'Super Rugby Américas',
   '7s Dubai',
   '7s Sudáfrica',
