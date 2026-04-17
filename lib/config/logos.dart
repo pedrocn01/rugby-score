@@ -51,12 +51,12 @@ const Map<String, String> clubLogoUrls = {
   'Fijian Drua':         'https://upload.wikimedia.org/wikipedia/en/thumb/9/9c/FijianDruaLogo.svg/200px-FijianDruaLogo.svg.png',
 
   // ── United Rugby Championship ──────────────────────────────────────────
-  'Zebre Parma':         'https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Zebre_parma_logo23.png/200px-Zebre_parma_logo23.png',
-  'Zebre':               'https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Zebre_parma_logo23.png/200px-Zebre_parma_logo23.png',
+  'Zebre Parma':         'https://r2.thesportsdb.com/images/media/team/badge/y0vaog1716739157.png',
+  'Zebre':               'https://r2.thesportsdb.com/images/media/team/badge/y0vaog1716739157.png',
   'Cardiff Rugby':       'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Cardiff_Rugby_logo_%282021%29.jpg/200px-Cardiff_Rugby_logo_%282021%29.jpg',
   'Cardiff':             'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Cardiff_Rugby_logo_%282021%29.jpg/200px-Cardiff_Rugby_logo_%282021%29.jpg',
-  'Benetton Rugby':      'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Benetton_rugby.svg/200px-Benetton_rugby.svg.png',
-  'Benetton':            'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Benetton_rugby.svg/200px-Benetton_rugby.svg.png',
+  'Benetton Rugby':      'https://r2.thesportsdb.com/images/media/team/badge/txsuxw1453647910.png',
+  'Benetton':            'https://r2.thesportsdb.com/images/media/team/badge/txsuxw1453647910.png',
   'Dragons RFC':         'https://upload.wikimedia.org/wikipedia/en/thumb/9/9b/Dragons_RFC_logo.png/200px-Dragons_RFC_logo.png',
   'Dragons':             'https://upload.wikimedia.org/wikipedia/en/thumb/9/9b/Dragons_RFC_logo.png/200px-Dragons_RFC_logo.png',
   'Scarlets':            'https://upload.wikimedia.org/wikipedia/en/thumb/0/07/Scarlets_logo.svg/200px-Scarlets_logo.svg.png',
@@ -69,8 +69,8 @@ const Map<String, String> clubLogoUrls = {
   'Brasil Cobras':       'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
   'Cobras Brasil':       'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
   'Cobras XV':           'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
-  'Black Lions':         'https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Black_lion_rugby_logo.png/200px-Black_lion_rugby_logo.png',
-  'Black Lion':          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Black_lion_rugby_logo.png/200px-Black_lion_rugby_logo.png',
+  'Black Lions':         'https://r2.thesportsdb.com/images/media/team/badge/m0zs931716752391.png',
+  'Black Lion':          'https://r2.thesportsdb.com/images/media/team/badge/m0zs931716752391.png',
   'Cheetahs':            'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
   'Free State Cheetahs': 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
 
@@ -98,7 +98,8 @@ const Map<String, String> clubLogoUrls = {
   'Racing 92':           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Racing_92_%28logo%29.svg/200px-Racing_92_%28logo%29.svg.png',
   'Castres Olympique':   'https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Castres_olympique_badge.png/200px-Castres_olympique_badge.png',
   'Stade Rochelais':     'https://upload.wikimedia.org/wikipedia/en/thumb/e/e2/StadeRochelaisLogo.svg/200px-StadeRochelaisLogo.svg.png',
-  'Aviron Bayonnais':    'https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/AvironBayonnaisLogo2022.svg/200px-AvironBayonnaisLogo2022.svg.png',
+  'Aviron Bayonnais':    'https://r2.thesportsdb.com/images/media/team/badge/z0fq591714808782.png',
+  'Stade Bayonnais':     'https://r2.thesportsdb.com/images/media/team/badge/z0fq591714808782.png',
   'RC Toulonnais':       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/RCT_LOGO.png/200px-RCT_LOGO.png',
   'RC Toulon':           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/RCT_LOGO.png/200px-RCT_LOGO.png',
   'Lyon':                'https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/Lyon_Olympique_Universitaire.svg/200px-Lyon_Olympique_Universitaire.svg.png',
@@ -196,9 +197,16 @@ const Map<String, String> leagueLogoUrls = {
   'Seis Naciones':             'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/SixNationsRugbyCup.svg/250px-SixNationsRugbyCup.svg.png',
   'The Rugby Championship':    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Rugby_Championship_logo_%28white_background%29.png/250px-The_Rugby_Championship_logo_%28white_background%29.png',
   'Super Rugby Américas':      'https://upload.wikimedia.org/wikipedia/en/2/27/Super_Rugby_Americas_logo.png',
-  'Nations Championship':      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/2026_Nations_Championship_pictogram.svg/200px-2026_Nations_Championship_pictogram.svg.png',
   'URBA Top 14':               'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Urba_logo.png/200px-Urba_logo.png',
 };
 
-/// Devuelve la URL del logo de una liga/torneo, o null si no hay.
+// Logos de ligas guardados como assets locales (más confiables que network)
+const Map<String, String> leagueLogoAssets = {
+  'Nations Championship': 'assets/logos/nations_championship.png',
+};
+
+/// Devuelve la URL de red del logo de una liga/torneo, o null si no hay.
 String? leagueLogo(String leagueName) => leagueLogoUrls[leagueName];
+
+/// Devuelve el path de asset local del logo de una liga/torneo, o null si no hay.
+String? leagueLogoAsset(String leagueName) => leagueLogoAssets[leagueName];

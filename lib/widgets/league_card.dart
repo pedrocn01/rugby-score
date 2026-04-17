@@ -5,6 +5,7 @@ import '../config/themes.dart';
 import '../pages/detalle_liga.dart';
 import 'urba_logo.dart';
 
+
 const _fallbackTheme = LeagueTheme(
   primary:    Color(0xFF1B4332),
   accent:     Color(0xFF40916C),
@@ -12,16 +13,18 @@ const _fallbackTheme = LeagueTheme(
 );
 
 Widget leagueCard(BuildContext context, String nombre) {
-  final theme   = leagueThemes[nombre] ?? _fallbackTheme;
-  final logoUrl = leagueLogo(nombre);
-  return _LeagueCard(nombre: nombre, theme: theme, logoUrl: logoUrl);
+  final theme      = leagueThemes[nombre] ?? _fallbackTheme;
+  final logoUrl    = leagueLogo(nombre);
+  final logoAsset  = leagueLogoAsset(nombre);
+  return _LeagueCard(nombre: nombre, theme: theme, logoUrl: logoUrl, logoAsset: logoAsset);
 }
 
 class _LeagueCard extends StatefulWidget {
   final String nombre;
   final LeagueTheme theme;
   final String? logoUrl;
-  const _LeagueCard({required this.nombre, required this.theme, this.logoUrl});
+  final String? logoAsset;
+  const _LeagueCard({required this.nombre, required this.theme, this.logoUrl, this.logoAsset});
 
   @override
   State<_LeagueCard> createState() => _LeagueCardState();
@@ -72,7 +75,7 @@ class _LeagueCardState extends State<_LeagueCard> {
                 ),
               ],
             ),
-            child: _CardContent(nombre: widget.nombre, accent: accent, logoUrl: widget.logoUrl),
+            child: _CardContent(nombre: widget.nombre, accent: accent, logoUrl: widget.logoUrl, logoAsset: widget.logoAsset),
           ),
         ),
       );
@@ -129,7 +132,7 @@ class _LeagueCardState extends State<_LeagueCard> {
                     ),
                   ),
                 ),
-                _CardContent(nombre: widget.nombre, accent: accent),
+                _CardContent(nombre: widget.nombre, accent: accent, logoUrl: widget.logoUrl, logoAsset: widget.logoAsset),
               ],
             ),
           ),
@@ -145,7 +148,8 @@ class _CardContent extends StatelessWidget {
   final String  nombre;
   final Color   accent;
   final String? logoUrl;
-  const _CardContent({required this.nombre, required this.accent, this.logoUrl});
+  final String? logoAsset;
+  const _CardContent({required this.nombre, required this.accent, this.logoUrl, this.logoAsset});
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +165,40 @@ class _CardContent extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
                 child: urbaLogo,
               ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.35),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(nombre,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11)),
+                ),
+                Icon(Icons.arrow_forward_rounded, size: 12,
+                  color: Colors.white.withValues(alpha: 0.6)),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    // ── Con logo asset local ───────────────────────────────────────────────
+    if (logoAsset != null) {
+      return Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
+              child: Image.asset(logoAsset!, fit: BoxFit.contain),
             ),
           ),
           Container(
