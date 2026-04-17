@@ -51,12 +51,12 @@ const Map<String, String> clubLogoUrls = {
   'Fijian Drua':         'https://upload.wikimedia.org/wikipedia/en/thumb/9/9c/FijianDruaLogo.svg/200px-FijianDruaLogo.svg.png',
 
   // ── United Rugby Championship ──────────────────────────────────────────
-  'Zebre Parma':         'https://r2.thesportsdb.com/images/media/team/badge/y0vaog1716739157.png',
-  'Zebre':               'https://r2.thesportsdb.com/images/media/team/badge/y0vaog1716739157.png',
+  'Zebre Parma':         'https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Zebre_parma_logo23.png/200px-Zebre_parma_logo23.png',
+  'Zebre':               'https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Zebre_parma_logo23.png/200px-Zebre_parma_logo23.png',
   'Cardiff Rugby':       'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Cardiff_Rugby_logo_%282021%29.jpg/200px-Cardiff_Rugby_logo_%282021%29.jpg',
   'Cardiff':             'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/Cardiff_Rugby_logo_%282021%29.jpg/200px-Cardiff_Rugby_logo_%282021%29.jpg',
-  'Benetton Rugby':      'https://r2.thesportsdb.com/images/media/team/badge/txsuxw1453647910.png',
-  'Benetton':            'https://r2.thesportsdb.com/images/media/team/badge/txsuxw1453647910.png',
+  'Benetton Rugby':      'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Benetton_rugby.svg/200px-Benetton_rugby.svg.png',
+  'Benetton':            'https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Benetton_rugby.svg/200px-Benetton_rugby.svg.png',
   'Dragons RFC':         'https://upload.wikimedia.org/wikipedia/en/thumb/9/9b/Dragons_RFC_logo.png/200px-Dragons_RFC_logo.png',
   'Dragons':             'https://upload.wikimedia.org/wikipedia/en/thumb/9/9b/Dragons_RFC_logo.png/200px-Dragons_RFC_logo.png',
   'Scarlets':            'https://upload.wikimedia.org/wikipedia/en/thumb/0/07/Scarlets_logo.svg/200px-Scarlets_logo.svg.png',
@@ -69,8 +69,8 @@ const Map<String, String> clubLogoUrls = {
   'Brasil Cobras':       'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
   'Cobras Brasil':       'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
   'Cobras XV':           'https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Cobras_xv_logo.png/200px-Cobras_xv_logo.png',
-  'Black Lions':         'https://r2.thesportsdb.com/images/media/team/badge/m0zs931716752391.png',
-  'Black Lion':          'https://r2.thesportsdb.com/images/media/team/badge/m0zs931716752391.png',
+  'Black Lions':         'https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Black_lion_rugby_logo.png/200px-Black_lion_rugby_logo.png',
+  'Black Lion':          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Black_lion_rugby_logo.png/200px-Black_lion_rugby_logo.png',
   'Cheetahs':            'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
   'Free State Cheetahs': 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Logo_Cheetahs_Rugby.svg/200px-Logo_Cheetahs_Rugby.svg.png',
 
