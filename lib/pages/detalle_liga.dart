@@ -639,21 +639,41 @@ class _DetalleLigaState extends State<DetalleLiga> {
     );
   }
 
+  Widget _teamInitials(String teamName, double size) {
+    final initial = teamName.isNotEmpty ? teamName[0].toUpperCase() : '?';
+    return Container(
+      width: size, height: size,
+      decoration: BoxDecoration(
+        color: widget.theme.primary.withValues(alpha: 0.15),
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Text(
+          initial,
+          style: TextStyle(
+            fontSize: size * 0.5,
+            fontWeight: FontWeight.w800,
+            color: widget.theme.primary,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) {
     final staticUrl = clubLogo(teamName);
     final url = staticUrl ?? apiLogoUrl;
-    if (url == null) return const SizedBox(width: 20);
+    if (url == null) return _teamInitials(teamName, 20);
     return Image.network(
       url,
       width: 20, height: 20,
       fit: BoxFit.contain,
       errorBuilder: (_, e, s) {
-        // Si el URL estático falla, intentar con el logo de la API como fallback
         if (staticUrl != null && apiLogoUrl != null) {
           return Image.network(apiLogoUrl, width: 20, height: 20, fit: BoxFit.contain,
-            errorBuilder: (_, e2, s2) => const SizedBox(width: 20));
+            errorBuilder: (_, e2, s2) => _teamInitials(teamName, 20));
         }
-        return const SizedBox(width: 20);
+        return _teamInitials(teamName, 20);
       },
     );
   }
@@ -661,18 +681,17 @@ class _DetalleLigaState extends State<DetalleLiga> {
   Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) {
     final staticUrl = clubLogo(teamName);
     final url = staticUrl ?? apiLogoUrl;
-    if (url == null) return const SizedBox.shrink();
+    if (url == null) return _teamInitials(teamName, size);
     return Image.network(
       url,
       width: size, height: size,
       fit: BoxFit.contain,
       errorBuilder: (_, e, s) {
-        // Si el URL estático falla, intentar con el logo de la API como fallback
         if (staticUrl != null && apiLogoUrl != null) {
           return Image.network(apiLogoUrl, width: size, height: size, fit: BoxFit.contain,
-            errorBuilder: (_, e2, s2) => const SizedBox.shrink());
+            errorBuilder: (_, e2, s2) => _teamInitials(teamName, size));
         }
-        return const SizedBox.shrink();
+        return _teamInitials(teamName, size);
       },
     );
   }

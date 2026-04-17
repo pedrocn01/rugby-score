@@ -134,6 +134,7 @@ const Map<String, String> clubLogoUrls = {
   'La Tablada':                 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7f/Club_La_Tablada_Crest.svg/200px-Club_La_Tablada_Crest.svg.png',
   'Santa Fe Rugby':             'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Santa_Fe_Rugby_Club_Crest.svg/200px-Santa_Fe_Rugby_Club_Crest.svg.png',
   'Estudiantes de Paraná':      'https://upload.wikimedia.org/wikipedia/en/thumb/8/87/Estudiantes_parana_logo.png/200px-Estudiantes_parana_logo.png',
+  'CURNE':                      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Escudo_CURNE.png/200px-Escudo_CURNE.png',
 };
 
 // ─── Logos de selecciones / federaciones internacionales ──────────────────────
