@@ -40,7 +40,6 @@ const Map<String, int> leagueIds = {
   'Nations Championship':     -10, // sin API — fixture estático scrapeado de Wikipedia
   'TDI A 2026':               -20, // Torneo del Interior A — fixture estático cargado a mano
   // Circuito 7s
-  'Acumulado 7s':              -1, // tabla acumulada estática
   '7s Dubai':                  111,
   '7s Sudáfrica':              112,
   '7s Singapore':              120,
@@ -56,7 +55,6 @@ const Set<String> staticLeagues = {
   'URBA Primera A',
   'URBA Primera B',
   'URBA Primera C',
-  'Acumulado 7s',
   'Nations Championship',
   'TDI A 2026',
 };
@@ -96,14 +94,10 @@ const Set<String> sevensLeagues = {
 };
 
 // ─── Ligas que solo muestran la pestaña TABLA (sin partidos) ──────────────
-const Set<String> soloTablaLeagues = {
-  'Acumulado 7s',
-};
+const Set<String> soloTablaLeagues = {};
 
 // ─── Tabla acumulada calculada desde datos de la API (no estática) ────────
-const Set<String> computedSevensAccumulated = {
-  'Acumulado 7s',
-};
+const Set<String> computedSevensAccumulated = {};
 
 // ─── Ligas cuya tabla viene de la API de URBA (partidos siguen estáticos) ─
 const Set<String> urbaApiStandingsLeagues = {
@@ -114,7 +108,9 @@ const Set<String> urbaApiStandingsLeagues = {
 };
 
 // ─── Ligas que solo muestran la pestaña RESULTADOS (fase de grupos/pools) ─
-const Set<String> soloResultadosLeagues = {};
+const Set<String> soloResultadosLeagues = {
+  '7s Hong Kong',
+};
 
 // ─── Ligas donde el descenso está suspendido (no colorear fila) ───────────
 const Set<String> noRelegationLeagues = {
@@ -124,6 +120,7 @@ const Set<String> noRelegationLeagues = {
   'United Rugby Championship', // franquicias, sin descenso
   'Super Rugby Pacific',    // franquicias, sin descenso
   'Super Rugby Américas',   // franquicias, sin descenso
+  'TDI A 2026',             // sin descenso ni playoff promoción
 };
 
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
@@ -131,7 +128,6 @@ const Map<String, List<String>> folders = {
   'URBA': ['URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
   'Torneo del Interior': ['TDI A 2026'],
   'Circuito 7s': [
-    'Acumulado 7s',
     '7s Hong Kong',
     '7s Dubai',
     '7s Sudáfrica',

@@ -7,7 +7,6 @@ class StaticDataService {
       'URBA Primera A' => _urbaPrimeraAMatches,
       'URBA Primera B' => _urbaPrimeraBMatches,
       'URBA Primera C' => _urbaPrimeraCMatches,
-      'Acumulado 7s'          => [],
       'Nations Championship'  => _nationsChampionshipMatches,
       'TDI A 2026'            => _tdiA2026Matches,
       _ => [],
@@ -20,7 +19,6 @@ class StaticDataService {
       'URBA Primera A' => [_urbaPrimeraAStandings],
       'URBA Primera B' => [_urbaPrimeraBStandings],
       'URBA Primera C' => [_urbaPrimeraCStandings],
-      'Acumulado 7s'   => [_sevensAcumuladoStandings],
       'Super Rugby Pacific' => [_superRugbyStandings],
       'Champions Cup'  => [_champsCupGrupoA, _champsCupGrupoB, _champsCupGrupoC, _champsCupGrupoD],
       'Challenge Cup'  => [_challengeCupGrupoA, _challengeCupGrupoB, _challengeCupGrupoC],
@@ -162,19 +160,6 @@ class StaticDataService {
     {'position':6,'team':{'name':'Cheetahs'},            'games':{'played':4,'win':{'total':0},'draw':{'total':0},'lose':{'total':4}},'points':1, 'description':null},
   ];
 
-  // ── CIRCUITO 7s — tabla acumulada ────────────────────────────────────────
-  // Actualizada hasta Perth (4 legs jugados: Dubai, Sudáfrica, Singapore, Australia)
-
-  static final List<dynamic> _sevensAcumuladoStandings = [
-    {'position':1,'team':{'name':'Fiji'},          'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':70,'description':'Líder'},
-    {'position':2,'team':{'name':'South Africa'},  'games':{'played':4,'win':{'total':3},'draw':{'total':0},'lose':{'total':1}},'points':66,'description':null},
-    {'position':3,'team':{'name':'New Zealand'},   'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':62,'description':null},
-    {'position':4,'team':{'name':'France'},        'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':54,'description':null},
-    {'position':5,'team':{'name':'Australia'},     'games':{'played':4,'win':{'total':2},'draw':{'total':0},'lose':{'total':2}},'points':54,'description':null},
-    {'position':6,'team':{'name':'Argentina'},     'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':44,'description':null},
-    {'position':7,'team':{'name':'Spain'},         'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':36,'description':null},
-    {'position':8,'team':{'name':'Great Britain'}, 'games':{'played':4,'win':{'total':1},'draw':{'total':0},'lose':{'total':3}},'points':30,'description':null},
-  ];
 
   // ── URBA PRIMERA A (agregar datos cuando estén disponibles) ─────────────
   static final List<dynamic> _urbaPrimeraAMatches   = [];

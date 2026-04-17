@@ -41,7 +41,6 @@ const Map<String, LeagueTheme> leagueThemes = {
   'URBA Primera C':            LeagueTheme(primary: Color(0xFF8A3800), accent: Color(0xFFFFD700), background: Color(0xFFFFF3E8)),
 
   // ── Circuito 7s ─────────────────────────────────────────────────────────
-  'Acumulado 7s':              LeagueTheme(primary: Color(0xFF0D1B2A), accent: Color(0xFFFF6B00), background: Color(0xFFFFF4EE)),
   '7s Dubai':                  LeagueTheme(primary: Color(0xFF8B6914), accent: Color(0xFFFFD700), background: Color(0xFFFFF8E1)),
   '7s Sudáfrica':              LeagueTheme(primary: Color(0xFF007749), accent: Color(0xFFFFB612), background: Color(0xFFE8FFF4)),
   '7s Singapore':              LeagueTheme(primary: Color(0xFFCC0001), accent: Color(0xFFFFFFFF), background: Color(0xFFFFEEEE)),
