@@ -677,17 +677,49 @@ class _DetalleLigaState extends State<DetalleLiga> {
     );
   }
 
+  static const _liveStatuses = {'1H', '2H', 'HT', 'ET', 'BT', 'P'};
+
   Widget _statusChip(String status) {
     final Color bg;
     final Color fg;
     final String label;
+    final bool isLive = _liveStatuses.contains(status);
     switch (status) {
       case 'FT':
         bg = const Color(0xFFE8F5EE); fg = const Color(0xFF2D6A4F); label = 'Final';
       case 'AET':
         bg = const Color(0xFFFFF3E8); fg = const Color(0xFFE85D04); label = 'Prórroga';
+      case '1H':
+        bg = const Color(0xFFFFEBEB); fg = const Color(0xFFD32F2F); label = '1er Tiempo';
+      case '2H':
+        bg = const Color(0xFFFFEBEB); fg = const Color(0xFFD32F2F); label = '2do Tiempo';
+      case 'HT':
+        bg = const Color(0xFFFFEBEB); fg = const Color(0xFFD32F2F); label = 'Entretiempo';
+      case 'ET':
+        bg = const Color(0xFFFFEBEB); fg = const Color(0xFFD32F2F); label = 'Prórroga';
+      case 'BT':
+        bg = const Color(0xFFFFEBEB); fg = const Color(0xFFD32F2F); label = 'Descanso';
+      case 'P':
+        bg = const Color(0xFFFFEBEB); fg = const Color(0xFFD32F2F); label = 'Penales';
       default:
         bg = const Color(0xFFEEF2FF); fg = widget.theme.primary;    label = status;
+    }
+    if (isLive) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 7, height: 7,
+            decoration: const BoxDecoration(color: Color(0xFFD32F2F), shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
+            child: Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: fg)),
+          ),
+        ],
+      );
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -1013,6 +1045,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
     final awayLogoUrl = partido['teams']?['away']?['logo']?.toString();
     final fecha       = _formatFecha(partido['date']);
     final hora        = _formatHora(partido['date']);
+    final status      = partido['status']?['short'] as String? ?? '';
+    final isLive      = _liveStatuses.contains(status);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -1027,11 +1061,16 @@ class _DetalleLigaState extends State<DetalleLiga> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.calendar_today, size: 12, color: widget.theme.primary),
-                const SizedBox(width: 5),
-                Text('$fecha · $hora hs', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: widget.theme.primary)),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_today, size: 12, color: widget.theme.primary),
+                    const SizedBox(width: 5),
+                    Text('$fecha · $hora hs', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: widget.theme.primary)),
+                  ],
+                ),
+                if (isLive) _statusChip(status),
               ],
             ),
             const SizedBox(height: 14),

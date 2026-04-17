@@ -42,14 +42,18 @@ class MatchCache {
       final results = await Future.wait(
         entries.map((e) => service
             .fetchMatches(e.value, noCache: force)
+            .then<List<dynamic>?>((data) => data)
             .catchError((err) {
               debugPrint('❌ MatchCache: error cargando ${e.key}: $err');
-              return <dynamic>[];
+              return null;
             })),
       );
 
       for (int i = 0; i < entries.length; i++) {
-        _data[entries[i].key] = results[i];
+        final result = results[i];
+        if (result != null) {
+          _data[entries[i].key] = result;
+        }
       }
       _lastFetch = DateTime.now();
     } finally {
