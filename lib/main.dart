@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/home_page.dart';
+import 'widgets/main_shell.dart';
 
 void main() => runApp(const RugbyApp());
 
@@ -17,7 +17,7 @@ class RugbyApp extends StatelessWidget {
         fontFamily:            'Georgia',
         scaffoldBackgroundColor: const Color(0xFFF7F3EE),
       ),
-      home: const HomePage(),
+      home: const MainShell(),
     );
   }
 }

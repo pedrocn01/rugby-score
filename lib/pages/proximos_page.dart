@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../services/match_cache.dart';
-import '../widgets/app_drawer.dart';
-
 class ProximosPage extends StatefulWidget {
   const ProximosPage({super.key});
 
@@ -36,7 +34,6 @@ class _ProximosPageState extends State<ProximosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
-      drawer: const AppDrawer(),
       body: CustomScrollView(
         slivers: [
           // ── AppBar ──────────────────────────────────────────────────────
@@ -44,12 +41,6 @@ class _ProximosPageState extends State<ProximosPage> {
             pinned: true,
             backgroundColor: const Color(0xFF1B4332),
             elevation: 0,
-            leading: Builder(
-              builder: (ctx) => IconButton(
-                icon: const Icon(Icons.menu_rounded, color: Colors.white),
-                onPressed: () => Scaffold.of(ctx).openDrawer(),
-              ),
-            ),
             title: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

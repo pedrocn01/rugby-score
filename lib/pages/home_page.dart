@@ -4,7 +4,6 @@ import '../config/leagues.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
 import '../widgets/league_card.dart';
-import '../widgets/app_drawer.dart';
 import '../widgets/rugby_logo.dart';
 import 'carpeta_page.dart';
 import 'detalle_liga.dart';
@@ -39,7 +38,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
-      drawer: const AppDrawer(),
       body: CustomScrollView(
         slivers: [
           // ─── Header ────────────────────────────────────────────────────────
@@ -48,12 +46,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             backgroundColor: const Color(0xFF1B4332),
             elevation:       0,
             iconTheme:       const IconThemeData(color: Colors.white),
-            leading: Builder(
-              builder: (ctx) => IconButton(
-                icon: const Icon(Icons.menu_rounded, color: Colors.white, size: 26),
-                onPressed: () => Scaffold.of(ctx).openDrawer(),
-              ),
-            ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.search_rounded, color: Colors.white),

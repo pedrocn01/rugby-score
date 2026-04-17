@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/proximos_page.dart';
 import '../pages/live_page.dart';
+import 'pulse_dot.dart';
 import 'rugby_logo.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -125,7 +126,7 @@ class _NavItemState extends State<_NavItem> {
                 style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
               if (widget.isLive) ...[
                 const SizedBox(width: 8),
-                _PulseDot(),
+                const PulseDot(),
               ],
             ],
           ),
@@ -135,49 +136,3 @@ class _NavItemState extends State<_NavItem> {
   }
 }
 
-// ── Punto rojo pulsante ───────────────────────────────────────────────────────
-
-class _PulseDot extends StatefulWidget {
-  @override
-  State<_PulseDot> createState() => _PulseDotState();
-}
-
-class _PulseDotState extends State<_PulseDot> with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
-  late final Animation<double> _anim;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
-      ..repeat(reverse: true);
-    _anim = CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut);
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _anim,
-      builder: (_, child) => Container(
-        width: 8, height: 8,
-        decoration: BoxDecoration(
-          color: Color.lerp(Colors.redAccent, Colors.red.shade900, _anim.value),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.redAccent.withValues(alpha: 0.6 * (1 - _anim.value)),
-              blurRadius: 6,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

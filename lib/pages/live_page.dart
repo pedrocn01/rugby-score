@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../services/match_cache.dart';
-import '../widgets/app_drawer.dart';
+import '../widgets/pulse_dot.dart';
 
 class LivePage extends StatefulWidget {
   const LivePage({super.key});
@@ -52,7 +52,6 @@ class _LivePageState extends State<LivePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
-      drawer: const AppDrawer(),
       body: CustomScrollView(
         slivers: [
           // ── AppBar ──────────────────────────────────────────────────────
@@ -60,12 +59,6 @@ class _LivePageState extends State<LivePage> {
             pinned: true,
             backgroundColor: const Color(0xFF1A0505),
             elevation: 0,
-            leading: Builder(
-              builder: (ctx) => IconButton(
-                icon: const Icon(Icons.menu_rounded, color: Colors.white),
-                onPressed: () => Scaffold.of(ctx).openDrawer(),
-              ),
-            ),
             title: Row(
               children: [
                 const Column(
@@ -79,7 +72,7 @@ class _LivePageState extends State<LivePage> {
                   ],
                 ),
                 const SizedBox(width: 10),
-                _PulseDot(),
+                const PulseDot(size: 10),
               ],
             ),
             actions: [
@@ -259,48 +252,3 @@ class _LiveCard extends StatelessWidget {
   }
 }
 
-// ── Punto rojo pulsante ───────────────────────────────────────────────────────
-
-class _PulseDot extends StatefulWidget {
-  @override
-  State<_PulseDot> createState() => _PulseDotState();
-}
-
-class _PulseDotState extends State<_PulseDot> with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
-  late final Animation<double> _anim;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
-      ..repeat(reverse: true);
-    _anim = CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut);
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _anim,
-      builder: (_, child) => Container(
-        width: 10, height: 10,
-        decoration: BoxDecoration(
-          color: Color.lerp(Colors.redAccent, Colors.red.shade900, _anim.value),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.redAccent.withValues(alpha: 0.7 * (1 - _anim.value)),
-              blurRadius: 8, spreadRadius: 2,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
