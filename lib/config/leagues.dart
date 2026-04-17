@@ -132,13 +132,13 @@ const Map<String, List<String>> folders = {
   'Torneo del Interior': ['TDI A 2026'],
   'Circuito 7s': [
     'Acumulado 7s',
+    '7s Hong Kong',
     '7s Dubai',
     '7s Sudáfrica',
     '7s Singapore',
     '7s Australia',
     '7s Canadá',
     '7s USA',
-    '7s Hong Kong',
   ],
 };
 
