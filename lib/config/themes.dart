@@ -28,6 +28,8 @@ const Map<String, LeagueTheme> leagueThemes = {
   'Super Rugby Américas':      LeagueTheme(primary: Color(0xFF007A33), accent: Color(0xFFFFD700), background: Color(0xFFEAFFF0)),
 
   // ── Internacional ───────────────────────────────────────────────────────
+  // Nations Championship → negro/dorado (logo amarillo sobre fondo negro)
+  'Nations Championship':      LeagueTheme(primary: Color(0xFF0A0A0A), accent: Color(0xFFFFD700), background: Color(0xFFF5F0E8)),
   // Seis Naciones → navy/gold del torneo
   'Seis Naciones':             LeagueTheme(primary: Color(0xFF1A237E), accent: Color(0xFFC8A951), background: Color(0xFFEEF0FF)),
   'The Rugby Championship':    LeagueTheme(primary: Color(0xFF0077B6), accent: Color(0xFF00B4D8), background: Color(0xFFE8F7FF)),
