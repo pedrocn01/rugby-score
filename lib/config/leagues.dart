@@ -67,9 +67,13 @@ const Set<String> staticStandingsOnly = {
   'Challenge Cup',
 };
 
+// ─── Ligas cuya tabla viene de ESPN (incluye todos los bonus points) ──────
+const Set<String> espnStandingsLeagues = {
+  'Super Rugby Pacific',
+};
+
 // ─── Ligas cuya tabla se calcula a partir de los partidos de la API ───────
 const Set<String> computeStandingsLeagues = {
-  'Super Rugby Pacific',
   'Super Rugby Américas',
   '7s Dubai',
   '7s Sudáfrica',

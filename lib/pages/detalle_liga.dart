@@ -9,6 +9,7 @@ import '../models/team_stats.dart';
 import '../services/match_cache.dart';
 import '../services/rugby_service.dart';
 import '../services/urba_service.dart';
+import '../services/espn_service.dart';
 
 class DetalleLiga extends StatefulWidget {
   final String nombreLiga;
@@ -33,6 +34,7 @@ class DetalleLiga extends StatefulWidget {
 class _DetalleLigaState extends State<DetalleLiga> {
   final RugbyService _service = RugbyService();
   final UrbaService  _urba   = UrbaService();
+  final EspnService  _espn   = EspnService();
   late Future<List<dynamic>> _matchesFuture;
   late Future<List<List<dynamic>>> _standingsFuture;
 
@@ -57,6 +59,11 @@ class _DetalleLigaState extends State<DetalleLiga> {
     if (urbaApiStandingsLeagues.contains(widget.nombreLiga)) {
       _matchesFuture   = _urba.fetchMatches(widget.nombreLiga);
       _standingsFuture = _urba.fetchStandings(widget.nombreLiga).then((s) => [s]);
+      return;
+    }
+    if (espnStandingsLeagues.contains(widget.nombreLiga)) {
+      _matchesFuture   = _service.fetchMatches(widget.leagueId, noCache: noCache);
+      _standingsFuture = _espn.fetchStandings(widget.nombreLiga);
       return;
     }
     if (widget.isStatic) {
