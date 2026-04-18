@@ -5,8 +5,11 @@ import '../widgets/app_drawer.dart';
 import '../widgets/urba_logo.dart';
 import '../config/themes.dart';
 import '../data/static_data.dart';
+import '../models/team_stats.dart';
+import '../services/match_cache.dart';
 import '../services/rugby_service.dart';
 import '../services/urba_service.dart';
+import '../services/espn_service.dart';
 
 class DetalleLiga extends StatefulWidget {
   final String nombreLiga;
@@ -31,26 +34,182 @@ class DetalleLiga extends StatefulWidget {
 class _DetalleLigaState extends State<DetalleLiga> {
   final RugbyService _service = RugbyService();
   final UrbaService  _urba   = UrbaService();
+  final EspnService  _espn   = EspnService();
   late Future<List<dynamic>> _matchesFuture;
+  late Future<List<List<dynamic>>> _standingsFuture;
 
   @override
   void initState() {
     super.initState();
+    // El Worker de Cloudflare cachea las respuestas con TTL inteligente
+    // (10 min en fines de semana, 24h en días sin partidos). Todos los usuarios
+    // comparten ese cache → api-sports recibe 1 llamada por TTL, no 1 por usuario.
+    // Solo forzar refresh cuando el usuario lo pide explícitamente (_refresh).
     _loadData();
   }
 
   void _loadData({bool noCache = false}) {
+    if (computedSevensAccumulated.contains(widget.nombreLiga)) {
+      _matchesFuture   = Future.value([]);
+      _standingsFuture = MatchCache.instance
+          .fetchAll(force: noCache)
+          .then((_) => MatchCache.instance.getAccumulatedSevensStandings());
+      return;
+    }
     if (urbaApiStandingsLeagues.contains(widget.nombreLiga)) {
-      _matchesFuture = _urba.fetchMatches(widget.nombreLiga);
-    } else if (widget.isStatic) {
-      _matchesFuture = Future.value(StaticDataService.getMatches(widget.nombreLiga));
+      _matchesFuture   = _urba.fetchMatches(widget.nombreLiga);
+      _standingsFuture = _urba.fetchStandings(widget.nombreLiga).then((s) => [s]);
+      return;
+    }
+    if (espnStandingsLeagues.contains(widget.nombreLiga)) {
+      _matchesFuture   = _service.fetchMatches(widget.leagueId, noCache: noCache);
+      _standingsFuture = _espn.fetchStandings(widget.nombreLiga);
+      return;
+    }
+    if (widget.isStatic) {
+      _matchesFuture  = Future.value(StaticDataService.getMatches(widget.nombreLiga));
+      _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
+    } else if (widget.isStaticStandingsOnly) {
+      _matchesFuture  = _service.fetchMatches(widget.leagueId, noCache: noCache);
+      _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
+    } else if (computeStandingsLeagues.contains(widget.nombreLiga)) {
+      final f = _service.fetchMatches(widget.leagueId, noCache: noCache);
+      _matchesFuture  = f;
+      _standingsFuture = sevensLeagues.contains(widget.nombreLiga)
+          ? f.then(_computePoolStandings)
+          : f.then(_computeStandingsFromMatches);
     } else {
-      _matchesFuture = _service.fetchMatches(widget.leagueId, noCache: noCache);
+      _matchesFuture  = _service.fetchMatches(widget.leagueId, noCache: noCache);
+      _standingsFuture = _service.fetchStandings(widget.leagueId);
     }
   }
 
   void _refresh() {
     setState(() => _loadData(noCache: true));
+  }
+
+  // ── Cálculo de tabla desde partidos ─────────────────────────────────────
+
+  List<List<dynamic>> _computeStandingsFromMatches(List<dynamic> matches) {
+    final Map<String, TeamStats> stats = {};
+
+    for (final match in matches) {
+      final hs = match['scores']?['home'];
+      final as_ = match['scores']?['away'];
+      if (hs == null || as_ == null) continue;
+
+      final home        = match['teams']?['home']?['name'] as String? ?? '';
+      final away        = match['teams']?['away']?['name'] as String? ?? '';
+      if (home.isEmpty || away.isEmpty) continue;
+      final homeLogo    = match['teams']?['home']?['logo']?.toString();
+      final awayLogo    = match['teams']?['away']?['logo']?.toString();
+
+      stats.putIfAbsent(home, () => TeamStats(home));
+      stats.putIfAbsent(away, () => TeamStats(away));
+      stats[home]!.logoUrl ??= homeLogo;
+      stats[away]!.logoUrl ??= awayLogo;
+
+      stats[home]!.pj++;
+      stats[away]!.pj++;
+
+      if (hs > as_) {
+        stats[home]!.g++;  stats[away]!.p++;
+        stats[home]!.pts += 4;
+        if ((hs - as_) <= 7) stats[away]!.pts += 1; // bonus defensivo
+      } else if (as_ > hs) {
+        stats[away]!.g++;  stats[home]!.p++;
+        stats[away]!.pts += 4;
+        if ((as_ - hs) <= 7) stats[home]!.pts += 1; // bonus defensivo
+      } else {
+        stats[home]!.e++;  stats[away]!.e++;
+        stats[home]!.pts += 2;
+        stats[away]!.pts += 2;
+      }
+    }
+
+    final sorted = stats.values.toList()
+      ..sort((a, b) => b.pts != a.pts ? b.pts.compareTo(a.pts) : b.g.compareTo(a.g));
+
+    return [
+      sorted.asMap().entries.map((e) => {
+        'position': e.key + 1,
+        'team': {'name': e.value.name, 'logo': e.value.logoUrl},
+        'games': {
+          'played': e.value.pj,
+          'win':    {'total': e.value.g},
+          'draw':   {'total': e.value.e},
+          'lose':   {'total': e.value.p},
+        },
+        'points':     e.value.pts,
+        'description': null,
+      }).toList(),
+    ];
+  }
+
+  // ── Cálculo de tabla por pools (7s) ─────────────────────────────────────
+
+  List<List<dynamic>> _computePoolStandings(List<dynamic> matches) {
+    // Solo partidos de fase de grupos (week == null o "Pool X")
+    final poolMatches = matches.where((p) {
+      final week = p['week']?.toString();
+      return week == null || week.toLowerCase().startsWith('pool');
+    }).toList();
+
+    // Agrupar por pool. SVNS usa week=null para todos los pools → un solo grupo
+    final Map<String, List<dynamic>> byPool = {};
+    for (final match in poolMatches) {
+      final pool = match['week']?.toString() ?? 'Fase de Grupos';
+      byPool.putIfAbsent(pool, () => []).add(match);
+    }
+
+    final sortedPools = byPool.keys.toList()..sort();
+
+    return sortedPools.map((pool) {
+      final Map<String, TeamStats> stats = {};
+      for (final match in byPool[pool]!) {
+        final hs  = match['scores']?['home'];
+        final as_ = match['scores']?['away'];
+        if (hs == null || as_ == null) continue;
+
+        final home = match['teams']?['home']?['name'] as String? ?? '';
+        final away = match['teams']?['away']?['name'] as String? ?? '';
+        if (home.isEmpty || away.isEmpty) continue;
+
+        stats.putIfAbsent(home, () => TeamStats(home));
+        stats.putIfAbsent(away, () => TeamStats(away));
+
+        stats[home]!.pj++;
+        stats[away]!.pj++;
+
+        if (hs > as_) {
+          stats[home]!.g++;  stats[away]!.p++;
+          stats[home]!.pts += 4;
+        } else if (as_ > hs) {
+          stats[away]!.g++;  stats[home]!.p++;
+          stats[away]!.pts += 4;
+        } else {
+          stats[home]!.e++;  stats[away]!.e++;
+          stats[home]!.pts += 2;
+          stats[away]!.pts += 2;
+        }
+      }
+
+      final sorted = stats.values.toList()
+        ..sort((a, b) => b.pts != a.pts ? b.pts.compareTo(a.pts) : b.g.compareTo(a.g));
+
+      return sorted.asMap().entries.map((e) => {
+        'position': e.key + 1,
+        'team':     {'name': e.value.name},
+        'games': {
+          'played': e.value.pj,
+          'win':    {'total': e.value.g},
+          'draw':   {'total': e.value.e},
+          'lose':   {'total': e.value.p},
+        },
+        'points':      e.value.pts,
+        'description': null,
+      }).toList();
+    }).toList();
   }
 
   // ── Filtro de partidos — solo competencia principal (7s) ─────────────────
@@ -248,7 +407,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         drawer: const AppDrawer(),
@@ -285,7 +444,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
             labelColor:           Colors.white,
             unselectedLabelColor: Colors.white60,
             labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
-            tabs: const [Tab(text: 'RESULTADOS'), Tab(text: 'PRÓXIMOS')],
+            tabs: const [Tab(text: 'RESULTADOS'), Tab(text: 'TABLA'), Tab(text: 'PRÓXIMOS')],
           ),
         ),
         body: FutureBuilder<List<dynamic>>(
@@ -320,7 +479,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
                     });
 
                   return TabBarView(
-                    children: [_listaResultados(jugados), _listaProximos(proximos)],
+                    children: [_listaResultados(jugados), _tablaWidget(), _listaProximos(proximos)],
                   );
                 },
               ),
@@ -484,6 +643,24 @@ class _DetalleLigaState extends State<DetalleLiga> {
     );
   }
 
+  Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) {
+    final staticUrl = clubLogo(teamName);
+    final url = staticUrl ?? apiLogoUrl;
+    if (url == null) return _teamInitials(teamName, 20);
+    return Image.network(
+      url,
+      width: 20, height: 20,
+      fit: BoxFit.contain,
+      errorBuilder: (_, e, s) {
+        if (staticUrl != null && apiLogoUrl != null) {
+          return Image.network(apiLogoUrl, width: 20, height: 20, fit: BoxFit.contain,
+            errorBuilder: (_, e2, s2) => _teamInitials(teamName, 20));
+        }
+        return _teamInitials(teamName, 20);
+      },
+    );
+  }
+
   Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) {
     final staticUrl = clubLogo(teamName);
     final url = staticUrl ?? apiLogoUrl;
@@ -550,6 +727,286 @@ class _DetalleLigaState extends State<DetalleLiga> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
       child: Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: fg)),
+    );
+  }
+
+  // ── Tab: Tabla ───────────────────────────────────────────────────────────
+
+  Widget _tablaWidget() {
+    return FutureBuilder<List<List<dynamic>>>(
+      future: _standingsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(color: widget.theme.primary));
+        }
+        if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
+
+        final grupos = snapshot.data ?? [];
+        if (grupos.isEmpty) return _emptyState('Tabla no disponible — aún no hay etapas completadas');
+
+        // Tabla especial para el acumulado del circuito 7s
+        if (computedSevensAccumulated.contains(widget.nombreLiga)) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: _tablaSevensAcumulada(grupos[0]),
+          );
+        }
+
+        final tieneGrupos   = grupos.length > 1;
+        final ocultarLeyenda = widget.nombreLiga == 'Seis Naciones' || widget.nombreLiga == 'The Rugby Championship';
+
+        final grupoLabels = switch (widget.nombreLiga) {
+          'Champions Cup' => ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'],
+          'Challenge Cup' => ['GRUPO A', 'GRUPO B', 'GRUPO C'],
+          'TDI A 2026'   => ['ZONA 1', 'ZONA 2', 'ZONA 3', 'ZONA 4'],
+          _ when sevensLeagues.contains(widget.nombreLiga) =>
+            List.generate(grupos.length, (i) => 'POOL ${String.fromCharCode(65 + i)}'),
+          _ => <String>[],
+        };
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...grupos.asMap().entries.map((entry) {
+                final idx       = entry.key;
+                final tabla     = entry.value;
+                final labelGrupo = grupoLabels.isNotEmpty && idx < grupoLabels.length
+                    ? grupoLabels[idx]
+                    : 'GRUPO ${idx + 1}';
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (tieneGrupos)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10, top: idx == 0 ? 0 : 24),
+                        child: Text(
+                          labelGrupo,
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: widget.theme.primary, letterSpacing: 2),
+                        ),
+                      ),
+                    _tablaHeader(),
+                    _tablaBody(tabla),
+                  ],
+                );
+              }),
+
+              if (!ocultarLeyenda) ...[
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 6,
+                  children: [
+                    if (urbaFirstLeagues.contains(widget.nombreLiga)) ...[
+                      _leyendaItem(const Color(0xFF2D6A4F), 'Ascenso directo'),
+                      _leyendaItem(const Color(0xFFF4A100), 'Playoff de ascenso'),
+                      _leyendaItem(Colors.red, 'Descenso'),
+                    ] else if (urbaTop14Leagues.contains(widget.nombreLiga)) ...[
+                      _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica playoffs'),
+                      _leyendaItem(Colors.red, 'Descenso'),
+                    ] else ...[
+                      _leyendaItem(const Color(0xFF2D6A4F), 'Clasifica'),
+                      if (widget.nombreLiga == 'Champions Cup')
+                        _leyendaItem(const Color(0xFF0077B6), 'Pasa a Challenge Cup'),
+                      if (!noRelegationLeagues.contains(widget.nombreLiga)) ...[
+                        _leyendaItem(const Color(0xFFF4A100), 'Playoff promoción'),
+                        _leyendaItem(Colors.red, 'Descenso'),
+                      ],
+                    ],
+                  ],
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _tablaHeader() {
+    return Container(
+      decoration: BoxDecoration(
+        color:        widget.theme.primary,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      child: const Row(
+        children: [
+          SizedBox(width: 28, child: Text('#',     style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
+          Expanded(            child: Text('Equipo', style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
+          SizedBox(width: 32, child: Text('PJ',   textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 32, child: Text('G',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 32, child: Text('E',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 32, child: Text('P',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+          SizedBox(width: 40, child: Text('Pts',  textAlign: TextAlign.center, style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w800, fontSize: 12))),
+        ],
+      ),
+    );
+  }
+
+  Widget _tablaBody(List<dynamic> tabla) {
+    return Container(
+      decoration: BoxDecoration(
+        color:        Colors.white,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(14)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.07), blurRadius: 8, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        children: tabla.asMap().entries.map<Widget>((eq) {
+          final i      = eq.key;
+          final equipo = eq.value;
+          final pos     = equipo['position'] ?? i + 1;
+          final nombre  = equipo['team']?['name'] ?? '-';
+          final logoUrl = equipo['team']?['logo']?.toString();
+          final pj      = equipo['games']?['played'] ?? '-';
+          final g      = equipo['games']?['win']?['total'] ?? '-';
+          final e      = equipo['games']?['draw']?['total'] ?? '-';
+          final p      = equipo['games']?['lose']?['total'] ?? '-';
+          final pts    = equipo['points'] ?? '-';
+          final desc   = equipo['description'] as String?;
+          final isLast = i == tabla.length - 1;
+
+          Color leftBorder = Colors.transparent;
+          Color rowBg      = i.isOdd ? const Color(0xFFFAFAFA) : Colors.white;
+
+          final noRelegation = noRelegationLeagues.contains(widget.nombreLiga);
+          if (desc != null) {
+            if (desc == 'Challenge Cup') {
+              leftBorder = const Color(0xFF0077B6);
+              rowBg      = const Color(0xFFEEF6FF);
+            } else if (desc.contains('Relegation') && desc.contains('Playoffs') && !noRelegation) {
+              leftBorder = const Color(0xFFF4A100);
+              rowBg      = const Color(0xFFFFFAEE);
+            } else if (desc.contains('Relegation') && !desc.contains('Playoffs') && !noRelegation) {
+              leftBorder = Colors.red;
+              rowBg      = const Color(0xFFFFF5F5);
+            } else if ((desc.contains('Playoffs') || desc.contains('Qualified')) && !desc.contains('Relegation')) {
+              leftBorder = const Color(0xFF2D6A4F);
+              rowBg      = const Color(0xFFF0FAF5);
+            }
+          }
+
+          return Container(
+            decoration: BoxDecoration(
+              color: rowBg,
+              border: Border(
+                left:   BorderSide(color: leftBorder, width: 4),
+                bottom: isLast ? BorderSide.none : const BorderSide(color: Color(0xFFEEEEEE), width: 1),
+              ),
+              borderRadius: isLast ? const BorderRadius.vertical(bottom: Radius.circular(14)) : BorderRadius.zero,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            child: Row(
+              children: [
+                SizedBox(width: 28, child: Text(pos.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
+                _teamLogoSmall(nombre, apiLogoUrl: logoUrl),
+                const SizedBox(width: 6),
+                Expanded(           child: Text(nombre,         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
+                SizedBox(width: 32, child: Text(pj.toString(),  textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 32, child: Text(g.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 32, child: Text(e.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 32, child: Text(p.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                SizedBox(width: 40, child: Text(pts.toString(), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Color(0xFF1A1A1A)))),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  // ── Tabla acumulada Circuito 7s (puntos por posición SVNS) ─────────────────
+
+  Widget _tablaSevensAcumulada(List<dynamic> tabla) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Encabezado
+        Container(
+          decoration: BoxDecoration(
+            color: widget.theme.primary,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              const SizedBox(width: 28, child: Text('#',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12))),
+              const Expanded(child: Text('Selección',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12))),
+              SizedBox(width: 52, child: Text('Etapas',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11))),
+              const SizedBox(width: 44, child: Text('Pts SVNS',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11))),
+            ],
+          ),
+        ),
+        // Filas
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(14)),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.07), blurRadius: 8, offset: const Offset(0, 2))],
+          ),
+          child: Column(
+            children: tabla.asMap().entries.map<Widget>((eq) {
+              final i      = eq.key;
+              final equipo = eq.value;
+              final pos    = equipo['position'] ?? i + 1;
+              final nombre = equipo['team']?['name'] ?? '-';
+              final logoUrl = equipo['team']?['logo']?.toString();
+              final etapas = equipo['games']?['played'] ?? 0;
+              final pts    = equipo['points'] ?? 0;
+              final isLast = i == tabla.length - 1;
+              final rowBg  = i.isOdd ? const Color(0xFFFAFAFA) : Colors.white;
+
+              return Container(
+                decoration: BoxDecoration(
+                  color: rowBg,
+                  border: Border(
+                    bottom: isLast ? BorderSide.none : const BorderSide(color: Color(0xFFEEEEEE), width: 1),
+                  ),
+                  borderRadius: isLast ? const BorderRadius.vertical(bottom: Radius.circular(14)) : BorderRadius.zero,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                child: Row(
+                  children: [
+                    SizedBox(width: 28, child: Text('$pos',
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
+                    _teamLogoSmall(nombre, apiLogoUrl: logoUrl),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(nombre,
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
+                    SizedBox(width: 52, child: Text('$etapas',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 44, child: Text('$pts',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Color(0xFF1A1A1A)))),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text('Puntos por posición final en cada etapa (sistema SVNS)',
+          style: TextStyle(fontSize: 10, color: Colors.grey[500], fontStyle: FontStyle.italic)),
+      ],
+    );
+  }
+
+  Widget _leyendaItem(Color color, String texto) {
+    return Row(
+      children: [
+        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+        const SizedBox(width: 6),
+        Text(texto, style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
+      ],
     );
   }
 
