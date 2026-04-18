@@ -108,9 +108,7 @@ const Set<String> urbaApiStandingsLeagues = {
 };
 
 // ─── Ligas que solo muestran la pestaña RESULTADOS (fase de grupos/pools) ─
-const Set<String> soloResultadosLeagues = {
-  '7s Hong Kong',
-};
+const Set<String> soloResultadosLeagues = {};
 
 // ─── Ligas donde el descenso está suspendido (no colorear fila) ───────────
 const Set<String> noRelegationLeagues = {
