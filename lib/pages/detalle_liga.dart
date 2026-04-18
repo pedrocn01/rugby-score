@@ -37,6 +37,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
   final EspnService  _espn   = EspnService();
   late Future<List<dynamic>> _matchesFuture;
   late Future<List<List<dynamic>>> _standingsFuture;
+  final Map<String, String> _standingLogos = {};
 
   @override
   void initState() {
@@ -63,7 +64,16 @@ class _DetalleLigaState extends State<DetalleLiga> {
     }
     if (espnStandingsLeagues.contains(widget.nombreLiga)) {
       _matchesFuture   = _service.fetchMatches(widget.leagueId, noCache: noCache);
-      _standingsFuture = _espn.fetchStandings(widget.nombreLiga);
+      _standingsFuture = _espn.fetchStandings(widget.nombreLiga).then((standings) {
+        for (final group in standings) {
+          for (final entry in group) {
+            final name = entry['team']?['name'] as String?;
+            final logo = entry['team']?['logo'] as String?;
+            if (name != null && logo != null) _standingLogos[name] = logo;
+          }
+        }
+        return standings;
+      });
       return;
     }
     if (widget.isStatic) {
@@ -520,8 +530,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
   Widget _cardResultado(dynamic partido) {
     final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
     final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
-    final homeLogoUrl = partido['teams']?['home']?['logo']?.toString();
-    final awayLogoUrl = partido['teams']?['away']?['logo']?.toString();
+    final homeLogoUrl = _standingLogos[homeTeam] ?? partido['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl = _standingLogos[awayTeam] ?? partido['teams']?['away']?['logo']?.toString();
     final homeScore   = partido['scores']?['home'] ?? '-';
     final awayScore   = partido['scores']?['away'] ?? '-';
     final homePT1     = partido['periods']?['first']?['home'];
@@ -1043,8 +1053,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
   Widget _cardProximo(dynamic partido) {
     final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
     final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
-    final homeLogoUrl = partido['teams']?['home']?['logo']?.toString();
-    final awayLogoUrl = partido['teams']?['away']?['logo']?.toString();
+    final homeLogoUrl = _standingLogos[homeTeam] ?? partido['teams']?['home']?['logo']?.toString();
+    final awayLogoUrl = _standingLogos[awayTeam] ?? partido['teams']?['away']?['logo']?.toString();
     final fecha       = _formatFecha(partido['date']);
     final hora        = _formatHora(partido['date']);
     final status      = partido['status']?['short'] as String? ?? '';
