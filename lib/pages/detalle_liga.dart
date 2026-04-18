@@ -405,16 +405,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
 
   @override
   Widget build(BuildContext context) {
-    final bool onlyTabla      = soloTablaLeagues.contains(widget.nombreLiga);
-    final bool onlyResultados = soloResultadosLeagues.contains(widget.nombreLiga);
-    final List<Tab> tabs = onlyTabla
-        ? [const Tab(text: 'TABLA')]
-        : onlyResultados
-            ? [const Tab(text: 'RESULTADOS')]
-            : const [Tab(text: 'RESULTADOS'), Tab(text: 'TABLA'), Tab(text: 'PRÓXIMOS')];
-
     return DefaultTabController(
-      length: tabs.length,
+      length: 3,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         drawer: const AppDrawer(),
@@ -451,12 +443,10 @@ class _DetalleLigaState extends State<DetalleLiga> {
             labelColor:           Colors.white,
             unselectedLabelColor: Colors.white60,
             labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
-            tabs: tabs,
+            tabs: const [Tab(text: 'RESULTADOS'), Tab(text: 'TABLA'), Tab(text: 'PRÓXIMOS')],
           ),
         ),
-        body: onlyTabla
-            ? _tablaWidget()
-            : FutureBuilder<List<dynamic>>(
+        body: FutureBuilder<List<dynamic>>(
                 future: _matchesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -488,9 +478,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
                     });
 
                   return TabBarView(
-                    children: onlyResultados
-                        ? [_listaResultados(jugados)]
-                        : [_listaResultados(jugados), _tablaWidget(), _listaProximos(proximos)],
+                    children: [_listaResultados(jugados), _tablaWidget(), _listaProximos(proximos)],
                   );
                 },
               ),

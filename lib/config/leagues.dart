@@ -93,9 +93,6 @@ const Set<String> sevensLeagues = {
   '7s Hong Kong',
 };
 
-// ─── Ligas que solo muestran la pestaña TABLA (sin partidos) ──────────────
-const Set<String> soloTablaLeagues = {};
-
 // ─── Tabla acumulada calculada desde datos de la API (no estática) ────────
 const Set<String> computedSevensAccumulated = {};
 
@@ -107,8 +104,6 @@ const Set<String> urbaApiStandingsLeagues = {
   'URBA Primera C',
 };
 
-// ─── Ligas que solo muestran la pestaña RESULTADOS (fase de grupos/pools) ─
-const Set<String> soloResultadosLeagues = {};
 
 // ─── Ligas donde el descenso está suspendido (no colorear fila) ───────────
 const Set<String> noRelegationLeagues = {
