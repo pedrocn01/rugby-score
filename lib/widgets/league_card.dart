@@ -52,7 +52,7 @@ class _LeagueCardState extends State<_LeagueCard> {
   Widget build(BuildContext context) {
     final primary  = widget.theme.primary;
     final accent   = widget.theme.accent;
-    final isMobile = MediaQuery.of(context).size.width < 700;
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
 
     // ── Mobile: widget estático simple (sin AnimatedScale ni hover) ───────
     if (isMobile) {

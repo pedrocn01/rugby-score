@@ -450,6 +450,7 @@ class _Logo extends StatelessWidget {
         errorBuilder: (ctx, e, st) => const SizedBox(width: 20));
     }
     return Image.network(url, width: 20, height: 20, fit: BoxFit.contain,
+      cacheWidth: 40, cacheHeight: 40,
       errorBuilder: (ctx, e, st) => const SizedBox(width: 20));
   }
 }

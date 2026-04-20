@@ -660,10 +660,12 @@ class _DetalleLigaState extends State<DetalleLiga> {
       return Image.asset(url, width: 20, height: 20, fit: BoxFit.contain,
         errorBuilder: (_, e, s) => apiLogoUrl != null
           ? Image.network(apiLogoUrl, width: 20, height: 20, fit: BoxFit.contain,
+              cacheWidth: 40, cacheHeight: 40,
               errorBuilder: (_, e2, s2) => _teamInitials(teamName, 20))
           : _teamInitials(teamName, 20));
     }
     return Image.network(url, width: 20, height: 20, fit: BoxFit.contain,
+      cacheWidth: 40, cacheHeight: 40,
       errorBuilder: (_, e, s) => _teamInitials(teamName, 20));
   }
 
@@ -674,10 +676,12 @@ class _DetalleLigaState extends State<DetalleLiga> {
       return Image.asset(url, width: size, height: size, fit: BoxFit.contain,
         errorBuilder: (_, e, s) => apiLogoUrl != null
           ? Image.network(apiLogoUrl, width: size, height: size, fit: BoxFit.contain,
+              cacheWidth: 64, cacheHeight: 64,
               errorBuilder: (_, e2, s2) => _teamInitials(teamName, size))
           : _teamInitials(teamName, size));
     }
     return Image.network(url, width: size, height: size, fit: BoxFit.contain,
+      cacheWidth: 64, cacheHeight: 64,
       errorBuilder: (_, e, s) => _teamInitials(teamName, size));
   }
 

@@ -122,7 +122,7 @@ class _LivePageState extends State<LivePage> {
                     : Column(
                         children: [
                           const SizedBox(height: 16),
-                          ..._live.map((e) => _LiveCard(entry: e)),
+                          ..._live.map((e) => _LiveCard(key: ValueKey(e.match['id']), entry: e)),
                           const SizedBox(height: 32),
                         ],
                       ),
@@ -137,7 +137,7 @@ class _LivePageState extends State<LivePage> {
 
 class _LiveCard extends StatelessWidget {
   final MatchEntry entry;
-  const _LiveCard({required this.entry});
+  const _LiveCard({super.key, required this.entry});
 
   String _statusLabel(String s) {
     return switch (s) {
@@ -212,6 +212,7 @@ class _LiveCard extends StatelessWidget {
                         homeLogoUrl.startsWith('assets/')
                           ? Image.asset(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain)
                           : Image.network(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
+                              cacheWidth: 64, cacheHeight: 64,
                               errorBuilder: (_, e, s) => const SizedBox(height: 32)),
                       const SizedBox(height: 4),
                       Text(home, textAlign: TextAlign.right,
@@ -240,6 +241,7 @@ class _LiveCard extends StatelessWidget {
                         awayLogoUrl.startsWith('assets/')
                           ? Image.asset(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain)
                           : Image.network(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
+                              cacheWidth: 64, cacheHeight: 64,
                               errorBuilder: (_, e, s) => const SizedBox(height: 32)),
                       const SizedBox(height: 4),
                       Text(away, textAlign: TextAlign.left,

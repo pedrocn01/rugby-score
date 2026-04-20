@@ -212,7 +212,7 @@ class _MatchesByLeague extends StatelessWidget {
               style: const TextStyle(color: Color(0xFF4A7C59), fontSize: 10,
                 fontWeight: FontWeight.w700, letterSpacing: 1.5)),
           ),
-          for (final match in byLeague[league]!) _ProximoCard(match: match),
+          for (final match in byLeague[league]!) _ProximoCard(key: ValueKey(match['id']), match: match),
         ],
       ],
     );
@@ -223,7 +223,7 @@ class _MatchesByLeague extends StatelessWidget {
 
 class _ProximoCard extends StatelessWidget {
   final dynamic match;
-  const _ProximoCard({required this.match});
+  const _ProximoCard({super.key, required this.match});
 
   String _formatHora(String? date) {
     if (date == null || date.length < 16) return '';
@@ -307,6 +307,7 @@ class _ProximoCard extends StatelessWidget {
                         child: homeLogoUrl.startsWith('assets/')
                           ? Image.asset(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain)
                           : Image.network(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
+                              cacheWidth: 36, cacheHeight: 36,
                               errorBuilder: (_, e, s) => const SizedBox(width: 18)),
                       ),
                     Expanded(
@@ -328,6 +329,7 @@ class _ProximoCard extends StatelessWidget {
                         child: awayLogoUrl.startsWith('assets/')
                           ? Image.asset(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain)
                           : Image.network(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
+                              cacheWidth: 36, cacheHeight: 36,
                               errorBuilder: (_, e, s) => const SizedBox(width: 18)),
                       ),
                     Expanded(
