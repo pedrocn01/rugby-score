@@ -8,24 +8,39 @@ import 'package:flutter/material.dart';
 /// Devuelve el widget-logo correspondiente o null si la liga no es URBA.
 Widget? urbaLogoWidget(String liga, {double size = 80}) {
   switch (liga) {
+    // ── Carpetas URBA ─────────────────────────────────────────────────────────
+    case 'TOP 14':    return _Top14Logo(size: size);
+    case 'Primera A': return _PrimeraLogo(letra: 'A', color: const Color(0xFF0A2240), size: size);
+    case 'Primera B': return _PrimeraLogo(letra: 'B', color: const Color(0xFFB35A00), size: size);
+    case 'Primera C': return _PrimeraLogo(letra: 'C', color: const Color(0xFFAA1500), size: size);
+    // ── División Superior ─────────────────────────────────────────────────────
     case 'URBA Top 14':    return _Top14Logo(size: size);
     case 'URBA Primera A': return _PrimeraLogo(letra: 'A', color: const Color(0xFF0A2240), size: size);
     case 'URBA Primera B': return _PrimeraLogo(letra: 'B', color: const Color(0xFFB35A00), size: size);
     case 'URBA Primera C': return _PrimeraLogo(letra: 'C', color: const Color(0xFFAA1500), size: size);
+    // ── TOP 14 sub-categorías ────────────────────────────────────────────────
+    case 'TOP 14 Intermedia':       return _Top14SubdivisionLogo(div: 'INT',   size: size);
+    case 'TOP 14 Pre-Intermedia A': return _Top14SubdivisionLogo(div: 'PRE A', size: size);
+    case 'TOP 14 Pre-Intermedia B': return _Top14SubdivisionLogo(div: 'PRE B', size: size);
+    case 'TOP 14 Pre-Intermedia C': return _Top14SubdivisionLogo(div: 'PRE C', size: size);
+    case 'TOP 14 Pre-Intermedia D': return _Top14SubdivisionLogo(div: 'PRE D', size: size);
+    case 'TOP 14 Pre-Intermedia E': return _Top14SubdivisionLogo(div: 'PRE E', size: size);
+    case 'TOP 14 Pre-Intermedia F': return _Top14SubdivisionLogo(div: 'PRE F', size: size);
+    case 'TOP 14 M-22':             return _Top14SubdivisionLogo(div: 'M-22',  size: size);
     // ── Primera A ─────────────────────────────────────────────────────────────
-    case '1A Intermedia':     return _SubdivisionLogo(cat: 'A', div: 'INT',   color: const Color(0xFF0A2240), size: size);
-    case '1A Pre-Intermedia': return _SubdivisionLogo(cat: 'A', div: 'PRE',   color: const Color(0xFF0A2240), size: size);
+    case '1A Intermedia':       return _SubdivisionLogo(cat: 'A', div: 'INT',   color: const Color(0xFF0A2240), size: size);
+    case '1A Pre-Intermedia':   return _SubdivisionLogo(cat: 'A', div: 'PRE',   color: const Color(0xFF0A2240), size: size);
     case '1A Pre-Intermedia B': return _SubdivisionLogo(cat: 'A', div: 'PRE B', color: const Color(0xFF0A2240), size: size);
     case '1A Pre-Intermedia C': return _SubdivisionLogo(cat: 'A', div: 'PRE C', color: const Color(0xFF0A2240), size: size);
     case '1A Pre-Intermedia D': return _SubdivisionLogo(cat: 'A', div: 'PRE D', color: const Color(0xFF0A2240), size: size);
     // ── Primera B ─────────────────────────────────────────────────────────────
-    case '1B Intermedia':     return _SubdivisionLogo(cat: 'B', div: 'INT',   color: const Color(0xFFB35A00), size: size);
-    case '1B Pre-Intermedia': return _SubdivisionLogo(cat: 'B', div: 'PRE',   color: const Color(0xFFB35A00), size: size);
+    case '1B Intermedia':       return _SubdivisionLogo(cat: 'B', div: 'INT',   color: const Color(0xFFB35A00), size: size);
+    case '1B Pre-Intermedia':   return _SubdivisionLogo(cat: 'B', div: 'PRE',   color: const Color(0xFFB35A00), size: size);
     case '1B Pre-Intermedia B': return _SubdivisionLogo(cat: 'B', div: 'PRE B', color: const Color(0xFFB35A00), size: size);
     case '1B Pre-Intermedia C': return _SubdivisionLogo(cat: 'B', div: 'PRE C', color: const Color(0xFFB35A00), size: size);
     // ── Primera C ─────────────────────────────────────────────────────────────
-    case '1C Intermedia':     return _SubdivisionLogo(cat: 'C', div: 'INT',   color: const Color(0xFFAA1500), size: size);
-    case '1C Pre-Intermedia': return _SubdivisionLogo(cat: 'C', div: 'PRE',   color: const Color(0xFFAA1500), size: size);
+    case '1C Intermedia':       return _SubdivisionLogo(cat: 'C', div: 'INT',   color: const Color(0xFFAA1500), size: size);
+    case '1C Pre-Intermedia':   return _SubdivisionLogo(cat: 'C', div: 'PRE',   color: const Color(0xFFAA1500), size: size);
     case '1C Pre-Intermedia B': return _SubdivisionLogo(cat: 'C', div: 'PRE B', color: const Color(0xFFAA1500), size: size);
     default: return null;
   }
@@ -179,6 +194,67 @@ class _Top14Painter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter old) => false;
+}
+
+// ─── Logo TOP 14 subdivisiones (Intermedia / Pre-Intermedia / M-22) ──────────
+
+class _Top14SubdivisionLogo extends StatelessWidget {
+  final String div;
+  final double size;
+  const _Top14SubdivisionLogo({required this.div, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width:  size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
+          colors: [Color(0xFF1B2F7A), Color(0xFF0A1540)],
+        ),
+        borderRadius: BorderRadius.circular(size * 0.12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'TOP 14',
+            style: TextStyle(
+              color:         const Color(0xFFCC1122),
+              fontSize:      size * 0.18,
+              fontWeight:    FontWeight.w900,
+              letterSpacing: size * 0.01,
+              height:        1.0,
+            ),
+          ),
+          SizedBox(height: size * 0.04),
+          Text(
+            div,
+            style: TextStyle(
+              color:         Colors.white,
+              fontSize:      size * 0.13,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.005,
+              height:        1.0,
+            ),
+          ),
+          SizedBox(height: size * 0.03),
+          Text(
+            'URBA',
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.45),
+              fontSize:      size * 0.10,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.02,
+              height:        1.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 // ─── Logo subdivisiones (Intermedia / Pre-Intermedia) ─────────────────────────
