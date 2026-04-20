@@ -55,6 +55,7 @@ class MatchCache {
           _data[entries[i].key] = result;
         }
       }
+
       _lastFetch = DateTime.now();
     } finally {
       _loading = false;

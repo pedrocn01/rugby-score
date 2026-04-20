@@ -464,7 +464,8 @@ class _AnimatedSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: fadeAnim,
-      builder: (context, _) {
+      child: child,
+      builder: (context, child) {
         final t = ((fadeAnim.value - delay) / (1.0 - delay)).clamp(0.0, 1.0);
         return Opacity(
           opacity: t,
