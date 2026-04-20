@@ -135,6 +135,7 @@ const Set<String> noRelegationLeagues = {
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
 const Map<String, List<String>> folders = {
   'TOP 14': [
+    'URBA Top 14',
     'TOP 14 Intermedia',
     'TOP 14 Pre-Intermedia A',
     'TOP 14 Pre-Intermedia B',
@@ -144,7 +145,7 @@ const Map<String, List<String>> folders = {
     'TOP 14 Pre-Intermedia F',
     'TOP 14 M-22',
   ],
-  'URBA': ['URBA Top 14', 'TOP 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
+  'URBA': ['TOP 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
   'Torneo del Interior': ['TDI A 2026'],
   'Circuito 7s': [
     '7s Hong Kong',

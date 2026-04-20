@@ -6,6 +6,7 @@
 const Map<String, String> folderLogoUrls = {
   'URBA':        'assets/logos/folder_urba.png',
   'Circuito 7s': 'assets/logos/folder_circuito_7s.png',
+  'TOP 14':      'assets/logos/league_urba.png',
 };
 
 // Logos locales (assets SVG) — usan SvgPicture.asset en vez de Image.asset
