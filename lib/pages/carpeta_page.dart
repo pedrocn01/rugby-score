@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/leagues.dart';
 import '../widgets/league_card.dart';
 import '../widgets/app_drawer.dart';
 
@@ -98,8 +99,9 @@ class _CarpetaPageState extends State<CarpetaPage> with SingleTickerProviderStat
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final liga  = widget.ligas[index];
-                  final delay = (index * 0.08).clamp(0.0, 0.6);
+                  final liga      = widget.ligas[index];
+                  final delay     = (index * 0.08).clamp(0.0, 0.6);
+                  final isFolder  = folders.containsKey(liga);
                   return AnimatedBuilder(
                     animation: _anim,
                     builder: (context, _) {
@@ -108,7 +110,9 @@ class _CarpetaPageState extends State<CarpetaPage> with SingleTickerProviderStat
                         opacity: t,
                         child: Transform.translate(
                           offset: Offset(0, 20 * (1 - t)),
-                          child: leagueCard(context, liga),
+                          child: isFolder
+                              ? _SubFolderTile(folderName: liga)
+                              : leagueCard(context, liga),
                         ),
                       );
                     },
@@ -119,6 +123,59 @@ class _CarpetaPageState extends State<CarpetaPage> with SingleTickerProviderStat
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SubFolderTile extends StatelessWidget {
+  final String folderName;
+  const _SubFolderTile({required this.folderName});
+
+  @override
+  Widget build(BuildContext context) {
+    final ligas = folders[folderName]!;
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (_) => CarpetaPage(titulo: folderName, ligas: ligas),
+      )),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end:   Alignment.bottomRight,
+            colors: [Color(0xFF1B4332), Color(0xFF071A0E)],
+          ),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: -6, bottom: -6,
+              child: Icon(Icons.folder_open_rounded, size: 60,
+                color: Colors.white.withValues(alpha: 0.07)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.folder_open_rounded, color: Colors.white70, size: 24),
+                  const Spacer(),
+                  Text(folderName, maxLines: 2,
+                    style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w900,
+                      fontSize: 12, height: 1.2,
+                    )),
+                  const SizedBox(height: 4),
+                  Text('${ligas.length} torneos',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.55), fontSize: 10)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

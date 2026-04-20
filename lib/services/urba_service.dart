@@ -5,10 +5,17 @@ import 'package:http/http.dart' as http;
 // Actualizar cuando cambie la temporada (buscar en /api/championships/{year})
 
 const Map<String, int> urbaChampionshipIds = {
-  'URBA Top 14':    2025176,
-  'URBA Primera A': 2025177,
-  'URBA Primera B': 2025178,
-  'URBA Primera C': 2025179,
+  'URBA Top 14':             2025176,
+  'URBA Primera A':          2025177,
+  'URBA Primera B':          2025178,
+  'URBA Primera C':          2025179,
+  'TOP 14 Intermedia':       2025002,
+  'TOP 14 Pre-Intermedia A': 2025003,
+  'TOP 14 Pre-Intermedia B': 2025004,
+  'TOP 14 Pre-Intermedia C': 2025005,
+  'TOP 14 Pre-Intermedia D': 2025006,
+  'TOP 14 Pre-Intermedia E': 2025045,
+  'TOP 14 M-22':             2025007,
 };
 
 // ─── Clasificación de la tabla por liga ──────────────────────────────────────

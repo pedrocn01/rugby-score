@@ -37,6 +37,13 @@ const Map<String, int> leagueIds = {
   'URBA Primera A':            -2, // tabla viva (api.urba.org.ar), partidos estáticos
   'URBA Primera B':            -3, // tabla viva (api.urba.org.ar), partidos estáticos
   'URBA Primera C':            -4, // tabla viva (api.urba.org.ar), partidos estáticos
+  'TOP 14 Intermedia':         -5,
+  'TOP 14 Pre-Intermedia A':   -6,
+  'TOP 14 Pre-Intermedia B':   -7,
+  'TOP 14 Pre-Intermedia C':   -8,
+  'TOP 14 Pre-Intermedia D':   -9,
+  'TOP 14 Pre-Intermedia E':   -11,
+  'TOP 14 M-22':               -12,
   'Nations Championship':     -10, // sin API — fixture estático scrapeado de Wikipedia
   'TDI A 2026':               -20, // Torneo del Interior A — fixture estático cargado a mano
   // Circuito 7s
@@ -102,6 +109,13 @@ const Set<String> urbaApiStandingsLeagues = {
   'URBA Primera A',
   'URBA Primera B',
   'URBA Primera C',
+  'TOP 14 Intermedia',
+  'TOP 14 Pre-Intermedia A',
+  'TOP 14 Pre-Intermedia B',
+  'TOP 14 Pre-Intermedia C',
+  'TOP 14 Pre-Intermedia D',
+  'TOP 14 Pre-Intermedia E',
+  'TOP 14 M-22',
 };
 
 
@@ -118,7 +132,17 @@ const Set<String> noRelegationLeagues = {
 
 // ─── Carpetas (agrupaciones en el home) ───────────────────────────────────
 const Map<String, List<String>> folders = {
-  'URBA': ['URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
+  'TOP 14': [
+    'URBA Top 14',
+    'TOP 14 Intermedia',
+    'TOP 14 Pre-Intermedia A',
+    'TOP 14 Pre-Intermedia B',
+    'TOP 14 Pre-Intermedia C',
+    'TOP 14 Pre-Intermedia D',
+    'TOP 14 Pre-Intermedia E',
+    'TOP 14 M-22',
+  ],
+  'URBA': ['TOP 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
   'Torneo del Interior': ['TDI A 2026'],
   'Circuito 7s': [
     '7s Hong Kong',
