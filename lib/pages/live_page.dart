@@ -209,8 +209,10 @@ class _LiveCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       if (homeLogoUrl != null)
-                        Image.network(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
-                          errorBuilder: (_, e, s) => const SizedBox(height: 32)),
+                        homeLogoUrl.startsWith('assets/')
+                          ? Image.asset(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain)
+                          : Image.network(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
+                              errorBuilder: (_, e, s) => const SizedBox(height: 32)),
                       const SizedBox(height: 4),
                       Text(home, textAlign: TextAlign.right,
                         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)),
@@ -235,8 +237,10 @@ class _LiveCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (awayLogoUrl != null)
-                        Image.network(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
-                          errorBuilder: (_, e, s) => const SizedBox(height: 32)),
+                        awayLogoUrl.startsWith('assets/')
+                          ? Image.asset(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain)
+                          : Image.network(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
+                              errorBuilder: (_, e, s) => const SizedBox(height: 32)),
                       const SizedBox(height: 4),
                       Text(away, textAlign: TextAlign.left,
                         style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 13)),

@@ -336,7 +336,7 @@ class _MatchCard extends StatelessWidget {
                 if (leagueLogo(entry.league) != null)
                   Padding(
                     padding: const EdgeInsets.only(right: 6),
-                    child: Image.network(
+                    child: Image.asset(
                       leagueLogo(entry.league)!,
                       width: 14, height: 14, fit: BoxFit.contain,
                       errorBuilder: (ctx, e, st) => const SizedBox(width: 14),
@@ -445,6 +445,10 @@ class _Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     final url = clubLogo(name) ?? apiUrl;
     if (url == null) return const SizedBox(width: 20);
+    if (url.startsWith('assets/')) {
+      return Image.asset(url, width: 20, height: 20, fit: BoxFit.contain,
+        errorBuilder: (ctx, e, st) => const SizedBox(width: 20));
+    }
     return Image.network(url, width: 20, height: 20, fit: BoxFit.contain,
       errorBuilder: (ctx, e, st) => const SizedBox(width: 20));
   }

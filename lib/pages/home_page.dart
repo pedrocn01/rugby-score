@@ -295,7 +295,7 @@ class _FolderTileState extends State<_FolderTile> {
       Expanded(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
-          child: Image.network(logoUrl, fit: BoxFit.contain,
+          child: Image.asset(logoUrl, fit: BoxFit.contain,
             errorBuilder: (ctx, e, s) => const Icon(Icons.folder_open_rounded, color: Colors.white54, size: 36)),
         ),
       ),

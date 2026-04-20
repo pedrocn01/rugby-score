@@ -232,7 +232,7 @@ class _CardContent extends StatelessWidget {
     final useWhiteFilter = whiteFilterLeagues.contains(nombre);
 
     if (logoUrl != null) {
-      Widget logoWidget = Image.network(
+      Widget logoWidget = Image.asset(
         logoUrl!,
         fit: BoxFit.contain,
         errorBuilder: (ctx, e, s) =>

@@ -304,8 +304,10 @@ class _ProximoCard extends StatelessWidget {
                     if (homeLogoUrl != null)
                       Padding(
                         padding: const EdgeInsets.only(right: 6),
-                        child: Image.network(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
-                          errorBuilder: (_, e, s) => const SizedBox(width: 18)),
+                        child: homeLogoUrl.startsWith('assets/')
+                          ? Image.asset(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain)
+                          : Image.network(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
+                              errorBuilder: (_, e, s) => const SizedBox(width: 18)),
                       ),
                     Expanded(
                       child: Text(home,
@@ -323,8 +325,10 @@ class _ProximoCard extends StatelessWidget {
                     if (awayLogoUrl != null)
                       Padding(
                         padding: const EdgeInsets.only(right: 6),
-                        child: Image.network(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
-                          errorBuilder: (_, e, s) => const SizedBox(width: 18)),
+                        child: awayLogoUrl.startsWith('assets/')
+                          ? Image.asset(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain)
+                          : Image.network(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
+                              errorBuilder: (_, e, s) => const SizedBox(width: 18)),
                       ),
                     Expanded(
                       child: Text(away,

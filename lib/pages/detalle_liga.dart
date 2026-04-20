@@ -654,39 +654,31 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) {
-    final staticUrl = clubLogo(teamName);
-    final url = staticUrl ?? apiLogoUrl;
+    final url = clubLogo(teamName) ?? apiLogoUrl;
     if (url == null) return _teamInitials(teamName, 20);
-    return Image.network(
-      url,
-      width: 20, height: 20,
-      fit: BoxFit.contain,
-      errorBuilder: (_, e, s) {
-        if (staticUrl != null && apiLogoUrl != null) {
-          return Image.network(apiLogoUrl, width: 20, height: 20, fit: BoxFit.contain,
-            errorBuilder: (_, e2, s2) => _teamInitials(teamName, 20));
-        }
-        return _teamInitials(teamName, 20);
-      },
-    );
+    if (url.startsWith('assets/')) {
+      return Image.asset(url, width: 20, height: 20, fit: BoxFit.contain,
+        errorBuilder: (_, e, s) => apiLogoUrl != null
+          ? Image.network(apiLogoUrl, width: 20, height: 20, fit: BoxFit.contain,
+              errorBuilder: (_, e2, s2) => _teamInitials(teamName, 20))
+          : _teamInitials(teamName, 20));
+    }
+    return Image.network(url, width: 20, height: 20, fit: BoxFit.contain,
+      errorBuilder: (_, e, s) => _teamInitials(teamName, 20));
   }
 
   Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) {
-    final staticUrl = clubLogo(teamName);
-    final url = staticUrl ?? apiLogoUrl;
+    final url = clubLogo(teamName) ?? apiLogoUrl;
     if (url == null) return _teamInitials(teamName, size);
-    return Image.network(
-      url,
-      width: size, height: size,
-      fit: BoxFit.contain,
-      errorBuilder: (_, e, s) {
-        if (staticUrl != null && apiLogoUrl != null) {
-          return Image.network(apiLogoUrl, width: size, height: size, fit: BoxFit.contain,
-            errorBuilder: (_, e2, s2) => _teamInitials(teamName, size));
-        }
-        return _teamInitials(teamName, size);
-      },
-    );
+    if (url.startsWith('assets/')) {
+      return Image.asset(url, width: size, height: size, fit: BoxFit.contain,
+        errorBuilder: (_, e, s) => apiLogoUrl != null
+          ? Image.network(apiLogoUrl, width: size, height: size, fit: BoxFit.contain,
+              errorBuilder: (_, e2, s2) => _teamInitials(teamName, size))
+          : _teamInitials(teamName, size));
+    }
+    return Image.network(url, width: size, height: size, fit: BoxFit.contain,
+      errorBuilder: (_, e, s) => _teamInitials(teamName, size));
   }
 
   static const _liveStatuses = {'1H', '2H', 'HT', 'ET', 'BT', 'P'};
