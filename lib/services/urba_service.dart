@@ -17,6 +17,21 @@ const Map<String, int> urbaChampionshipIds = {
   'TOP 14 Pre-Intermedia E': 2025200,
   'TOP 14 Pre-Intermedia F': 2025201,
   'TOP 14 M-22':             2025206,
+  // ── Primera A ──────────────────────────────────────────────────────────────
+  '1A Intermedia':           2025187,
+  '1A Pre-Intermedia':       2025188,
+  '1A Pre-Intermedia B':     2025189,
+  '1A Pre-Intermedia C':     2025202,
+  '1A Pre-Intermedia D':     2025203,
+  // ── Primera B ──────────────────────────────────────────────────────────────
+  '1B Intermedia':           2025190,
+  '1B Pre-Intermedia':       2025191,
+  '1B Pre-Intermedia B':     2025192,
+  '1B Pre-Intermedia C':     2025204,
+  // ── Primera C ──────────────────────────────────────────────────────────────
+  '1C Intermedia':           2025193,
+  '1C Pre-Intermedia':       2025195,
+  '1C Pre-Intermedia B':     2025205,
 };
 
 // ─── Clasificación de la tabla por liga ──────────────────────────────────────

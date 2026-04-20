@@ -47,6 +47,21 @@ const Map<String, int> leagueIds = {
   'TOP 14 M-22':               -12,
   'Nations Championship':     -10, // sin API — fixture estático scrapeado de Wikipedia
   'TDI A 2026':               -20, // Torneo del Interior A — fixture estático cargado a mano
+  // ── Primera A ──────────────────────────────────────────────────────────────
+  '1A Intermedia':             -14,
+  '1A Pre-Intermedia':         -15,
+  '1A Pre-Intermedia B':       -16,
+  '1A Pre-Intermedia C':       -17,
+  '1A Pre-Intermedia D':       -18,
+  // ── Primera B ──────────────────────────────────────────────────────────────
+  '1B Intermedia':             -19,
+  '1B Pre-Intermedia':         -21,
+  '1B Pre-Intermedia B':       -22,
+  '1B Pre-Intermedia C':       -23,
+  // ── Primera C ──────────────────────────────────────────────────────────────
+  '1C Intermedia':             -24,
+  '1C Pre-Intermedia':         -25,
+  '1C Pre-Intermedia B':       -26,
   // Circuito 7s
   '7s Dubai':                  111,
   '7s Sudáfrica':              112,
@@ -118,6 +133,18 @@ const Set<String> urbaApiStandingsLeagues = {
   'TOP 14 Pre-Intermedia E',
   'TOP 14 Pre-Intermedia F',
   'TOP 14 M-22',
+  '1A Intermedia',
+  '1A Pre-Intermedia',
+  '1A Pre-Intermedia B',
+  '1A Pre-Intermedia C',
+  '1A Pre-Intermedia D',
+  '1B Intermedia',
+  '1B Pre-Intermedia',
+  '1B Pre-Intermedia B',
+  '1B Pre-Intermedia C',
+  '1C Intermedia',
+  '1C Pre-Intermedia',
+  '1C Pre-Intermedia B',
 };
 
 
@@ -145,7 +172,28 @@ const Map<String, List<String>> folders = {
     'TOP 14 Pre-Intermedia F',
     'TOP 14 M-22',
   ],
-  'URBA': ['TOP 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
+  'Primera A': [
+    'URBA Primera A',
+    '1A Intermedia',
+    '1A Pre-Intermedia',
+    '1A Pre-Intermedia B',
+    '1A Pre-Intermedia C',
+    '1A Pre-Intermedia D',
+  ],
+  'Primera B': [
+    'URBA Primera B',
+    '1B Intermedia',
+    '1B Pre-Intermedia',
+    '1B Pre-Intermedia B',
+    '1B Pre-Intermedia C',
+  ],
+  'Primera C': [
+    'URBA Primera C',
+    '1C Intermedia',
+    '1C Pre-Intermedia',
+    '1C Pre-Intermedia B',
+  ],
+  'URBA': ['TOP 14', 'Primera A', 'Primera B', 'Primera C'],
   'Torneo del Interior': ['TDI A 2026'],
   'Circuito 7s': [
     '7s Hong Kong',

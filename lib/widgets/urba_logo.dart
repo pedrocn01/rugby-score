@@ -8,10 +8,25 @@ import 'package:flutter/material.dart';
 /// Devuelve el widget-logo correspondiente o null si la liga no es URBA.
 Widget? urbaLogoWidget(String liga, {double size = 80}) {
   switch (liga) {
-    case 'URBA Top 14':   return _Top14Logo(size: size);
+    case 'URBA Top 14':    return _Top14Logo(size: size);
     case 'URBA Primera A': return _PrimeraLogo(letra: 'A', color: const Color(0xFF0A2240), size: size);
     case 'URBA Primera B': return _PrimeraLogo(letra: 'B', color: const Color(0xFFB35A00), size: size);
     case 'URBA Primera C': return _PrimeraLogo(letra: 'C', color: const Color(0xFFAA1500), size: size);
+    // ── Primera A ─────────────────────────────────────────────────────────────
+    case '1A Intermedia':     return _SubdivisionLogo(cat: 'A', div: 'INT',   color: const Color(0xFF0A2240), size: size);
+    case '1A Pre-Intermedia': return _SubdivisionLogo(cat: 'A', div: 'PRE',   color: const Color(0xFF0A2240), size: size);
+    case '1A Pre-Intermedia B': return _SubdivisionLogo(cat: 'A', div: 'PRE B', color: const Color(0xFF0A2240), size: size);
+    case '1A Pre-Intermedia C': return _SubdivisionLogo(cat: 'A', div: 'PRE C', color: const Color(0xFF0A2240), size: size);
+    case '1A Pre-Intermedia D': return _SubdivisionLogo(cat: 'A', div: 'PRE D', color: const Color(0xFF0A2240), size: size);
+    // ── Primera B ─────────────────────────────────────────────────────────────
+    case '1B Intermedia':     return _SubdivisionLogo(cat: 'B', div: 'INT',   color: const Color(0xFFB35A00), size: size);
+    case '1B Pre-Intermedia': return _SubdivisionLogo(cat: 'B', div: 'PRE',   color: const Color(0xFFB35A00), size: size);
+    case '1B Pre-Intermedia B': return _SubdivisionLogo(cat: 'B', div: 'PRE B', color: const Color(0xFFB35A00), size: size);
+    case '1B Pre-Intermedia C': return _SubdivisionLogo(cat: 'B', div: 'PRE C', color: const Color(0xFFB35A00), size: size);
+    // ── Primera C ─────────────────────────────────────────────────────────────
+    case '1C Intermedia':     return _SubdivisionLogo(cat: 'C', div: 'INT',   color: const Color(0xFFAA1500), size: size);
+    case '1C Pre-Intermedia': return _SubdivisionLogo(cat: 'C', div: 'PRE',   color: const Color(0xFFAA1500), size: size);
+    case '1C Pre-Intermedia B': return _SubdivisionLogo(cat: 'C', div: 'PRE B', color: const Color(0xFFAA1500), size: size);
     default: return null;
   }
 }
@@ -164,4 +179,65 @@ class _Top14Painter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter old) => false;
+}
+
+// ─── Logo subdivisiones (Intermedia / Pre-Intermedia) ─────────────────────────
+
+class _SubdivisionLogo extends StatelessWidget {
+  final String cat;   // 'A', 'B' o 'C'
+  final String div;   // 'INT', 'PRE', 'PRE B', etc.
+  final Color  color;
+  final double size;
+  const _SubdivisionLogo({required this.cat, required this.div, required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    final darkColor = Color.lerp(color, Colors.black, 0.55)!;
+    return Container(
+      width:  size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
+          colors: [color, darkColor],
+        ),
+        borderRadius: BorderRadius.circular(size * 0.12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text('1', style: TextStyle(color: Colors.white, fontSize: size * 0.38, fontWeight: FontWeight.w900, height: 1.0)),
+              Text(cat,  style: TextStyle(color: Colors.white, fontSize: size * 0.25, fontWeight: FontWeight.w900, height: 1.0)),
+            ],
+          ),
+          SizedBox(height: size * 0.04),
+          Text(div,
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.85),
+              fontSize:      size * 0.12,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.01,
+              height:        1.0,
+            ),
+          ),
+          SizedBox(height: size * 0.02),
+          Text('URBA',
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.50),
+              fontSize:      size * 0.10,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.02,
+              height:        1.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
