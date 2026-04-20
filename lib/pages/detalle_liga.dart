@@ -756,7 +756,9 @@ class _DetalleLigaState extends State<DetalleLiga> {
         }
 
         final tieneGrupos   = grupos.length > 1;
-        final ocultarLeyenda = widget.nombreLiga == 'Seis Naciones' || widget.nombreLiga == 'The Rugby Championship';
+        final ocultarLeyenda = widget.nombreLiga == 'Seis Naciones' ||
+            widget.nombreLiga == 'The Rugby Championship' ||
+            widget.nombreLiga.contains('Intermedia');
 
         final grupoLabels = switch (widget.nombreLiga) {
           'Champions Cup' => ['GRUPO A', 'GRUPO B', 'GRUPO C', 'GRUPO D'],
