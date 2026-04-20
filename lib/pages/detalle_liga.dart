@@ -468,25 +468,22 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   final partidos = snapshot.data ?? [];
                   final isSevensTournament = sevensLeagues.contains(widget.nombreLiga);
 
+                  DateTime pd(dynamic p, DateTime fallback) =>
+                      DateTime.tryParse(p['date'] as String? ?? '') ?? fallback;
+
                   final jugados = partidos
-                      .where((p) => p['scores']?['home'] != null)
-                      .where((p) => !isSevensTournament || _isMainDrawMatch(p))
+                      .where((p) =>
+                          p['scores']?['home'] != null &&
+                          (!isSevensTournament || _isMainDrawMatch(p)))
                       .toList()
-                    ..sort((a, b) {
-                      final da = DateTime.tryParse(a['date'] ?? '') ?? DateTime(2000);
-                      final db = DateTime.tryParse(b['date'] ?? '') ?? DateTime(2000);
-                      return db.compareTo(da);
-                    });
+                    ..sort((a, b) => pd(b, DateTime(2000)).compareTo(pd(a, DateTime(2000))));
 
                   final proximos = partidos
-                      .where((p) => p['scores']?['home'] == null)
-                      .where((p) => !isSevensTournament || _isMainDrawMatch(p))
+                      .where((p) =>
+                          p['scores']?['home'] == null &&
+                          (!isSevensTournament || _isMainDrawMatch(p)))
                       .toList()
-                    ..sort((a, b) {
-                      final da = DateTime.tryParse(a['date'] ?? '') ?? DateTime(2099);
-                      final db = DateTime.tryParse(b['date'] ?? '') ?? DateTime(2099);
-                      return da.compareTo(db);
-                    });
+                    ..sort((a, b) => pd(a, DateTime(2099)).compareTo(pd(b, DateTime(2099))));
 
                   return TabBarView(
                     children: [_listaResultados(jugados), _tablaWidget(), _listaProximos(proximos)],

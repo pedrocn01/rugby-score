@@ -27,6 +27,8 @@ class _SearchPageState extends State<SearchPage> {
   bool _loading  = true;
   final List<_Entry> _all = [];
   List<_Entry> _results   = [];
+  List<_Entry> _played    = [];
+  List<_Entry> _upcoming  = [];
 
   static const _doneStatuses   = {'FT', 'AET', 'PEN', 'AWD', 'Canc'};
   static const _urbaLeagues    = ['URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'];
@@ -81,42 +83,42 @@ class _SearchPageState extends State<SearchPage> {
   void _onType() {
     final q = _ctrl.text.trim().toLowerCase();
     if (q.length < 2) {
-      setState(() => _results = []);
+      setState(() { _results = []; _played = []; _upcoming = []; });
       return;
     }
-    setState(() {
-      _results = _all.where((e) {
-        final home = e.match['teams']?['home']?['name']?.toString().toLowerCase() ?? '';
-        final away = e.match['teams']?['away']?['name']?.toString().toLowerCase() ?? '';
-        return home.contains(q) || away.contains(q);
-      }).toList();
-    });
-  }
+    final filtered = _all.where((e) {
+      final home = e.match['teams']?['home']?['name']?.toString().toLowerCase() ?? '';
+      final away = e.match['teams']?['away']?['name']?.toString().toLowerCase() ?? '';
+      return home.contains(q) || away.contains(q);
+    }).toList();
 
-  // ── Build ────────────────────────────────────────────────────────────────────
-
-  @override
-  Widget build(BuildContext context) {
-    // Separar en jugados y próximos
-    final played   = _results.where((e) {
+    final played = filtered.where((e) {
       final s = e.match['status']?['short'] as String? ?? '';
       return _doneStatuses.contains(s);
     }).toList()
       ..sort((a, b) {
         final ta = a.match['timestamp'] as int? ?? 0;
         final tb = b.match['timestamp'] as int? ?? 0;
-        return tb.compareTo(ta); // más recientes primero
+        return tb.compareTo(ta);
       });
 
-    final upcoming = _results.where((e) {
+    final upcoming = filtered.where((e) {
       final s = e.match['status']?['short'] as String? ?? '';
       return !_doneStatuses.contains(s);
     }).toList()
       ..sort((a, b) {
         final ta = a.match['timestamp'] as int? ?? 0;
         final tb = b.match['timestamp'] as int? ?? 0;
-        return ta.compareTo(tb); // más próximos primero
+        return ta.compareTo(tb);
       });
+
+    setState(() { _results = filtered; _played = played; _upcoming = upcoming; });
+  }
+
+  // ── Build ────────────────────────────────────────────────────────────────────
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
@@ -152,7 +154,7 @@ class _SearchPageState extends State<SearchPage> {
               ? const _EmptyPrompt()
               : _results.isEmpty
                   ? _NoResults(query: _ctrl.text.trim())
-                  : _ResultsList(played: played, upcoming: upcoming),
+                  : _ResultsList(played: _played, upcoming: _upcoming),
     );
   }
 }

@@ -22,7 +22,7 @@ class _LivePageState extends State<LivePage> {
     super.initState();
     _load();
     // Refresca cada 60 segundos
-    _timer = Timer.periodic(const Duration(seconds: 60), (_) => _load());
+    _timer = Timer.periodic(const Duration(seconds: 60), (_) => _load(silent: true));
   }
 
   @override
@@ -31,17 +31,19 @@ class _LivePageState extends State<LivePage> {
     super.dispose();
   }
 
-  Future<void> _load() async {
+  Future<void> _load({bool silent = false}) async {
     if (_fetching) return;
     _fetching = true;
-    setState(() => _loading = true);
+    if (!silent) setState(() => _loading = true);
     try {
       await MatchCache.instance.fetchAll(force: true);
       if (mounted) {
-        setState(() {
-          _live    = MatchCache.instance.getLive();
+        final fresh = MatchCache.instance.getLive();
+        if (fresh.length != _live.length || _loading) {
+          setState(() { _live = fresh; _loading = false; });
+        } else {
           _loading = false;
-        });
+        }
       }
     } finally {
       _fetching = false;
