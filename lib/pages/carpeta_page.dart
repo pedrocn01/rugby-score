@@ -132,9 +132,21 @@ class _SubFolderTile extends StatelessWidget {
   final String folderName;
   const _SubFolderTile({required this.folderName});
 
+  Color get _primary {
+    switch (folderName) {
+      case 'TOP 14':     return const Color(0xFF006A3B);
+      case 'Primera A':  return const Color(0xFF00508A);
+      case 'Primera B':  return const Color(0xFF5C2D82);
+      case 'Primera C':  return const Color(0xFF8A3800);
+      default:           return const Color(0xFF1B4332);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ligas = folders[folderName]!;
+    final primary = _primary;
+    final dark = Color.lerp(primary, Colors.black, 0.55)!;
     return GestureDetector(
       onTap: () => Navigator.push(context, MaterialPageRoute(
         builder: (_) => CarpetaPage(titulo: folderName, ligas: ligas),
@@ -142,10 +154,10 @@ class _SubFolderTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end:   Alignment.bottomRight,
-            colors: [Color(0xFF1B4332), Color(0xFF071A0E)],
+            colors: [primary, dark],
           ),
         ),
         child: Stack(

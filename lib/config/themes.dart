@@ -34,11 +34,34 @@ const Map<String, LeagueTheme> leagueThemes = {
   'Seis Naciones':             LeagueTheme(primary: Color(0xFF1A237E), accent: Color(0xFFC8A951), background: Color(0xFFEEF0FF)),
   'The Rugby Championship':    LeagueTheme(primary: Color(0xFF0077B6), accent: Color(0xFF00B4D8), background: Color(0xFFE8F7FF)),
 
-  // ── URBA ────────────────────────────────────────────────────────────────
+  // ── URBA Top 14 ─────────────────────────────────────────────────────────
   'URBA Top 14':               LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 Intermedia':         LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 Pre-Intermedia A':   LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 Pre-Intermedia B':   LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 Pre-Intermedia C':   LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 Pre-Intermedia D':   LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 Pre-Intermedia E':   LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 Pre-Intermedia F':   LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  'TOP 14 M-22':               LeagueTheme(primary: Color(0xFF006A3B), accent: Color(0xFFFFD700), background: Color(0xFFE8F5EE)),
+  // ── URBA Primera A ──────────────────────────────────────────────────────
   'URBA Primera A':            LeagueTheme(primary: Color(0xFF00508A), accent: Color(0xFFFFD700), background: Color(0xFFE8F2FF)),
+  '1A Intermedia':             LeagueTheme(primary: Color(0xFF00508A), accent: Color(0xFFFFD700), background: Color(0xFFE8F2FF)),
+  '1A Pre-Intermedia':         LeagueTheme(primary: Color(0xFF00508A), accent: Color(0xFFFFD700), background: Color(0xFFE8F2FF)),
+  '1A Pre-Intermedia B':       LeagueTheme(primary: Color(0xFF00508A), accent: Color(0xFFFFD700), background: Color(0xFFE8F2FF)),
+  '1A Pre-Intermedia C':       LeagueTheme(primary: Color(0xFF00508A), accent: Color(0xFFFFD700), background: Color(0xFFE8F2FF)),
+  '1A Pre-Intermedia D':       LeagueTheme(primary: Color(0xFF00508A), accent: Color(0xFFFFD700), background: Color(0xFFE8F2FF)),
+  // ── URBA Primera B ──────────────────────────────────────────────────────
   'URBA Primera B':            LeagueTheme(primary: Color(0xFF5C2D82), accent: Color(0xFFFFD700), background: Color(0xFFF5EEFF)),
+  '1B Intermedia':             LeagueTheme(primary: Color(0xFF5C2D82), accent: Color(0xFFFFD700), background: Color(0xFFF5EEFF)),
+  '1B Pre-Intermedia':         LeagueTheme(primary: Color(0xFF5C2D82), accent: Color(0xFFFFD700), background: Color(0xFFF5EEFF)),
+  '1B Pre-Intermedia B':       LeagueTheme(primary: Color(0xFF5C2D82), accent: Color(0xFFFFD700), background: Color(0xFFF5EEFF)),
+  '1B Pre-Intermedia C':       LeagueTheme(primary: Color(0xFF5C2D82), accent: Color(0xFFFFD700), background: Color(0xFFF5EEFF)),
+  // ── URBA Primera C ──────────────────────────────────────────────────────
   'URBA Primera C':            LeagueTheme(primary: Color(0xFF8A3800), accent: Color(0xFFFFD700), background: Color(0xFFFFF3E8)),
+  '1C Intermedia':             LeagueTheme(primary: Color(0xFF8A3800), accent: Color(0xFFFFD700), background: Color(0xFFFFF3E8)),
+  '1C Pre-Intermedia':         LeagueTheme(primary: Color(0xFF8A3800), accent: Color(0xFFFFD700), background: Color(0xFFFFF3E8)),
+  '1C Pre-Intermedia B':       LeagueTheme(primary: Color(0xFF8A3800), accent: Color(0xFFFFD700), background: Color(0xFFFFF3E8)),
 
   // ── Circuito 7s ─────────────────────────────────────────────────────────
   '7s Dubai':                  LeagueTheme(primary: Color(0xFF8B6914), accent: Color(0xFFFFD700), background: Color(0xFFFFF8E1)),
