@@ -43,6 +43,7 @@ const Map<String, int> leagueIds = {
   'TOP 14 Pre-Intermedia C':   -8,
   'TOP 14 Pre-Intermedia D':   -9,
   'TOP 14 Pre-Intermedia E':   -11,
+  'TOP 14 Pre-Intermedia F':   -13,
   'TOP 14 M-22':               -12,
   'Nations Championship':     -10, // sin API — fixture estático scrapeado de Wikipedia
   'TDI A 2026':               -20, // Torneo del Interior A — fixture estático cargado a mano
@@ -115,6 +116,7 @@ const Set<String> urbaApiStandingsLeagues = {
   'TOP 14 Pre-Intermedia C',
   'TOP 14 Pre-Intermedia D',
   'TOP 14 Pre-Intermedia E',
+  'TOP 14 Pre-Intermedia F',
   'TOP 14 M-22',
 };
 
@@ -140,6 +142,7 @@ const Map<String, List<String>> folders = {
     'TOP 14 Pre-Intermedia C',
     'TOP 14 Pre-Intermedia D',
     'TOP 14 Pre-Intermedia E',
+    'TOP 14 Pre-Intermedia F',
     'TOP 14 M-22',
   ],
   'URBA': ['TOP 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C'],
