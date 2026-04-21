@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/leagues.dart';
 import '../widgets/league_card.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/urba_logo.dart';
 
 class CarpetaPage extends StatefulWidget {
   final String titulo;
@@ -134,19 +135,20 @@ class _SubFolderTile extends StatelessWidget {
 
   Color get _primary {
     switch (folderName) {
-      case 'TOP 14':     return const Color(0xFF006A3B);
-      case 'Primera A':  return const Color(0xFF00508A);
-      case 'Primera B':  return const Color(0xFF5C2D82);
-      case 'Primera C':  return const Color(0xFF8A3800);
+      case 'TOP 14':     return const Color(0xFF1B2F7A);
+      case 'Primera A':  return const Color(0xFF0A2240);
+      case 'Primera B':  return const Color(0xFFB35A00);
+      case 'Primera C':  return const Color(0xFFAA1500);
       default:           return const Color(0xFF1B4332);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final ligas = folders[folderName]!;
+    final ligas   = folders[folderName]!;
     final primary = _primary;
-    final dark = Color.lerp(primary, Colors.black, 0.55)!;
+    final dark    = Color.lerp(primary, Colors.black, 0.55)!;
+    final logo    = urbaLogoWidget(folderName, size: 72);
     return GestureDetector(
       onTap: () => Navigator.push(context, MaterialPageRoute(
         builder: (_) => CarpetaPage(titulo: folderName, ligas: ligas),
@@ -160,29 +162,35 @@ class _SubFolderTile extends StatelessWidget {
             colors: [primary, dark],
           ),
         ),
-        child: Stack(
+        child: Column(
           children: [
-            Positioned(
-              right: -6, bottom: -6,
-              child: Icon(Icons.folder_open_rounded, size: 60,
-                color: Colors.white.withValues(alpha: 0.07)),
+            Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
+                  child: logo ?? Icon(Icons.folder_open_rounded,
+                    color: Colors.white70, size: 40),
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.35),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+              ),
+              child: Row(
                 children: [
-                  const Icon(Icons.folder_open_rounded, color: Colors.white70, size: 24),
-                  const Spacer(),
-                  Text(folderName, maxLines: 2,
-                    style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w900,
-                      fontSize: 12, height: 1.2,
-                    )),
-                  const SizedBox(height: 4),
-                  Text('${ligas.length} torneos',
+                  Expanded(
+                    child: Text(folderName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11)),
+                  ),
+                  Text('${ligas.length}',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.55), fontSize: 10)),
+                      color: Colors.white.withValues(alpha: 0.50), fontSize: 10)),
                 ],
               ),
             ),
