@@ -220,6 +220,10 @@ def main():
         match_tags = top14_section.find_all("div", class_="mc-matchContainer")
         log.info(f"Partidos encontrados en sección Top 14: {len(match_tags)}")
 
+        # Debug temporal: imprimir el HTML del primer partido para ver su estructura
+        if match_tags:
+            log.info(f"HTML primer partido:\n{match_tags[0].prettify()[:2000]}")
+
         matches = []
         for tag in match_tags:
             channel_attr = tag.get("data-channel", "")
