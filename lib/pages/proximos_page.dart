@@ -11,11 +11,35 @@ class ProximosPage extends StatefulWidget {
 class _ProximosPageState extends State<ProximosPage> {
   late Future<Map<String, List<dynamic>>> _future;
   bool _refreshing = false;
+  final _scrollController = ScrollController();
+  final _todayKey = GlobalKey();
+  bool _scrolledToToday = false;
 
   @override
   void initState() {
     super.initState();
     _future = MatchCache.instance.fetchAll(force: true);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scheduleScrollToToday() {
+    if (_scrolledToToday) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _todayKey.currentContext;
+      if (ctx != null) {
+        _scrolledToToday = true;
+        Scrollable.ensureVisible(ctx,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOut,
+          alignment: 0.0,
+        );
+      }
+    });
   }
 
   Future<void> _refresh() async {
@@ -35,6 +59,7 @@ class _ProximosPageState extends State<ProximosPage> {
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           // ── AppBar ──────────────────────────────────────────────────────
           SliverAppBar(
@@ -108,11 +133,26 @@ class _ProximosPageState extends State<ProximosPage> {
 
                 final sortedDates = byDate.keys.toList()..sort();
 
+                final now = DateTime.now();
+                final today = DateTime(now.year, now.month, now.day);
+                String? scrollTarget;
+                for (final dateStr in sortedDates) {
+                  final d = DateTime.parse(dateStr);
+                  if (!d.isBefore(today)) {
+                    scrollTarget = dateStr;
+                    break;
+                  }
+                }
+                if (scrollTarget != null) _scheduleScrollToToday();
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (final dateStr in sortedDates) ...[
-                      _DateHeader(dateStr: dateStr),
+                      _DateHeader(
+                        key: dateStr == scrollTarget ? _todayKey : null,
+                        dateStr: dateStr,
+                      ),
                       _MatchesByLeague(entries: byDate[dateStr]!),
                     ],
                     const SizedBox(height: 32),
@@ -131,7 +171,7 @@ class _ProximosPageState extends State<ProximosPage> {
 
 class _DateHeader extends StatelessWidget {
   final String dateStr;
-  const _DateHeader({required this.dateStr});
+  const _DateHeader({super.key, required this.dateStr});
 
   @override
   Widget build(BuildContext context) {
