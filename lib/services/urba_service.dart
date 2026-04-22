@@ -116,7 +116,7 @@ class UrbaService {
     // Para URBA Top 14 iniciamos el fetch de datos en vivo en paralelo con
     // la descarga de fechas, sin que afecte el resto de divisiones.
     final liveFuture = leagueName == 'URBA Top 14'
-        ? _fetchLiveTop14()
+        ? fetchLiveTop14()
         : Future<List<dynamic>?>.value(null);
 
     // 1. Obtener todas las fechas del campeonato
@@ -150,7 +150,8 @@ class UrbaService {
 
   // Llama a GET /urba-live en el Worker y devuelve la lista de partidos.
   // Retorna null ante cualquier error (falla silenciosa → se usan datos de URBA API).
-  Future<List<dynamic>?> _fetchLiveTop14() async {
+  // Método público para que MatchCache pueda inyectar partidos en vivo en "En Vivo".
+  Future<List<dynamic>?> fetchLiveTop14() async {
     // En desarrollo API_BASE_URL apunta a api-sports → no tiene /urba-live → ignorar.
     if (_workerBase.isEmpty || _workerBase.contains('api-sports')) return null;
     try {
