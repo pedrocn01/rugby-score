@@ -57,8 +57,8 @@ class MatchCache {
         }
       }
 
-      // Inyectar partidos en vivo del URBA Top 14 para que aparezcan en "En Vivo".
-      // Falla silenciosamente si el Worker no tiene datos o no es sábado de fecha.
+      // Inyectar partidos en vivo del URBA Top 14 — solo sábados.
+      // fetchLiveTop14() retorna null cualquier otro día sin hacer ningún request.
       try {
         final urbaLive = await UrbaService().fetchLiveTop14();
         if (urbaLive != null && urbaLive.isNotEmpty) {
