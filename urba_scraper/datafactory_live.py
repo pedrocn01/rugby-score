@@ -97,10 +97,11 @@ def int_or_none(val) -> int | None:
         return None
 
 
-def parse_date(raw: str | None) -> str | None:
+def parse_date_originaldate(raw: str | None) -> str | None:
+    """Convierte data-originaldate='2026/03/14 15:30' a ISO 8601 con zona Argentina."""
     if not raw:
         return None
-    for fmt in ("%d/%m/%Y %H:%M", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
+    for fmt in ("%Y/%m/%d %H:%M", "%d/%m/%Y %H:%M", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M"):
         try:
             dt = datetime.strptime(raw.strip(), fmt)
             return dt.strftime("%Y-%m-%dT%H:%M:%S-03:00")
@@ -110,62 +111,58 @@ def parse_date(raw: str | None) -> str | None:
 
 
 def parse_match(tag, channel_id: str | None, round_name: str) -> dict | None:
-    """
-    Parsea un div.mc-matchContainer.
-    Intenta obtener datos del livescore JSON primero; si no, cae en HTML.
-    """
-    # ── Datos del HTML ────────────────────────────────────────────────────────
-    # Selectores comunes de datafactory — ajustar si es necesario
-    home_name = text_or_none(tag,
-        ".mc-local .mc-teamName", ".mc-home .mc-teamName",
-        ".mc-local .name",        ".local .mc-teamName",
-        ".mc-teamName:first-of-type",
-    )
-    away_name = text_or_none(tag,
-        ".mc-visit .mc-teamName", ".mc-away .mc-teamName",
-        ".mc-visit .name",        ".visit .mc-teamName",
-    )
-    date_str = text_or_none(tag, ".mc-date", ".mc-datetime", ".matchDate", "time")
-    time_str = text_or_none(tag, ".mc-time", ".matchTime")
-    if date_str and time_str and " " not in date_str:
-        date_str = f"{date_str} {time_str}"
-    date_iso = parse_date(date_str)
+    """Parsea un div.mc-matchContainer con la estructura real de datafactory."""
 
-    # Estado inicial desde clases CSS del contenedor
+    # ── Nombres de equipo ─────────────────────────────────────────────────────
+    # Estructura real: <div class="local ..."><div class="equipo ...">Nombre</div>
+    home_name = text_or_none(tag, ".local .equipo")
+    away_name = text_or_none(tag, ".visitante .equipo")
+
+    if not home_name or not away_name:
+        log.debug(f"Partido sin nombres, saltando. channel={channel_id}")
+        return None
+
+    # ── Fecha desde atributo data-originaldate ────────────────────────────────
+    original_date = tag.get("data-originaldate", "")  # "2026/03/14 15:30"
+    date_iso  = parse_date_originaldate(original_date)
+    timestamp = 0
+    if date_iso:
+        try:
+            timestamp = int(datetime.fromisoformat(date_iso).timestamp())
+        except ValueError:
+            pass
+
+    # ── Estado desde clases CSS del container ─────────────────────────────────
     classes = " ".join(tag.get("class", []))
-    raw_status_html = "notStarted"
-    if "inProgress" in classes or "status-inProgress" in classes:
-        raw_status_html = "inProgress"
-    elif "end" in classes or "status-end" in classes or "finished" in classes:
-        raw_status_html = "end"
+    if "status-inProgress" in classes:
+        raw_status = "inProgress"
+    elif "status-finished" in classes or "status-end" in classes:
+        raw_status = "finished"
+    else:
+        raw_status = "notStarted"
 
     home_score: int | None = None
     away_score: int | None = None
     status_short = "NS"
 
-    # ── Livescore JSON (más confiable para partidos en curso) ─────────────────
-    if channel_id and raw_status_html in ("inProgress",):
+    if raw_status == "inProgress" and channel_id:
+        # Pedir livescore para obtener marcador y periodo exactos
         live = fetch_livescore(channel_id)
         if live:
             status_short = map_status(live)
             score = live.get("score") or {}
             home_score = int_or_none(score.get("local") or live.get("localScore"))
             away_score = int_or_none(score.get("visit") or live.get("visitScore"))
-            # Nombres desde livescore si no los encontramos en el HTML
-            if not home_name:
-                home_name = live.get("localTeam", {}).get("name") or live.get("local_team")
-            if not away_name:
-                away_name = live.get("visitTeam", {}).get("name") or live.get("visit_team")
-    elif raw_status_html == "end":
-        status_short = "FT"
-        home_score = int_or_none(text_or_none(tag,
-            ".mc-score-local", ".mc-result-local", ".local .score", ".home .score"))
-        away_score = int_or_none(text_or_none(tag,
-            ".mc-score-visit", ".mc-result-visit", ".visit .score", ".away .score"))
+        else:
+            # Sin livescore disponible: leer marcador del HTML
+            status_short = "1H"
+            home_score = int_or_none(text_or_none(tag, ".local .resultado"))
+            away_score = int_or_none(text_or_none(tag, ".visitante .resultado"))
 
-    if not home_name or not away_name:
-        log.debug(f"Partido sin nombres, saltando. channel={channel_id}")
-        return None
+    elif raw_status == "finished":
+        status_short = "FT"
+        home_score = int_or_none(text_or_none(tag, ".local .resultado"))
+        away_score = int_or_none(text_or_none(tag, ".visitante .resultado"))
 
     timestamp = 0
     if date_iso:
@@ -218,14 +215,18 @@ def main():
 
         # ── Partidos dentro de la sección ─────────────────────────────────────
         match_tags = top14_section.find_all("div", class_="mc-matchContainer")
-        log.info(f"Partidos encontrados en sección Top 14: {len(match_tags)}")
+        log.info(f"Partidos en sección Top 14 (total temporada): {len(match_tags)}")
 
-        # Debug temporal: imprimir el HTML del primer partido para ver su estructura
-        if match_tags:
-            log.info(f"HTML primer partido:\n{match_tags[0].prettify()[:2000]}")
+        # Filtrar solo los partidos de hoy (Argentina UTC-3)
+        today_arg = datetime.now(timezone.utc).strftime("%Y/%m/%d")  # "2026/04/19"
+        today_tags = [
+            t for t in match_tags
+            if t.get("data-originaldate", "").startswith(today_arg)
+        ]
+        log.info(f"Partidos de hoy ({today_arg}): {len(today_tags)}")
 
         matches = []
-        for tag in match_tags:
+        for tag in today_tags:
             channel_attr = tag.get("data-channel", "")
             channel_id   = extract_channel_id(channel_attr)
             parsed = parse_match(tag, channel_id, round_name)
