@@ -45,6 +45,11 @@ class UrbaService {
   static const _base = 'https://api.urba.org.ar/api';
   static const _headers = {'Accept': 'application/json'};
 
+  // URL del Worker de Cloudflare (misma variable que usa RugbyService).
+  // En desarrollo apunta a api-sports directamente → /urba-live no existe → ignorado.
+  static const _workerBase = String.fromEnvironment('API_BASE_URL', defaultValue: '');
+  static const _appSecret  = String.fromEnvironment('APP_SECRET',   defaultValue: '');
+
   // ── Tabla de posiciones ───────────────────────────────────────────────────
 
   Future<List<dynamic>> fetchStandings(String leagueName) async {
@@ -108,6 +113,12 @@ class UrbaService {
     final champId = urbaChampionshipIds[leagueName];
     if (champId == null) throw Exception('UrbaService: liga desconocida "$leagueName"');
 
+    // Para URBA Top 14 iniciamos el fetch de datos en vivo en paralelo con
+    // la descarga de fechas, sin que afecte el resto de divisiones.
+    final liveFuture = leagueName == 'URBA Top 14'
+        ? _fetchLiveTop14()
+        : Future<List<dynamic>?>.value(null);
+
     // 1. Obtener todas las fechas del campeonato
     final champRes = await http.get(
       Uri.parse('$_base/championship/$champId?include=rounds'),
@@ -126,7 +137,66 @@ class UrbaService {
       rounds.map((r) => _fetchRound(r).catchError((_) => <dynamic>[])),
     );
 
-    return results.expand((m) => m).toList();
+    final allMatches = results.expand((m) => m).toList();
+
+    // 3. Overlay en vivo — SOLO para URBA Top 14
+    final liveData = await liveFuture;
+    if (liveData != null && liveData.isNotEmpty) {
+      _applyLiveOverlay(allMatches, liveData);
+    }
+
+    return allMatches;
+  }
+
+  // Llama a GET /urba-live en el Worker y devuelve la lista de partidos.
+  // Retorna null ante cualquier error (falla silenciosa → se usan datos de URBA API).
+  Future<List<dynamic>?> _fetchLiveTop14() async {
+    // En desarrollo API_BASE_URL apunta a api-sports → no tiene /urba-live → ignorar.
+    if (_workerBase.isEmpty || _workerBase.contains('api-sports')) return null;
+    try {
+      final res = await http.get(
+        Uri.parse('$_workerBase/urba-live'),
+        headers: {
+          'Accept': 'application/json',
+          if (_appSecret.isNotEmpty) 'X-App-Secret': _appSecret,
+        },
+      ).timeout(const Duration(seconds: 5));
+      if (res.statusCode != 200) return null;
+
+      final body = jsonDecode(res.body) as Map<String, dynamic>;
+
+      // Ignorar datos con más de 4 horas de antigüedad (evita mostrar
+      // scores del sábado pasado como si fueran en vivo).
+      final updatedAt = DateTime.tryParse(body['updated_at'] as String? ?? '');
+      if (updatedAt == null) return null;
+      if (DateTime.now().toUtc().difference(updatedAt).inHours >= 4) return null;
+
+      return body['matches'] as List<dynamic>?;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // Sobrescribe status y scores de los partidos de la API con los datos en vivo.
+  // La coincidencia es por nombre de equipo local + visitante.
+  void _applyLiveOverlay(List<dynamic> matches, List<dynamic> liveMatches) {
+    for (final live in liveMatches) {
+      final lh = (live['teams']?['home']?['name'] as String? ?? '').toLowerCase().trim();
+      final la = (live['teams']?['away']?['name'] as String? ?? '').toLowerCase().trim();
+      if (lh.isEmpty || la.isEmpty) continue;
+
+      for (int i = 0; i < matches.length; i++) {
+        final m  = matches[i] as Map;
+        final mh = (m['teams']?['home']?['name'] as String? ?? '').toLowerCase().trim();
+        final ma = (m['teams']?['away']?['name'] as String? ?? '').toLowerCase().trim();
+        if (mh == lh && ma == la) {
+          matches[i] = Map<String, dynamic>.from(m)
+            ..['status'] = live['status']
+            ..['scores'] = live['scores'];
+          break;
+        }
+      }
+    }
   }
 
   Future<List<dynamic>> _fetchRound(dynamic round) async {

@@ -2,9 +2,14 @@ name            = "rugby-proxy"
 main            = "worker.js"
 compatibility_date = "2025-01-01"
 
-# La API key se guarda como secreto en Cloudflare (nunca en este archivo).
-# Para configurarla: wrangler secret put API_KEY
-#
-# Variables de entorno NO secretas (opcionales):
-# [vars]
-# SOME_VAR = "value"
+# Secrets (wrangler secret put <nombre>):
+#   API_KEY           → key de api-sports.io
+#   APP_SECRET        → string compartido con Flutter (header X-App-Secret)
+#   LIVE_SECRET_TOKEN → token para que el scraper Python haga PUT /urba-live
+
+# KV namespace para datos en vivo del URBA Top 14.
+# Crear con: wrangler kv namespace create RUGBY_LIVE
+# Luego reemplazar el id con el que devuelve ese comando.
+[[kv_namespaces]]
+binding = "RUGBY_LIVE"
+id      = "66ff7c4d3377463b8b3bba9b719b09f5"

@@ -44,8 +44,8 @@
  *      --dart-define=APP_SECRET=el_mismo_string_del_paso_4
  */
 
-const ALLOWED_ENDPOINTS = ['games', 'standings'];
-const API_ORIGIN        = 'https://v1.rugby.api-sports.io';
+const PROXY_ENDPOINTS = ['games', 'standings'];
+const API_ORIGIN      = 'https://v1.rugby.api-sports.io';
 
 // TTL base para cualquier respuesta sin partidos activos
 const BASE_TTL = 24 * 60 * 60; // 24 horas
@@ -110,6 +110,14 @@ function isAuthorized(request, env) {
   return request.headers.get('X-App-Secret') === secret;
 }
 
+// ── Validación del scraper Python (token secreto, diferente al del app) ────────
+// Si LIVE_SECRET_TOKEN no está configurado, rechaza todo (falla segura).
+function isScraperAuthorized(request, env) {
+  const token = env.LIVE_SECRET_TOKEN;
+  if (!token) return false;
+  return request.headers.get('X-Secret-Token') === token;
+}
+
 // ── Handler principal ──────────────────────────────────────────────────────────
 export default {
   async fetch(request, env) {
@@ -119,6 +127,33 @@ export default {
       return corsResponse('', 204);
     }
 
+    const url      = new URL(request.url);
+    const endpoint = url.pathname.replace(/^\/+/, '');
+
+    // ── /urba-live: datos en vivo del URBA Top 14 guardados en KV ─────────
+    //   GET → la app Flutter lee los datos (requiere X-App-Secret)
+    //   PUT → el scraper Python escribe los datos (requiere X-Secret-Token)
+    if (endpoint === 'urba-live') {
+      if (request.method === 'GET') {
+        if (!isAuthorized(request, env)) {
+          return corsResponse(JSON.stringify({ error: 'No autorizado' }), 403);
+        }
+        const data = await env.RUGBY_LIVE.get('urba_live_data');
+        if (!data) return corsResponse(JSON.stringify({ matches: [] }), 200);
+        return corsResponse(data, 200);
+      }
+      if (request.method === 'PUT') {
+        if (!isScraperAuthorized(request, env)) {
+          return corsResponse(JSON.stringify({ error: 'No autorizado' }), 403);
+        }
+        const body = await request.text();
+        await env.RUGBY_LIVE.put('urba_live_data', body);
+        return corsResponse(JSON.stringify({ ok: true }), 200);
+      }
+      return corsResponse(JSON.stringify({ error: 'Método no permitido' }), 405);
+    }
+
+    // ── Proxy a api-sports (games, standings) ─────────────────────────────
     if (request.method !== 'GET') {
       return corsResponse(JSON.stringify({ error: 'Método no permitido' }), 405);
     }
@@ -128,10 +163,7 @@ export default {
       return corsResponse(JSON.stringify({ error: 'No autorizado' }), 403);
     }
 
-    const url      = new URL(request.url);
-    const endpoint = url.pathname.replace(/^\/+/, '');
-
-    if (!ALLOWED_ENDPOINTS.includes(endpoint)) {
+    if (!PROXY_ENDPOINTS.includes(endpoint)) {
       return corsResponse(JSON.stringify({ error: 'Endpoint no permitido' }), 403);
     }
 

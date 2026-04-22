@@ -1,0 +1,29 @@
+name: URBA Top 14 - Resultados en vivo
+
+on:
+  schedule:
+    # Cada minuto, sábados de 15:00 a 22:00 UTC (12:00-19:00 Argentina)
+    - cron: '*/1 15-22 * * 6'
+  # Permite correrlo manualmente desde GitHub para probar
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install -r urba_scraper/requirements.txt
+
+      - name: Correr scraper en vivo
+        env:
+          WORKER_URL:        ${{ secrets.WORKER_URL }}
+          LIVE_SECRET_TOKEN: ${{ secrets.LIVE_SECRET_TOKEN }}
+        run: python urba_scraper/datafactory_live.py
