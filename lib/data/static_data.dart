@@ -8,6 +8,16 @@ class StaticDataService {
     };
   }
 
+  /// Fixtures que la API no devuelve pero sí deberían estar.
+  /// Se inyectan sobre la respuesta de la API evitando duplicados.
+  static List<dynamic> getSupplementalMatches(String league) {
+    return switch (league) {
+      'Champions Cup' => _champsCupSupplemental,
+      'Challenge Cup' => _challengeCupSupplemental,
+      _ => [],
+    };
+  }
+
   static List<List<dynamic>> getStandings(String league) {
     return switch (league) {
       'Champions Cup' => [_champsCupGrupoA, _champsCupGrupoB, _champsCupGrupoC, _champsCupGrupoD],
@@ -16,6 +26,38 @@ class StaticDataService {
       _ => [],
     };
   }
+
+  // ── Fixtures suplementarios (la API no los devuelve) ─────────────────────
+
+  static final List<dynamic> _champsCupSupplemental = [
+    {
+      'id': 'static_champs_sf_bor_bath',
+      'week': 'semi-finals',
+      'date': '2026-05-03T14:00:00+00:00',
+      'timestamp': 1777816800,
+      'status': {'short': 'NS'},
+      'teams': {
+        'home': {'name': 'Bordeaux Bèglès'},
+        'away': {'name': 'Bath'},
+      },
+      'scores': {'home': null, 'away': null},
+    },
+  ];
+
+  static final List<dynamic> _challengeCupSupplemental = [
+    {
+      'id': 'static_challenge_sf_ulster_exeter',
+      'week': 'semi-finals',
+      'date': '2026-05-02T16:30:00+00:00',
+      'timestamp': 1777739400,
+      'status': {'short': 'NS'},
+      'teams': {
+        'home': {'name': 'Ulster'},
+        'away': {'name': 'Exeter Chiefs'},
+      },
+      'scores': {'home': null, 'away': null},
+    },
+  ];
 
   // ── CHAMPIONS CUP — tablas de grupo ──────────────────────────────────────
 

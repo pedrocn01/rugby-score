@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../config/leagues.dart';
+import '../data/static_data.dart';
 import 'rugby_service.dart';
 import 'urba_service.dart';
 
@@ -54,6 +55,26 @@ class MatchCache {
         final result = results[i];
         if (result != null) {
           _data[entries[i].key] = result;
+        }
+      }
+
+      // Inyectar fixtures que la API no devuelve (evitar duplicados por nombre de equipos)
+      for (int i = 0; i < entries.length; i++) {
+        final leagueName = entries[i].key;
+        final extra = StaticDataService.getSupplementalMatches(leagueName);
+        if (extra.isEmpty) continue;
+        final existing = _data[leagueName] ?? [];
+        final existingPairs = existing.map((m) {
+          final h = m['teams']?['home']?['name']?.toString() ?? '';
+          final a = m['teams']?['away']?['name']?.toString() ?? '';
+          return '$h|$a';
+        }).toSet();
+        for (final m in extra) {
+          final h = m['teams']?['home']?['name']?.toString() ?? '';
+          final a = m['teams']?['away']?['name']?.toString() ?? '';
+          if (!existingPairs.contains('$h|$a')) {
+            _data.putIfAbsent(leagueName, () => []).add(m);
+          }
         }
       }
 

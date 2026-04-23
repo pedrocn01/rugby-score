@@ -80,7 +80,21 @@ class _DetalleLigaState extends State<DetalleLiga> {
       _matchesFuture  = Future.value(StaticDataService.getMatches(widget.nombreLiga));
       _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
     } else if (widget.isStaticStandingsOnly) {
-      _matchesFuture  = _service.fetchMatches(widget.leagueId, noCache: noCache);
+      _matchesFuture = _service.fetchMatches(widget.leagueId, noCache: noCache).then((matches) {
+        final extra = StaticDataService.getSupplementalMatches(widget.nombreLiga);
+        if (extra.isEmpty) return matches;
+        final existingPairs = matches.map((m) {
+          final h = m['teams']?['home']?['name']?.toString() ?? '';
+          final a = m['teams']?['away']?['name']?.toString() ?? '';
+          return '$h|$a';
+        }).toSet();
+        final toAdd = extra.where((m) {
+          final h = m['teams']?['home']?['name']?.toString() ?? '';
+          final a = m['teams']?['away']?['name']?.toString() ?? '';
+          return !existingPairs.contains('$h|$a');
+        }).toList();
+        return [...matches, ...toAdd];
+      });
       _standingsFuture = Future.value(StaticDataService.getStandings(widget.nombreLiga));
     } else if (computeStandingsLeagues.contains(widget.nombreLiga)) {
       final f = _service.fetchMatches(widget.leagueId, noCache: noCache);
