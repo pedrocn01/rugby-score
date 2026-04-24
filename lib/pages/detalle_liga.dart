@@ -42,7 +42,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
   @override
   void initState() {
     super.initState();
-    _loadData(noCache: true);
+    _loadData();
   }
 
   void _loadData({bool noCache = false}) {
