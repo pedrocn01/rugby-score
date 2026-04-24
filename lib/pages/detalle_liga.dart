@@ -485,16 +485,24 @@ class _DetalleLigaState extends State<DetalleLiga> {
                   DateTime pd(dynamic p, DateTime fallback) =>
                       DateTime.tryParse(p['date'] as String? ?? '') ?? fallback;
 
+                  const finishedStatuses = {'FT', 'AET', 'PEN', 'AWD'};
+
+                  // Un partido va a Resultados si tiene marcador O si ya terminó
+                  // (la API a veces devuelve FT sin scores; mostramos '-' en ese caso)
+                  bool esJugado(dynamic p) =>
+                      p['scores']?['home'] != null ||
+                      finishedStatuses.contains(p['status']?['short']);
+
                   final jugados = partidos
                       .where((p) =>
-                          p['scores']?['home'] != null &&
+                          esJugado(p) &&
                           (!isSevensTournament || _isMainDrawMatch(p)))
                       .toList()
                     ..sort((a, b) => pd(b, DateTime(2000)).compareTo(pd(a, DateTime(2000))));
 
                   final proximos = partidos
                       .where((p) =>
-                          p['scores']?['home'] == null &&
+                          !esJugado(p) &&
                           (!isSevensTournament || _isMainDrawMatch(p)))
                       .toList()
                     ..sort((a, b) => pd(a, DateTime(2099)).compareTo(pd(b, DateTime(2099))));

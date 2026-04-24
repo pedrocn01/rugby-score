@@ -84,6 +84,12 @@ function getGamesTTL(body) {
       if (!finishedStatuses.has(status) && msSince >= 0 && msSince < 3 * 60 * 60 * 1000)
         return 5 * 60;
 
+      // Partido FT pero sin scores → la API puede tardar en cargar el marcador
+      if (finishedStatuses.has(status) &&
+          (game.scores?.home == null || game.scores?.away == null) &&
+          msSince >= 0 && msSince < 6 * 60 * 60 * 1000)
+        return 5 * 60;
+
       // Partido NS que arranca dentro de las próximas 24h:
       // ajustar TTL para que la caché expire 30 min antes del kickoff.
       // Esto evita que partidos nocturnos (ej: Super Rugby Pacific) queden
