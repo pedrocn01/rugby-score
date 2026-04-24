@@ -60,7 +60,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
     }
     if (espnStandingsLeagues.contains(widget.nombreLiga)) {
       _matchesFuture   = _service.fetchMatches(widget.leagueId, noCache: noCache)
-          .then((m) => StaticDataService.injectOverrides(m, widget.nombreLiga));
+          .then((m) => StaticDataService.injectOverrides(m, widget.nombreLiga))
+          .catchError((_) => StaticDataService.injectOverrides([], widget.nombreLiga));
       _standingsFuture = _espn.fetchStandings(widget.nombreLiga).then((standings) {
         for (final group in standings) {
           for (final entry in group) {

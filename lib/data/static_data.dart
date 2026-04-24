@@ -62,20 +62,8 @@ class StaticDataService {
 
   // ── Fixtures suplementarios (la API no los devuelve) ─────────────────────
 
-  static final List<dynamic> _champsCupSupplemental = [
-    {
-      'id': 'static_champs_sf_bor_bath',
-      'week': 'semi-finals',
-      'date': '2026-05-03T14:00:00+00:00',
-      'timestamp': 1777816800,
-      'status': {'short': 'NS'},
-      'teams': {
-        'home': {'name': 'Bordeaux Bèglès'},
-        'away': {'name': 'Bath'},
-      },
-      'scores': {'home': null, 'away': null},
-    },
-  ];
+  // Bordeaux vs Bath: la API ya lo devuelve, no hace falta suplemento.
+  static final List<dynamic> _champsCupSupplemental = [];
 
   static final List<dynamic> _challengeCupSupplemental = [
     {
