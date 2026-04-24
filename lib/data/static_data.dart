@@ -18,6 +18,39 @@ class StaticDataService {
     };
   }
 
+  /// Resultados conocidos que la API tarda en actualizar.
+  /// Reemplaza el partido si la API lo tiene sin marcador; lo agrega si no lo tiene.
+  /// Si la API ya tiene el marcador, no toca nada.
+  static List<dynamic> injectOverrides(List<dynamic> matches, String league) {
+    final overrides = switch (league) {
+      'Super Rugby Pacific' => _superRugbyPacificOverrides,
+      _ => <dynamic>[],
+    };
+    if (overrides.isEmpty) return matches;
+
+    final result = List<dynamic>.from(matches);
+    for (final override in overrides) {
+      final homeAliases = List<String>.from(override['_homeAliases'] as List);
+      final awayAliases = List<String>.from(override['_awayAliases'] as List);
+      final clean = Map<String, dynamic>.from(override as Map)
+        ..remove('_homeAliases')
+        ..remove('_awayAliases');
+
+      final idx = result.indexWhere((m) {
+        final h = m['teams']?['home']?['name']?.toString() ?? '';
+        final a = m['teams']?['away']?['name']?.toString() ?? '';
+        return homeAliases.contains(h) && awayAliases.contains(a);
+      });
+
+      if (idx == -1) {
+        result.add(clean);
+      } else if (result[idx]['scores']?['home'] == null) {
+        result[idx] = clean;
+      }
+    }
+    return result;
+  }
+
   static List<List<dynamic>> getStandings(String league) {
     return switch (league) {
       'Champions Cup' => [_champsCupGrupoA, _champsCupGrupoB, _champsCupGrupoC, _champsCupGrupoD],
@@ -269,5 +302,26 @@ class StaticDataService {
     {'position':2,'team':{'name':'La Tablada'},            'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
     {'position':3,'team':{'name':'Old Resian'},            'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
     {'position':4,'team':{'name':'Duendes RC'},            'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
+  ];
+
+  // ─── Overrides Super Rugby Pacific ───────────────────────────────────────
+  // Resultados que api-sports tarda en cargar. Se eliminan cuando la API los tenga.
+
+  static final List<dynamic> _superRugbyPacificOverrides = [
+    {
+      '_homeAliases': ['Crusaders'],
+      '_awayAliases': ['Waratahs', 'NSW Waratahs', 'New South Wales Waratahs', 'NSW Waeatahs', 'Waeatahs'],
+      'id': 'override_srp_r11_crusaders_waratahs_20260424',
+      'week': '11',
+      'date': '2026-04-24T07:35:00+00:00',
+      'timestamp': 1745480100,
+      'status': {'short': 'FT', 'long': 'Full Time'},
+      'teams': {
+        'home': {'name': 'Crusaders',    'logo': null},
+        'away': {'name': 'NSW Waratahs', 'logo': null},
+      },
+      'scores': {'home': 35, 'away': 20},
+      'periods': {'first': {'home': null, 'away': null}, 'second': {'home': null, 'away': null}},
+    },
   ];
 }
