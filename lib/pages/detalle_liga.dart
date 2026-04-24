@@ -42,11 +42,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
   @override
   void initState() {
     super.initState();
-    // El Worker de Cloudflare cachea las respuestas con TTL inteligente
-    // (10 min en fines de semana, 24h en días sin partidos). Todos los usuarios
-    // comparten ese cache → api-sports recibe 1 llamada por TTL, no 1 por usuario.
-    // Solo forzar refresh cuando el usuario lo pide explícitamente (_refresh).
-    _loadData();
+    _loadData(noCache: true);
   }
 
   void _loadData({bool noCache = false}) {
