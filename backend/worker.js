@@ -62,6 +62,10 @@ function getGamesTTL(body) {
     const liveStatuses     = new Set(['1H', '2H', 'HT', 'ET', 'BT', 'P']);
     const finishedStatuses = new Set(['FT', 'AET', 'PEN', 'Canc', 'AWD', 'Susp', 'ABD']);
 
+    // TTL mínimo calculado para el próximo partido NS
+    // (la caché expirará 30 min antes del kickoff para no perderse el resultado)
+    let nextMatchTTL = BASE_TTL;
+
     for (const game of data.response) {
       const status    = game.status?.short ?? '';
       const gameStart = new Date(game.date || 0).getTime();
@@ -79,10 +83,18 @@ function getGamesTTL(body) {
       // en actualizar el estado, el partido puede seguir en juego)
       if (!finishedStatuses.has(status) && msSince >= 0 && msSince < 3 * 60 * 60 * 1000)
         return 5 * 60;
+
+      // Partido NS que arranca dentro de las próximas 24h:
+      // ajustar TTL para que la caché expire 30 min antes del kickoff.
+      // Esto evita que partidos nocturnos (ej: Super Rugby Pacific) queden
+      // cacheados como NS durante todo el partido y el resultado nunca aparezca.
+      if (status === 'NS' && msUntil > 30 * 60 * 1000 && msUntil < BASE_TTL * 1000) {
+        const ttlSeconds = Math.floor((msUntil - 30 * 60 * 1000) / 1000);
+        nextMatchTTL = Math.min(nextMatchTTL, ttlSeconds);
+      }
     }
 
-    // Sin partidos activos → 24 horas (no gastar requests)
-    return BASE_TTL;
+    return nextMatchTTL;
   } catch {
     return BASE_TTL;
   }
