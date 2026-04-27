@@ -2,8 +2,8 @@ name: URBA Top 14 - Resultados en vivo
 
 on:
   schedule:
-    # Cada 5 minutos, sábados de 14:00 a 23:00 UTC (11:00-20:00 Argentina)
-    - cron: '*/5 14-23 * * 6'
+    # Cada 5 minutos, sábados de 17:00 a 22:00 UTC (14:00-19:00 Argentina)
+    - cron: '*/5 17-22 * * 6'
   # Permite correrlo manualmente desde GitHub para probar
   workflow_dispatch:
 
