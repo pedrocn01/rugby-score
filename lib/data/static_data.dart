@@ -215,14 +215,14 @@ class StaticDataService {
     {'week':'1','date':'2026-03-28T16:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Jockey Club de Córdoba'},'away':{'name':'Duendes RC'}},'scores':{'home':22,'away':7},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
     {'week':'1','date':'2026-03-28T16:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Old Resian'},'away':{'name':'La Tablada'}},'scores':{'home':22,'away':24},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
     // ─── Fecha 2 — 25 de abril ────────────────────────────────────────────
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Marista RC'},'away':{'name':'Tucumán Rugby'}},'scores':{'home':null,'away':null}},
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Mendoza RC'},'away':{'name':'Gimnasia y Esgrima de Rosario'}},'scores':{'home':null,'away':null}},
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Tala RC'},'away':{'name':'Urú Curé'}},'scores':{'home':null,'away':null}},
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'CURNE'},'away':{'name':'Estudiantes de Paraná'}},'scores':{'home':null,'away':null}},
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Jockey Club de Rosario'},'away':{'name':'Santa Fe Rugby'}},'scores':{'home':null,'away':null}},
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Córdoba Athletic'},'away':{'name':'Universitario de Córdoba'}},'scores':{'home':null,'away':null}},
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Duendes RC'},'away':{'name':'Old Resian'}},'scores':{'home':null,'away':null}},
-    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'La Tablada'},'away':{'name':'Jockey Club de Córdoba'}},'scores':{'home':null,'away':null}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Marista RC'},'away':{'name':'Tucumán Rugby'}},'scores':{'home':27,'away':39},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Mendoza RC'},'away':{'name':'Gimnasia y Esgrima de Rosario'}},'scores':{'home':17,'away':51},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Tala RC'},'away':{'name':'Urú Curé'}},'scores':{'home':79,'away':3},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'CURNE'},'away':{'name':'Estudiantes de Paraná'}},'scores':{'home':3,'away':27},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Jockey Club de Rosario'},'away':{'name':'Santa Fe Rugby'}},'scores':{'home':29,'away':31},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Córdoba Athletic'},'away':{'name':'Universitario de Córdoba'}},'scores':{'home':36,'away':17},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'Duendes RC'},'away':{'name':'Old Resian'}},'scores':{'home':38,'away':3},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
+    {'week':'2','date':'2026-04-25T00:00:00-03:00','status':{'short':'FT'},'teams':{'home':{'name':'La Tablada'},'away':{'name':'Jockey Club de Córdoba'}},'scores':{'home':17,'away':36},'periods':{'first':{'home':null,'away':null},'second':{'home':null,'away':null}}},
     // ─── Fecha 3 — 30 de mayo ─────────────────────────────────────────────
     {'week':'3','date':'2026-05-30T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Mendoza RC'},'away':{'name':'Marista RC'}},'scores':{'home':null,'away':null}},
     {'week':'3','date':'2026-05-30T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'Tucumán Rugby'},'away':{'name':'Gimnasia y Esgrima de Rosario'}},'scores':{'home':null,'away':null}},
@@ -261,35 +261,35 @@ class StaticDataService {
     {'week':'6','date':'2026-08-01T00:00:00-03:00','status':{'short':'NS'},'teams':{'home':{'name':'La Tablada'},'away':{'name':'Old Resian'}},'scores':{'home':null,'away':null}},
   ];
 
-  // ─── Tablas TDI A 2026 — actualizadas tras Fecha 1 ───────────────────────
+  // ─── Tablas TDI A 2026 — actualizadas tras Fecha 2 ───────────────────────
   // Criterio UAR: 4 pts victoria, 2 empate, 0 derrota. Top 2 clasifican a cuartos.
 
   static final List<dynamic> _tdiZona1Standings = [
-    {'position':1,'team':{'name':'Tucumán Rugby'},               'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':2,'team':{'name':'Gimnasia y Esgrima de Rosario'},'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Marista RC'},                  'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
-    {'position':4,'team':{'name':'Mendoza RC'},                  'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
+    {'position':1,'team':{'name':'Tucumán Rugby'},               'games':{'played':2,'win':{'total':2},'draw':{'total':0},'lose':{'total':0}},'points':8,'description':'Playoffs'},
+    {'position':2,'team':{'name':'Gimnasia y Esgrima de Rosario'},'games':{'played':2,'win':{'total':2},'draw':{'total':0},'lose':{'total':0}},'points':8,'description':'Playoffs'},
+    {'position':3,'team':{'name':'Marista RC'},                  'games':{'played':2,'win':{'total':0},'draw':{'total':0},'lose':{'total':2}},'points':0,'description':null},
+    {'position':4,'team':{'name':'Mendoza RC'},                  'games':{'played':2,'win':{'total':0},'draw':{'total':0},'lose':{'total':2}},'points':0,'description':null},
   ];
 
   static final List<dynamic> _tdiZona2Standings = [
-    {'position':1,'team':{'name':'Urú Curé'},           'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':2,'team':{'name':'Tala RC'},             'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Estudiantes de Paraná'},'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
-    {'position':4,'team':{'name':'CURNE'},               'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
+    {'position':1,'team':{'name':'Tala RC'},              'games':{'played':2,'win':{'total':2},'draw':{'total':0},'lose':{'total':0}},'points':8,'description':'Playoffs'},
+    {'position':2,'team':{'name':'Estudiantes de Paraná'},'games':{'played':2,'win':{'total':1},'draw':{'total':0},'lose':{'total':1}},'points':4,'description':null},
+    {'position':3,'team':{'name':'Urú Curé'},             'games':{'played':2,'win':{'total':1},'draw':{'total':0},'lose':{'total':1}},'points':4,'description':null},
+    {'position':4,'team':{'name':'CURNE'},                'games':{'played':2,'win':{'total':0},'draw':{'total':0},'lose':{'total':2}},'points':0,'description':null},
   ];
 
   static final List<dynamic> _tdiZona3Standings = [
-    {'position':1,'team':{'name':'Jockey Club de Rosario'},  'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':2,'team':{'name':'Santa Fe Rugby'},          'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Córdoba Athletic'},        'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
-    {'position':4,'team':{'name':'Universitario de Córdoba'},'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
+    {'position':1,'team':{'name':'Santa Fe Rugby'},          'games':{'played':2,'win':{'total':2},'draw':{'total':0},'lose':{'total':0}},'points':8,'description':'Playoffs'},
+    {'position':2,'team':{'name':'Jockey Club de Rosario'},  'games':{'played':2,'win':{'total':1},'draw':{'total':0},'lose':{'total':1}},'points':4,'description':null},
+    {'position':3,'team':{'name':'Córdoba Athletic'},        'games':{'played':2,'win':{'total':1},'draw':{'total':0},'lose':{'total':1}},'points':4,'description':null},
+    {'position':4,'team':{'name':'Universitario de Córdoba'},'games':{'played':2,'win':{'total':0},'draw':{'total':0},'lose':{'total':2}},'points':0,'description':null},
   ];
 
   static final List<dynamic> _tdiZona4Standings = [
-    {'position':1,'team':{'name':'Jockey Club de Córdoba'},'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':2,'team':{'name':'La Tablada'},            'games':{'played':1,'win':{'total':1},'draw':{'total':0},'lose':{'total':0}},'points':4,'description':'Playoffs'},
-    {'position':3,'team':{'name':'Old Resian'},            'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
-    {'position':4,'team':{'name':'Duendes RC'},            'games':{'played':1,'win':{'total':0},'draw':{'total':0},'lose':{'total':1}},'points':0,'description':null},
+    {'position':1,'team':{'name':'Jockey Club de Córdoba'},'games':{'played':2,'win':{'total':2},'draw':{'total':0},'lose':{'total':0}},'points':8,'description':'Playoffs'},
+    {'position':2,'team':{'name':'Duendes RC'},            'games':{'played':2,'win':{'total':1},'draw':{'total':0},'lose':{'total':1}},'points':4,'description':null},
+    {'position':3,'team':{'name':'La Tablada'},            'games':{'played':2,'win':{'total':1},'draw':{'total':0},'lose':{'total':1}},'points':4,'description':null},
+    {'position':4,'team':{'name':'Old Resian'},            'games':{'played':2,'win':{'total':0},'draw':{'total':0},'lose':{'total':2}},'points':0,'description':null},
   ];
 
   // ─── Overrides Super Rugby Pacific ───────────────────────────────────────
