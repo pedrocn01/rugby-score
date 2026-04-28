@@ -69,8 +69,8 @@ class UrbaService {
 
     return positions.map<dynamic>((p) {
       final pos      = p['position'] as int;
-      final clubName = p['team']?['club']?['name'] as String?
-                    ?? p['team']?['name'] as String?
+      final clubName = p['team']?['name'] as String?
+                    ?? p['team']?['club']?['name'] as String?
                     ?? '?';
       String? description;
       if (urbaTop14Leagues.contains(leagueName)) {
@@ -219,11 +219,11 @@ class UrbaService {
       final suspended = m['suspended'] as bool? ?? false;
       final homeScore = m['local_team_score'] as int?;
       final awayScore = m['visit_team_score'] as int?;
-      final homeName    = m['local_team']?['club']?['name'] as String?
-                       ?? m['local_team']?['name'] as String?
+      final homeName    = m['local_team']?['name'] as String?
+                       ?? m['local_team']?['club']?['name'] as String?
                        ?? '?';
-      final awayName    = m['visit_team']?['club']?['name'] as String?
-                       ?? m['visit_team']?['name'] as String?
+      final awayName    = m['visit_team']?['name'] as String?
+                       ?? m['visit_team']?['club']?['name'] as String?
                        ?? '?';
       final homeImgUri  = m['local_team']?['club']?['image_uri'] as String?;
       final awayImgUri  = m['visit_team']?['club']?['image_uri'] as String?;
