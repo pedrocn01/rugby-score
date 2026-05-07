@@ -5,6 +5,7 @@ import '../services/favorites_service.dart';
 import '../services/notifications_service.dart';
 import '../services/push_notification_service.dart';
 import '../services/match_cache.dart';
+import '../data/static_data.dart';
 import '../services/urba_service.dart';
 import 'team_detail_page.dart';
 
@@ -52,6 +53,14 @@ class _FavoritosPageState extends State<FavoritosPage> {
       for (final m in results[i]) {
         _all.add(_Entry(_urbaLeagues[i], m));
       }
+    }
+    for (final raw in StaticDataService.getMatches('TDI A 2026')) {
+      final m = Map<String, dynamic>.from(raw as Map);
+      if (!m.containsKey('timestamp')) {
+        final dt = DateTime.tryParse(m['date'] as String? ?? '');
+        m['timestamp'] = dt != null ? dt.millisecondsSinceEpoch ~/ 1000 : 0;
+      }
+      _all.add(_Entry('TDI A 2026', m));
     }
     if (mounted) setState(() => _loadingMatches = false);
   }
@@ -475,14 +484,24 @@ class _TeamPicker extends StatefulWidget {
 class _TeamPickerState extends State<_TeamPicker> {
   final _ctrl = TextEditingController();
   List<String> _filtered = [];
+  final Map<String, String> _networkLogos = {};
 
-  // Lista de todos los equipos conocidos (de logos + los que aparecen en partidos)
   late final List<String> _allTeams;
 
   @override
   void initState() {
     super.initState();
-    final fromLogos   = clubLogoUrls.keys.toSet();
+    // Recolectar logos de red de la API (URBA 1A/1B/1C, etc.)
+    for (final e in widget.allMatches) {
+      final hn = e.match['teams']?['home']?['name'] as String?;
+      final hl = e.match['teams']?['home']?['logo'] as String?;
+      final an = e.match['teams']?['away']?['name'] as String?;
+      final al = e.match['teams']?['away']?['logo'] as String?;
+      if (hn != null && hl != null && !_networkLogos.containsKey(hn)) _networkLogos[hn] = hl;
+      if (an != null && al != null && !_networkLogos.containsKey(an)) _networkLogos[an] = al;
+    }
+    // Excluir aliases del mapa estático para evitar duplicados
+    final fromLogos   = clubLogoUrls.keys.where((k) => !teamPickerHidden.contains(k)).toSet();
     final fromMatches = <String>{};
     for (final e in widget.allMatches) {
       final h = e.match['teams']?['home']?['name'] as String?;
@@ -602,8 +621,9 @@ class _TeamPickerState extends State<_TeamPicker> {
                     final name    = _filtered[i];
                     final isFav   = FavoritesService.instance.isFavorite(name);
                     final isNotif = NotificationsService.instance.isSubscribed(name);
-                    final logo    = clubLogo(name);
-                    final league  = _leagueFor(name);
+                    final logo        = clubLogo(name);
+                    final networkLogo = logo == null ? _networkLogos[name] : null;
+                    final league      = _leagueFor(name);
 
                     return InkWell(
                       onTap: () => FavoritesService.instance.toggle(name),
@@ -623,8 +643,11 @@ class _TeamPickerState extends State<_TeamPicker> {
                               ),
                               child: logo != null
                                   ? ClipOval(child: Image.asset(logo, fit: BoxFit.contain,
-                                      errorBuilder: (_, e, st) => _InitialsWidget(name)))
-                                  : _InitialsWidget(name),
+                                      errorBuilder: (_, _, _) => _InitialsWidget(name)))
+                                  : networkLogo != null
+                                      ? ClipOval(child: Image.network(networkLogo, fit: BoxFit.contain,
+                                          errorBuilder: (_, _, _) => _InitialsWidget(name)))
+                                      : _InitialsWidget(name),
                             ),
                             const SizedBox(width: 12),
                             // Nombre + liga

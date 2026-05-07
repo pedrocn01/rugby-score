@@ -4,6 +4,7 @@ import '../config/themes.dart';
 import '../services/favorites_service.dart';
 import '../services/notifications_service.dart';
 import '../services/push_notification_service.dart';
+import '../data/static_data.dart';
 import '../services/match_cache.dart';
 import '../services/urba_service.dart';
 
@@ -59,6 +60,15 @@ class _TeamDetailPageState extends State<TeamDetailPage> {
       for (final m in results[i]) {
         if (_hasTeam(m, widget.teamName)) all.add(_Entry(_urbaLeagues[i], m));
       }
+    }
+
+    for (final raw in StaticDataService.getMatches('TDI A 2026')) {
+      final m = Map<String, dynamic>.from(raw as Map);
+      if (!m.containsKey('timestamp')) {
+        final dt = DateTime.tryParse(m['date'] as String? ?? '');
+        m['timestamp'] = dt != null ? dt.millisecondsSinceEpoch ~/ 1000 : 0;
+      }
+      if (_hasTeam(m, widget.teamName)) all.add(_Entry('TDI A 2026', m));
     }
 
     if (!mounted) return;

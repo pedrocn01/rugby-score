@@ -176,6 +176,39 @@ const Map<String, String> _countryLogoUrls = {
   'Uganda':        'assets/logos/nat_uganda.png',
 };
 
+/// Aliases que no deben mostrarse en el selector de favoritos.
+/// Sirven solo para lookup de logo cuando la API devuelve este nombre alternativo.
+const Set<String> teamPickerHidden = {
+  // URBA
+  'Buenos Aires C&RC',
+  'Regatas Bella Vista',
+  // Super Rugby Pacific
+  'NSW Waratahs',
+  'Queensland Reds',
+  // URC
+  'Zebre',
+  'Cardiff',
+  'Benetton',
+  'Dragons',
+  'Edinburgh',
+  // Super Rugby Américas
+  'Brasil Cobras',
+  'Cobras Brasil',
+  'Cobras XV',
+  'Black Lion',
+  'Free State Cheetahs',
+  // Top 14
+  'Bordeaux Begles',
+  'Stade Francais Paris',
+  'Stade Bayonnais',
+  'RC Toulon',
+  // Premiership
+  'Bristol',
+  'Newcastle Red Bulls',
+  // Selecciones
+  'United States',
+};
+
 /// Devuelve el path local del logo de un club o selección, o null si no hay.
 String? clubLogo(String teamName) {
   final exact = clubLogoUrls[teamName] ?? _countryLogoUrls[teamName];
