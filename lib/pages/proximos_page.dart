@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../services/match_cache.dart';
+import 'match_detail_page.dart';
 class ProximosPage extends StatefulWidget {
   const ProximosPage({super.key});
 
@@ -252,7 +253,7 @@ class _MatchesByLeague extends StatelessWidget {
               style: const TextStyle(color: Color(0xFF4A7C59), fontSize: 10,
                 fontWeight: FontWeight.w700, letterSpacing: 1.5)),
           ),
-          for (final match in byLeague[league]!) _ProximoCard(key: ValueKey(match['id']), match: match),
+          for (final match in byLeague[league]!) _ProximoCard(key: ValueKey(match['id']), match: match, league: league),
         ],
       ],
     );
@@ -263,7 +264,8 @@ class _MatchesByLeague extends StatelessWidget {
 
 class _ProximoCard extends StatelessWidget {
   final dynamic match;
-  const _ProximoCard({super.key, required this.match});
+  final String league;
+  const _ProximoCard({super.key, required this.match, required this.league});
 
   String _formatHora(String? date) {
     if (date == null || date.length < 16) return '';
@@ -301,7 +303,11 @@ class _ProximoCard extends StatelessWidget {
             ? const Color(0xFF555555)
             : const Color(0xFF4A7C59);
 
-    return Container(
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (_) => MatchDetailPage(match: match, league: league),
+      )),
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -410,6 +416,7 @@ class _ProximoCard extends StatelessWidget {
           else
             const Icon(Icons.chevron_right_rounded, color: Color(0xFF333333), size: 20),
         ],
+      ),
       ),
     );
   }

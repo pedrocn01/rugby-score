@@ -10,6 +10,7 @@ import '../services/match_cache.dart';
 import '../services/rugby_service.dart';
 import '../services/urba_service.dart';
 import '../services/espn_service.dart';
+import 'match_detail_page.dart';
 
 class DetalleLiga extends StatefulWidget {
   final String nombreLiga;
@@ -545,6 +546,15 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _cardResultado(dynamic partido) {
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (_) => MatchDetailPage(match: partido, league: widget.nombreLiga),
+      )),
+      child: _cardResultadoContent(partido),
+    );
+  }
+
+  Widget _cardResultadoContent(dynamic partido) {
     final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
     final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
     final homeLogoUrl = _standingLogos[homeTeam] ?? partido['teams']?['home']?['logo']?.toString();
@@ -1066,6 +1076,15 @@ class _DetalleLigaState extends State<DetalleLiga> {
   }
 
   Widget _cardProximo(dynamic partido) {
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (_) => MatchDetailPage(match: partido, league: widget.nombreLiga),
+      )),
+      child: _cardProximoContent(partido),
+    );
+  }
+
+  Widget _cardProximoContent(dynamic partido) {
     final homeTeam    = partido['teams']?['home']?['name'] ?? 'Local';
     final awayTeam    = partido['teams']?['away']?['name'] ?? 'Visitante';
     final homeLogoUrl = _standingLogos[homeTeam] ?? partido['teams']?['home']?['logo']?.toString();

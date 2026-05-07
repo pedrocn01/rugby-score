@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../services/match_cache.dart';
 import '../widgets/pulse_dot.dart';
+import 'match_detail_page.dart';
 
 class LivePage extends StatefulWidget {
   const LivePage({super.key});
@@ -164,7 +165,11 @@ class _LiveCard extends StatelessWidget {
     final awayScore    = m['scores']?['away'] ?? '-';
     final status       = m['status']?['short'] as String? ?? '';
 
-    return Container(
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(
+        builder: (_) => MatchDetailPage(match: m, league: entry.league),
+      )),
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
@@ -255,6 +260,7 @@ class _LiveCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }
