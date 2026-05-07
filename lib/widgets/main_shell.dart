@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/favoritos_page.dart';
 import '../pages/home_page.dart';
 import '../pages/live_page.dart';
 import '../pages/proximos_page.dart';
@@ -24,6 +25,7 @@ class _MainShellState extends State<MainShell> {
           HomePage(),
           ProximosPage(),
           LivePage(),
+          FavoritosPage(),
         ],
       ),
       bottomNavigationBar: _BottomNav(
@@ -69,6 +71,13 @@ class _BottomNav extends StatelessWidget {
             _LiveTab(
               active: selectedIndex == 2,
               onTap: () => onTap(2),
+            ),
+            _NavTab(
+              icon: Icons.star_outline_rounded,
+              activeIcon: Icons.star_rounded,
+              label: 'Favoritos',
+              active: selectedIndex == 3,
+              onTap: () => onTap(3),
             ),
           ],
         ),

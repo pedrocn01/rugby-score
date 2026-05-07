@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'services/favorites_service.dart';
 import 'widgets/main_shell.dart';
 
-void main() => runApp(const RugbyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FavoritesService.instance.init();
+  runApp(const RugbyApp());
+}
 
 class RugbyApp extends StatelessWidget {
   const RugbyApp({super.key});
