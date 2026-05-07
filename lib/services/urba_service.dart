@@ -45,10 +45,16 @@ class UrbaService {
   static const _base = 'https://api.urba.org.ar/api';
   static const _headers = {'Accept': 'application/json'};
 
-  // URL del Worker de Cloudflare (misma variable que usa RugbyService).
-  // En desarrollo apunta a api-sports directamente → /urba-live no existe → ignorado.
-  static const _workerBase = String.fromEnvironment('API_BASE_URL', defaultValue: '');
-  static const _appSecret  = String.fromEnvironment('APP_SECRET',   defaultValue: '');
+  static const _configuredBase = String.fromEnvironment('API_BASE_URL', defaultValue: '');
+  static const _appSecret      = String.fromEnvironment('APP_SECRET',   defaultValue: '');
+
+  // Si API_BASE_URL no está configurada en Vercel (o apunta a api-sports en dev),
+  // usar el Worker directamente — la URL es pública, no es un secreto.
+  static const _workerFallback = 'https://rugby-proxy.pedrocastronevares.workers.dev';
+  static String get _workerBase =>
+      (_configuredBase.isEmpty || _configuredBase.contains('api-sports'))
+          ? _workerFallback
+          : _configuredBase;
 
   // ── Tabla de posiciones ───────────────────────────────────────────────────
 
@@ -152,10 +158,6 @@ class UrbaService {
   // Retorna null ante cualquier error (falla silenciosa → se usan datos de URBA API).
   // Método público para que MatchCache pueda inyectar partidos en vivo en "En Vivo".
   Future<List<dynamic>?> fetchLiveTop14() async {
-    // Solo consultar el Worker los sábados — evita requests innecesarios el resto de la semana.
-    if (DateTime.now().weekday != DateTime.saturday) return null;
-    // En desarrollo API_BASE_URL apunta a api-sports → no tiene /urba-live → ignorar.
-    if (_workerBase.isEmpty || _workerBase.contains('api-sports')) return null;
     try {
       final res = await http.get(
         Uri.parse('$_workerBase/urba-live'),
