@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
 import '../services/favorites_service.dart';
+import '../services/notifications_service.dart';
+import '../services/push_notification_service.dart';
 import '../services/match_cache.dart';
 import '../services/urba_service.dart';
 
@@ -147,15 +149,32 @@ class _TeamDetailPageState extends State<TeamDetailPage> {
             ),
             actions: [
               ListenableBuilder(
-                listenable: FavoritesService.instance,
+                listenable: Listenable.merge([
+                  FavoritesService.instance,
+                  NotificationsService.instance,
+                ]),
                 builder: (context, _) {
-                  final fav = FavoritesService.instance.isFavorite(widget.teamName);
-                  return IconButton(
-                    icon: Icon(
-                      fav ? Icons.star_rounded : Icons.star_outline_rounded,
-                      color: fav ? const Color(0xFFFFB300) : Colors.white70,
-                    ),
-                    onPressed: () => FavoritesService.instance.toggle(widget.teamName),
+                  final fav   = FavoritesService.instance.isFavorite(widget.teamName);
+                  final notif = NotificationsService.instance.isSubscribed(widget.teamName);
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          notif ? Icons.notifications_rounded : Icons.notifications_none_rounded,
+                          color: notif ? const Color(0xFF4CAF50) : Colors.white70,
+                        ),
+                        tooltip: notif ? 'Desactivar notificaciones' : 'Activar notificaciones',
+                        onPressed: () => PushNotificationService.instance.toggleTeam(widget.teamName),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          fav ? Icons.star_rounded : Icons.star_outline_rounded,
+                          color: fav ? const Color(0xFFFFB300) : Colors.white70,
+                        ),
+                        onPressed: () => FavoritesService.instance.toggle(widget.teamName),
+                      ),
+                    ],
                   );
                 },
               ),

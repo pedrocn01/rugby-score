@@ -27,3 +27,11 @@ jobs:
           WORKER_URL:        ${{ secrets.WORKER_URL }}
           LIVE_SECRET_TOKEN: ${{ secrets.LIVE_SECRET_TOKEN }}
         run: python urba_scraper/datafactory_live.py
+
+      - name: Enviar notificaciones push
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+        env:
+          WORKER_URL:               ${{ secrets.WORKER_URL }}
+          LIVE_SECRET_TOKEN:        ${{ secrets.LIVE_SECRET_TOKEN }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: python urba_scraper/firebase_notify.py

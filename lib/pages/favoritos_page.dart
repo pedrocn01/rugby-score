@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
 import '../services/favorites_service.dart';
+import '../services/notifications_service.dart';
+import '../services/push_notification_service.dart';
 import '../services/match_cache.dart';
 import '../services/urba_service.dart';
 import 'team_detail_page.dart';
@@ -589,13 +591,17 @@ class _TeamPickerState extends State<_TeamPicker> {
             // Lista
             Expanded(
               child: ListenableBuilder(
-                listenable: FavoritesService.instance,
+                listenable: Listenable.merge([
+                  FavoritesService.instance,
+                  NotificationsService.instance,
+                ]),
                 builder: (context, _) => ListView.builder(
                   controller: scrollCtrl,
                   itemCount: _filtered.length,
                   itemBuilder: (ctx, i) {
                     final name    = _filtered[i];
                     final isFav   = FavoritesService.instance.isFavorite(name);
+                    final isNotif = NotificationsService.instance.isSubscribed(name);
                     final logo    = clubLogo(name);
                     final league  = _leagueFor(name);
 
@@ -638,7 +644,21 @@ class _TeamPickerState extends State<_TeamPicker> {
                                 ],
                               ),
                             ),
-                            // Check
+                            // Campana (notificaciones)
+                            InkWell(
+                              onTap: () => PushNotificationService.instance.toggleTeam(name),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: Icon(
+                                  isNotif ? Icons.notifications_rounded : Icons.notifications_none_rounded,
+                                  color: isNotif ? const Color(0xFF4CAF50) : Colors.white38,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            // Estrella (favoritos)
                             Icon(
                               isFav ? Icons.check_circle_rounded : Icons.circle_outlined,
                               color: isFav ? const Color(0xFF4CAF50) : Colors.white24,
