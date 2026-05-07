@@ -158,6 +158,7 @@ class UrbaService {
   // Retorna null ante cualquier error (falla silenciosa → se usan datos de URBA API).
   // Método público para que MatchCache pueda inyectar partidos en vivo en "En Vivo".
   Future<List<dynamic>?> fetchLiveTop14() async {
+    if (DateTime.now().weekday != DateTime.saturday) return null;
     try {
       final res = await http.get(
         Uri.parse('$_workerBase/urba-live'),

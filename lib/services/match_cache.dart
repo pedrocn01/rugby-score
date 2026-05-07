@@ -78,7 +78,7 @@ class MatchCache {
         }
       }
 
-      // Inyectar partidos en vivo del URBA Top 14.
+      // Inyectar partidos en vivo del URBA Top 14 — solo sábados.
       try {
         final urbaLive = await UrbaService().fetchLiveTop14();
         if (urbaLive != null && urbaLive.isNotEmpty) {
