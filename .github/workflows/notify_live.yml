@@ -1,0 +1,34 @@
+name: Notificaciones en vivo — Todos los equipos
+
+on:
+  schedule:
+    # Viernes 18-23 UTC (15-20 Argentina) — Champions Cup, URC
+    - cron: '*/5 18-23 * * 5'
+    # Sábado 12-23 UTC (9-20 Argentina) — día principal de rugby
+    - cron: '*/5 12-23 * * 6'
+    # Domingo 12-23 UTC (9-20 Argentina) — Super Rugby, Premiership
+    - cron: '*/5 12-23 * * 0'
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install -r urba_scraper/requirements.txt
+
+      - name: Enviar notificaciones
+        env:
+          WORKER_URL:               ${{ secrets.WORKER_URL }}
+          LIVE_SECRET_TOKEN:        ${{ secrets.LIVE_SECRET_TOKEN }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          APP_SECRET:               ${{ secrets.APP_SECRET }}
+        run: python urba_scraper/firebase_notify.py
