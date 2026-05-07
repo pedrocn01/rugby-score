@@ -3,6 +3,7 @@ import '../config/logos.dart';
 import '../config/themes.dart';
 import '../services/match_cache.dart';
 import '../services/urba_service.dart';
+import 'team_detail_page.dart';
 
 class _Entry {
   final String league;
@@ -143,20 +144,24 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
                         Row(
                           children: [
                             Expanded(
-                              child: Column(
-                                children: [
-                                  _Logo(url: homeLogoUrl, name: _homeName, size: 48),
-                                  const SizedBox(height: 6),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                                    child: Text(_homeName,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(color: Colors.white,
-                                        fontWeight: FontWeight.w800, fontSize: 12)),
-                                  ),
-                                ],
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) => TeamDetailPage(teamName: _homeName))),
+                                child: Column(
+                                  children: [
+                                    _Logo(url: homeLogoUrl, name: _homeName, size: 48),
+                                    const SizedBox(height: 6),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: Text(_homeName,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(color: Colors.white,
+                                          fontWeight: FontWeight.w800, fontSize: 12)),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Container(
@@ -185,20 +190,24 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
                                         fontSize: 20)),
                             ),
                             Expanded(
-                              child: Column(
-                                children: [
-                                  _Logo(url: awayLogoUrl, name: _awayName, size: 48),
-                                  const SizedBox(height: 6),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                                    child: Text(_awayName,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(color: Colors.white70,
-                                        fontWeight: FontWeight.w700, fontSize: 12)),
-                                  ),
-                                ],
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) => TeamDetailPage(teamName: _awayName))),
+                                child: Column(
+                                  children: [
+                                    _Logo(url: awayLogoUrl, name: _awayName, size: 48),
+                                    const SizedBox(height: 6),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: Text(_awayName,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(color: Colors.white70,
+                                          fontWeight: FontWeight.w700, fontSize: 12)),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
