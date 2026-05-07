@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rugby Score — Preview Bottom Nav</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    padding: 40px 24px;
+    font-family: Georgia, serif;
+  }
+
+  .label-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .section-label {
+    color: #4CAF50;
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  /* ─── Phone frame ─────────────────────────────────────── */
+  .phone {
+    width: 320px;
+    height: 620px;
+    background: #111111;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 0 0 2px #2a2a2a,
+      0 0 0 6px #111,
+      0 40px 80px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── AppBar ──────────────────────────────────────────── */
+  .appbar {
+    background: #1B4332;
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .appbar-icon {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 20px;
+  }
+
+  .appbar-title {
+    flex: 1;
+  }
+
+  .appbar-title .main {
+    color: white;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 3px;
+  }
+
+  .appbar-title .sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+
+  .appbar-search {
+    color: white;
+    font-size: 18px;
+    opacity: 0.85;
+  }
+
+  /* ─── Content area ────────────────────────────────────── */
+  .content {
+    flex: 1;
+    overflow: hidden;
+    padding: 20px 0 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .section-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+  }
+
+  .section-pill {
+    background: #1B4332;
+    color: white;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(27,67,50,0.5), transparent);
+  }
+
+  .cards-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px;
+    overflow: hidden;
+  }
+
+  .card {
+    width: 110px;
+    height: 110px;
+    border-radius: 14px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  .card-footer {
+    background: rgba(0,0,0,0.35);
+    padding: 5px 7px;
+    font-size: 9px;
+    color: white;
+    font-weight: 800;
+  }
+
+  .card.sr      { background: linear-gradient(135deg, #1a3a6e, #0a1a3e); }
+  .card.rugby-c { background: linear-gradient(135deg, #2e1a6e, #14093a); }
+  .card.nc      { background: linear-gradient(135deg, #1B4332, #071A0E); }
+
+  .card.folder-7s  { background: linear-gradient(135deg, #FF6B00, #CC4400); }
+  .card.folder-tdi { background: linear-gradient(135deg, #004B87, #001D3D); }
+  .card.folder-urba{ background: linear-gradient(135deg, #1B4332, #071A0E); }
+
+  /* ─── Bottom Navigation ───────────────────────────────── */
+  .bottom-nav {
+    background: #0A0A0A;
+    border-top: 1px solid rgba(27,67,50,0.5);
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    padding-bottom: 4px;
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 4px 6px;
+    gap: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+  }
+
+  .nav-item.active .nav-icon {
+    color: #4CAF50;
+  }
+
+  .nav-item.active .nav-label {
+    color: #4CAF50;
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: #4CAF50;
+    border-radius: 0 0 2px 2px;
+  }
+
+  .nav-icon {
+    font-size: 22px;
+    color: rgba(255,255,255,0.35);
+    position: relative;
+  }
+
+  .nav-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.35);
+    font-family: Georgia, serif;
+  }
+
+  /* ─── Live dot ────────────────────────────────────────── */
+  .live-dot {
+    width: 8px; height: 8px;
+    background: #ff4444;
+    border-radius: 50%;
+    position: absolute;
+    top: -2px; right: -2px;
+    animation: pulse 0.9s ease-in-out infinite alternate;
+    box-shadow: 0 0 6px rgba(255,68,68,0.8);
+  }
+
+  @keyframes pulse {
+    from { opacity: 1; box-shadow: 0 0 6px rgba(255,68,68,0.8); }
+    to   { opacity: 0.5; box-shadow: 0 0 2px rgba(255,68,68,0.3); }
+  }
+
+  /* ─── Comparison labels ───────────────────────────────── */
+  .compare-wrap {
+    display: flex;
+    gap: 40px;
+    align-items: flex-end;
+  }
+
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .phone-label {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .phone-label.before { color: #666; }
+  .phone-label.after  { color: #4CAF50; }
+
+  .arrow {
+    color: rgba(255,255,255,0.2);
+    font-size: 28px;
+    padding-bottom: 240px;
+  }
+
+  /* ─── Drawer mockup (ANTES) ───────────────────────────── */
+  .drawer-hint {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 220px;
+    background: #071A0E;
+    z-index: 10;
+    padding: 28px 0 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+  }
+
+  .drawer-brand {
+    padding: 0 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .drawer-logo {
+    font-size: 24px;
+  }
+
+  .drawer-title {
+    font-size: 11px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 2px;
+  }
+
+  .drawer-subtitle {
+    font-size: 8px;
+    color: #4A7C59;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .drawer-divider {
+    height: 1px;
+    background: #1B4332;
+    margin: 0 16px 12px;
+  }
+
+  .drawer-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 16px 13px 28px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .drawer-item .d-icon { font-size: 18px; color: rgba(255,255,255,0.65); }
+  .drawer-item.live .d-icon { color: #ff4444; font-size: 11px; }
+
+  .dimmed-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9;
+  }
+
+  /* ─── Active tab variants ─────────────────────────────── */
+  .tab-proximos .appbar { background: #1B4332; }
+  .tab-live     .appbar { background: #1A0505; }
+
+  .nav-item.live-item .nav-icon { color: rgba(255,255,255,0.35); }
+  .nav-item.live-item.active .nav-icon { color: #ff6666; }
+  .nav-item.live-item.active .nav-label { color: #ff6666; }
+  .nav-item.live-item.active::before { background: #ff4444; }
+
+  /* ─── Live page content preview ──────────────────────── */
+  .live-card {
+    margin: 0 14px;
+    background: #1A1A1A;
+    border-radius: 12px;
+    border: 1px solid rgba(255,68,68,0.2);
+    padding: 12px;
+  }
+
+  .live-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .league-name {
+    color: #4A7C59;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+
+  .live-badge {
+    background: rgba(255,68,68,0.15);
+    border: 1px solid rgba(255,68,68,0.4);
+    border-radius: 6px;
+    padding: 2px 7px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    color: #ff6666;
+    font-weight: 700;
+  }
+
+  .live-badge-dot {
+    width: 5px; height: 5px;
+    background: #ff4444;
+    border-radius: 50%;
+    animation: pulse 0.9s ease-in-out infinite alternate;
+  }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .team {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .team-logo {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .team-name {
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .score-box {
+    background: rgba(255,68,68,0.15);
+    border: 1px solid rgba(255,68,68,0.3);
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  /* ─── Proximos page ───────────────────────────────────── */
+  .date-group {
+    padding: 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .date-chip {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #4CAF50;
+    margin-bottom: 2px;
+  }
+
+  .match-row {
+    background: #1A1A1A;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .match-teams {
+    flex: 1;
+    font-size: 10px;
+    color: white;
+    font-weight: 600;
+  }
+
+  .match-teams .vs { color: rgba(255,255,255,0.35); font-size: 9px; }
+
+  .match-time {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 600;
+  }
+
+  /* ─── Comparison title ────────────────────────────────── */
+  .page-title {
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+
+  .page-subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 40px;
+  }
+
+  .tabs-row {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .tab-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-label.selected {
+    background: #1B4332;
+    color: white;
+  }
+
+  .tab-label:not(.selected) {
+    color: rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* ─── Highlight box ───────────────────────────────────── */
+  .highlight {
+    border: 1.5px solid rgba(76,175,80,0.4);
+    border-radius: 14px;
+    padding: 3px;
+    position: relative;
+  }
+
+  .highlight-label {
+    position: absolute;
+    top: -11px; left: 50%;
+    transform: translateX(-50%);
+    background: #4CAF50;
+    color: #0A0A0A;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 2px 10px;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div style="width:100%; max-width:900px;">
+
+  <p class="page-title">RUGBY SCORE</p>
+  <p class="page-subtitle">PREVIEW — NAVEGACIÓN INFERIOR</p>
+
+  <!-- ─── COMPARACIÓN ANTES / DESPUÉS ─────────────────────────── -->
+  <div class="compare-wrap" style="justify-content:center; align-items:flex-start;">
+
+    <!-- ANTES -->
+    <div class="phone-wrap">
+      <span class="phone-label before">ANTES — Menú oculto</span>
+      <div class="phone">
+        <div class="appbar">
+          <div class="appbar-icon">☰</div>
+          <div class="appbar-title">
+            <div class="main">RUGBY SCORE</div>
+            <div class="sub">Resultados · Tablas · Fixtures</div>
+          </div>
+          <div class="appbar-search">🔍</div>
+        </div>
+        <div class="content">
+          <div class="section-row">
+            <div class="section-header">
+              <span class="section-pill">INTERNACIONAL</span>
+              <div class="section-line"></div>
+            </div>
+            <div class="cards-row">
+              <div class="card sr"><div class="card-body">🏉</div><div class="card-footer">Super Rugby</div></div>
+              <div class="card rugby-c"><div class="card-body">🌍</div><div class="card-footer">Rugby Champ.</div></div>
+              <div class="card nc"><div class="card-body">🏆</div><div class="card-footer">Nations C.</div></div>
+            </div>
+          </div>
+          <div class="section-row">
+            <div class="section-header">
+              <span class="section-pill">ARGENTINA</span>
+              <div class="section-line"></div>
+            </div>
+            <div class="cards-row">
+              <div class="card folder-7s"><div class="card-body">⚡</div><div class="card-footer">Circuito 7s</div></div>
+              <div class="card folder-tdi"><div class="card-body">🏛</div><div class="card-footer">Tor. Interior</div></div>
+              <div class="card folder-urba"><div class="card-body">🏟</div><div class="card-footer">URBA</div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Drawer overlay -->
+        <div class="dimmed-bg"></div>
+        <div class="drawer-hint">
+          <div class="drawer-brand">
+            <span class="drawer-logo">🏉</span>
+            <div>
+              <div class="drawer-title">RUGBY SCORE</div>
+              <div class="drawer-subtitle">Resultados · Tablas · Fixtures</div>
+            </div>
+          </div>
+          <div class="drawer-divider"></div>
+          <div class="drawer-item"><span class="d-icon">🏠</span> Home</div>
+          <div class="drawer-item"><span class="d-icon">📅</span> Próximos Partidos</div>
+          <div class="drawer-item live"><span class="d-icon">●</span> En Vivo</div>
+        </div>
+      </div>
+      <div style="color:rgba(255,255,255,0.25); font-size:11px; max-width:200px; text-align:center; line-height:1.6;">
+        El menú está escondido. Hay que saber deslizar desde el borde.
+      </div>
+    </div>
+
+    <!-- FLECHA -->
+    <div class="arrow">→</div>
+
+    <!-- DESPUÉS: HOME activo -->
+    <div class="phone-wrap">
+      <span class="phone-label after">DESPUÉS — Siempre visible</span>
+      <div class="highlight">
+        <span class="highlight-label">DISEÑO NUEVO</span>
+        <div class="phone">
+          <div class="appbar">
+            <div class="appbar-icon">🏉</div>
+            <div class="appbar-title">
+              <div class="main">RUGBY SCORE</div>
+              <div class="sub">Resultados · Tablas · Fixtures</div>
+            </div>
+            <div class="appbar-search">🔍</div>
+          </div>
+          <div class="content">
+            <div class="section-row">
+              <div class="section-header">
+                <span class="section-pill">INTERNACIONAL</span>
+                <div class="section-line"></div>
+              </div>
+              <div class="cards-row">
+                <div class="card sr"><div class="card-body">🏉</div><div class="card-footer">Super Rugby</div></div>
+                <div class="card rugby-c"><div class="card-body">🌍</div><div class="card-footer">Rugby Champ.</div></div>
+                <div class="card nc"><div class="card-body">🏆</div><div class="card-footer">Nations C.</div></div>
+              </div>
+            </div>
+            <div class="section-row">
+              <div class="section-header">
+                <span class="section-pill">ARGENTINA</span>
+                <div class="section-line"></div>
+              </div>
+              <div class="cards-row">
+                <div class="card folder-7s"><div class="card-body">⚡</div><div class="card-footer">Circuito 7s</div></div>
+                <div class="card folder-tdi"><div class="card-body">🏛</div><div class="card-footer">Tor. Interior</div></div>
+                <div class="card folder-urba"><div class="card-body">🏟</div><div class="card-footer">URBA</div></div>
+              </div>
+            </div>
+          </div>
+          <!-- BOTTOM NAV -->
+          <div class="bottom-nav">
+            <div class="nav-item active">
+              <div class="nav-icon">🏠</div>
+              <div class="nav-label">INICIO</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-icon">📅</div>
+              <div class="nav-label">PRÓXIMOS</div>
+            </div>
+            <div class="nav-item live-item">
+              <div class="nav-icon">
+                ●
+                <span class="live-dot"></span>
+              </div>
+              <div class="nav-label">EN VIVO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="color:rgba(255,255,255,0.5); font-size:11px; max-width:200px; text-align:center; line-height:1.6;">
+        Tres botones siempre visibles. Cualquiera sabe qué hacer.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── LAS 3 PESTAÑAS ─────────────────────────────────────── -->
+  <p style="color:rgba(255,255,255,0.35); font-size:11px; letter-spacing:2px; text-align:center; margin: 52px 0 24px;">
+    ASÍ SE VEN LAS 3 PESTAÑAS
+  </p>
+
+  <div style="display:flex; gap:24px; justify-content:center; flex-wrap:wrap;">
+
+    <!-- TAB: INICIO -->
+    <div class="phone-wrap">
+      <span class="phone-label after">🏠 INICIO</span>
+      <div class="phone">
+        <div class="appbar">
+          <div class="appbar-icon">🏉</div>
+          <div class="appbar-title">
+            <div class="main">RUGBY SCORE</div>
+            <div class="sub">Resultados · Tablas · Fixtures</div>
+          </div>
+          <div class="appbar-search">🔍</div>
+        </div>
+        <div class="content">
+          <div class="section-row">
+            <div class="section-header">
+              <span class="section-pill">INTERNACIONAL</span>
+              <div class="section-line"></div>
+            </div>
+            <div class="cards-row">
+              <div class="card sr"><div class="card-body">🏉</div><div class="card-footer">Super Rugby</div></div>
+              <div class="card rugby-c"><div class="card-body">🌍</div><div class="card-footer">Rugby Champ.</div></div>
+            </div>
+          </div>
+          <div class="section-row">
+            <div class="section-header">
+              <span class="section-pill">ARGENTINA</span>
+              <div class="section-line"></div>
+            </div>
+            <div class="cards-row">
+              <div class="card folder-7s"><div class="card-body">⚡</div><div class="card-footer">Circuito 7s</div></div>
+              <div class="card folder-tdi"><div class="card-body">🏛</div><div class="card-footer">Tor. Interior</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">INICIO</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">📅</div>
+            <div class="nav-label">PRÓXIMOS</div>
+          </div>
+          <div class="nav-item live-item">
+            <div class="nav-icon">● <span class="live-dot"></span></div>
+            <div class="nav-label">EN VIVO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PRÓXIMOS -->
+    <div class="phone-wrap">
+      <span class="phone-label after">📅 PRÓXIMOS</span>
+      <div class="phone tab-proximos">
+        <div class="appbar">
+          <div class="appbar-title" style="margin-left:8px;">
+            <div class="main">PRÓXIMOS PARTIDOS</div>
+            <div class="sub">Todos los torneos</div>
+          </div>
+          <div class="appbar-search">🔄</div>
+        </div>
+        <div class="content" style="padding-top:14px;">
+          <div class="date-group">
+            <div class="date-chip">HOY — JUE 17 ABR</div>
+            <div class="match-row">
+              <div class="match-teams">
+                Lions<br><span class="vs">vs</span> Stormers
+              </div>
+              <div class="match-time">20:35</div>
+            </div>
+            <div class="match-row">
+              <div class="match-teams">
+                Blues<br><span class="vs">vs</span> Chiefs
+              </div>
+              <div class="match-time">22:05</div>
+            </div>
+          </div>
+          <div class="date-group" style="margin-top:4px;">
+            <div class="date-chip">MAÑANA — VIE 18 ABR</div>
+            <div class="match-row">
+              <div class="match-teams">
+                Los Pumas<br><span class="vs">vs</span> All Blacks
+              </div>
+              <div class="match-time">18:00</div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">INICIO</div>
+          </div>
+          <div class="nav-item active">
+            <div class="nav-icon">📅</div>
+            <div class="nav-label">PRÓXIMOS</div>
+          </div>
+          <div class="nav-item live-item">
+            <div class="nav-icon">● <span class="live-dot"></span></div>
+            <div class="nav-label">EN VIVO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: EN VIVO -->
+    <div class="phone-wrap">
+      <span class="phone-label after">🔴 EN VIVO</span>
+      <div class="phone tab-live">
+        <div class="appbar" style="background:#1A0505;">
+          <div class="appbar-title" style="margin-left:8px;">
+            <div class="main">EN VIVO</div>
+            <div class="sub" style="color:#994444;">Partidos en curso</div>
+          </div>
+          <div style="width:10px; height:10px; background:#ff4444; border-radius:50%; animation:pulse 0.9s ease-in-out infinite alternate; box-shadow: 0 0 8px rgba(255,68,68,0.8); margin-right:8px;"></div>
+          <div class="appbar-search">🔄</div>
+        </div>
+        <div class="content" style="padding-top:14px;">
+          <div class="live-card">
+            <div class="live-card-top">
+              <span class="league-name">SUPER RUGBY PACIFIC</span>
+              <div class="live-badge">
+                <div class="live-badge-dot"></div>
+                2DO TIEMPO
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="team">
+                <div class="team-logo">🦁</div>
+                <div class="team-name">Lions</div>
+              </div>
+              <div class="score-box">21 - 17</div>
+              <div class="team">
+                <div class="team-logo">🌪</div>
+                <div class="team-name">Stormers</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">INICIO</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">📅</div>
+            <div class="nav-label">PRÓXIMOS</div>
+          </div>
+          <div class="nav-item live-item active">
+            <div class="nav-icon">● <span class="live-dot"></span></div>
+            <div class="nav-label">EN VIVO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── Nota footer ─────────────────────────────────────────── -->
+  <div style="text-align:center; margin-top:48px; color:rgba(255,255,255,0.2); font-size:10px; letter-spacing:2px; line-height:2;">
+    PREVIEW — NO ES EL APP REAL<br>
+    Aprobá este diseño para implementarlo
+  </div>
+
+</div>
+
+</body>
+</html>

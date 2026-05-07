@@ -6,12 +6,12 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-comp
 // Completar con los valores del proyecto Firebase una vez creado.
 // Ver: https://console.firebase.google.com → Configuración del proyecto → Web apps
 firebase.initializeApp({
-  apiKey:            "REEMPLAZAR_CON_FIREBASE_API_KEY",
-  authDomain:        "REEMPLAZAR_CON_FIREBASE_AUTH_DOMAIN",
-  projectId:         "REEMPLAZAR_CON_FIREBASE_PROJECT_ID",
-  storageBucket:     "REEMPLAZAR_CON_FIREBASE_STORAGE_BUCKET",
-  messagingSenderId: "REEMPLAZAR_CON_FIREBASE_MESSAGING_SENDER_ID",
-  appId:             "REEMPLAZAR_CON_FIREBASE_APP_ID",
+  apiKey:            "AIzaSyB2a9md3bvjNTBJg0r5xocHQVzYSM_98PA",
+  authDomain:        "rugby-score-65107.firebaseapp.com",
+  projectId:         "rugby-score-65107",
+  storageBucket:     "rugby-score-65107.firebasestorage.app",
+  messagingSenderId: "748860715146",
+  appId:             "1:748860715146:web:310dc5b35c42456878fd73",
 });
 
 const messaging = firebase.messaging();

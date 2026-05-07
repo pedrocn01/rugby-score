@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rugby Score — Preview Favoritos</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    min-height: 100vh;
+    font-family: 'Barlow', sans-serif;
+    color: #fff;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(-55deg, transparent, transparent 60px, rgba(27,67,50,0.035) 60px, rgba(27,67,50,0.035) 61px);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ─── Layout global ─────────────────────────────────────────── */
+  .page-title {
+    text-align: center;
+    padding: 32px 16px 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    position: relative; z-index: 1;
+  }
+  .page-subtitle {
+    text-align: center;
+    padding: 0 16px 28px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fff;
+    position: relative; z-index: 1;
+  }
+
+  /* ─── Grilla de mockups ─────────────────────────────────────── */
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    padding: 0 24px 60px;
+    position: relative; z-index: 1;
+  }
+
+  /* ─── Phone frame ───────────────────────────────────────────── */
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .phone-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+  .phone {
+    width: 360px;
+    background: #0A0A0A;
+    border-radius: 32px;
+    border: 2px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+    position: relative;
+  }
+  .phone-inner {
+    height: 680px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-inner::-webkit-scrollbar { display: none; }
+
+  /* ─── Top bar (status bar) ──────────────────────────────────── */
+  .status-bar {
+    height: 28px;
+    background: #1B4332;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    flex-shrink: 0;
+  }
+  .status-time {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+  }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+  .status-icons span { font-size: 9px; color: rgba(255,255,255,0.7); }
+
+  /* ─── App header ────────────────────────────────────────────── */
+  .app-header {
+    background: #1B4332;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 52px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+  }
+  .back-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.8);
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 4px;
+  }
+  .header-title-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 3.5px;
+    color: #fff;
+  }
+  .header-title-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0px;
+  }
+  .header-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .header-icon { font-size: 20px; color: rgba(255,255,255,0.85); cursor: pointer; }
+
+  /* ─── Content area ──────────────────────────────────────────── */
+  .content { flex: 1; overflow-y: auto; scrollbar-width: none; }
+  .content::-webkit-scrollbar { display: none; }
+
+  /* ─── Bottom nav ────────────────────────────────────────────── */
+  .bottom-nav {
+    background: #111;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-shrink: 0;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0 10px;
+    gap: 3px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .nav-icon { font-size: 20px; color: rgba(255,255,255,0.35); }
+  .nav-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+  }
+  .nav-item.active .nav-icon { color: #4CAF50; }
+  .nav-item.active .nav-label { color: #4CAF50; }
+  .nav-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: #4CAF50;
+    margin-top: -1px;
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     PANTALLA 1 — Favoritos (vacío)
+  ══════════════════════════════════════════════════════════════ */
+  .fav-header {
+    padding: 24px 16px 16px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .fav-header-text {}
+  .fav-header-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: #fff;
+    line-height: 1;
+  }
+  .fav-header-sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+  .add-btn {
+    background: #1B5E20;
+    border: none;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    gap: 12px;
+    text-align: center;
+  }
+  .empty-icon { font-size: 52px; opacity: 0.3; }
+  .empty-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+  .empty-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+    line-height: 1.5;
+  }
+  .empty-cta {
+    margin-top: 8px;
+    background: #1B5E20;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     PANTALLA 2 — Favoritos (con equipos)
+  ══════════════════════════════════════════════════════════════ */
+  .fav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 14px 16px;
+  }
+
+  .fav-card {
+    background: #1A1A1A;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.15s;
+    position: relative;
+  }
+  .fav-card:hover { transform: scale(1.02); }
+
+  .fav-card-top {
+    padding: 16px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-height: 80px;
+    justify-content: center;
+  }
+  .fav-logo {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    background: rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
+  .fav-team-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    color: #fff;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .fav-league-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+  }
+
+  .fav-card-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .fav-next-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.5px;
+  }
+  .fav-next-date {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4CAF50;
+    letter-spacing: 0.5px;
+  }
+
+  /* Result dots */
+  .result-dots { display: flex; gap: 3px; }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .dot-w { background: #4CAF50; }
+  .dot-l { background: #D32F2F; }
+  .dot-ns { background: rgba(255,255,255,0.15); }
+
+  /* Live indicator on fav card */
+  .fav-live-tag {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: #D32F2F;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    box-shadow: 0 0 8px rgba(211,47,47,0.6);
+  }
+  .fav-live-dot {
+    width: 4px; height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     PANTALLA 3 — Detalle equipo
+  ══════════════════════════════════════════════════════════════ */
+
+  /* Hero del equipo */
+  .team-hero {
+    background: linear-gradient(180deg, #1B4332 0%, #0A0A0A 100%);
+    padding: 20px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+  .team-hero-logo {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(76,175,80,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  .team-hero-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: #fff;
+    text-align: center;
+    line-height: 1;
+  }
+  .team-hero-league {
+    background: rgba(76,175,80,0.15);
+    border: 1px solid rgba(76,175,80,0.3);
+    color: #4CAF50;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+  .fav-toggle {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 17px;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: flex;
+    background: #1A1A1A;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+  .stat-item {
+    flex: 1;
+    padding: 12px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: #fff;
+    line-height: 1;
+  }
+  .stat-num.green { color: #4CAF50; }
+  .stat-num.red   { color: #EF5350; }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+  }
+
+  /* Section header */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 16px 10px;
+  }
+  .section-head-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    color: #fff;
+    background: #1B4332;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(27,67,50,0.5), transparent);
+  }
+
+  /* Match card en detalle equipo */
+  .match-row {
+    margin: 0 12px 6px;
+    background: #1A1A1A;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .match-row-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .match-meta-liga {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+  }
+  .match-meta-jornada {
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .match-row-body {
+    padding: 8px 12px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .team-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .team-side.right { flex-direction: row-reverse; }
+  .team-logo-sm {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .team-name-sm {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+  }
+  .team-name-sm.bold { font-weight: 900; color: #fff; }
+  .team-name-sm.dim  { color: rgba(255,255,255,0.45); }
+
+  .score-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 56px;
+  }
+  .score-nums {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .score-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: #fff;
+    line-height: 1;
+    min-width: 22px;
+    text-align: center;
+  }
+  .score-sep {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: rgba(255,255,255,0.25);
+  }
+  .status-chip {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .chip-ft   { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+  .chip-ns   { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); font-size: 10px; }
+  .chip-live { background: #D32F2F; color: #fff; box-shadow: 0 0 6px rgba(211,47,47,0.5); }
+
+  /* Win/loss highlight */
+  .match-row.win  { border-left: 3px solid #4CAF50; }
+  .match-row.loss { border-left: 3px solid #EF5350; }
+  .match-row.upcoming { border-left: 3px solid rgba(255,255,255,0.1); }
+
+  /* ─── Bottom sheet agregar favorito ─────────────────────────── */
+  .overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 20;
+    display: flex;
+    align-items: flex-end;
+  }
+  .bottom-sheet {
+    background: #1A1A1A;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    padding-bottom: 20px;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .sheet-handle {
+    display: flex; justify-content: center;
+    padding: 12px 0 8px;
+  }
+  .handle-bar {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+  }
+  .sheet-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 1px;
+    padding: 0 16px 6px;
+    color: #fff;
+  }
+  .sheet-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    padding: 0 16px 14px;
+  }
+  .search-input-wrap {
+    margin: 0 12px 10px;
+    background: #111;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .search-input-icon { font-size: 15px; color: rgba(255,255,255,0.3); }
+  .search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    padding: 10px 0;
+  }
+  .team-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.1s;
+  }
+  .team-option:hover { background: rgba(255,255,255,0.04); }
+  .team-opt-logo {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .team-opt-info {}
+  .team-opt-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: #fff;
+  }
+  .team-opt-league {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .team-opt-check {
+    margin-left: auto;
+    font-size: 18px;
+    color: #4CAF50;
+  }
+</style>
+</head>
+<body>
+
+<p class="page-title">Rugby Score — Preview</p>
+<p class="page-subtitle">Sección Favoritos</p>
+
+<div class="grid">
+
+  <!-- ─── PANTALLA 1: Favoritos vacío ─────────────────────────── -->
+  <div class="phone-wrap">
+    <span class="phone-label">Estado vacío</span>
+    <div class="phone">
+      <div class="phone-inner">
+        <!-- Status bar -->
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <!-- App header -->
+        <div class="app-header">
+          <div style="display:flex;flex-direction:column;">
+            <span class="header-title-text">RUGBY SCORE</span>
+            <span class="header-title-sub">ARGENTINA & MUNDO</span>
+          </div>
+          <div class="header-actions">
+            <span class="header-icon">🔍</span>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <div class="fav-header">
+            <div class="fav-header-text">
+              <div class="fav-header-title">MIS EQUIPOS</div>
+              <div class="fav-header-sub">Seguí a tus equipos favoritos</div>
+            </div>
+            <button class="add-btn">＋ AGREGAR</button>
+          </div>
+
+          <div class="empty-state">
+            <div class="empty-icon">🏉</div>
+            <div class="empty-title">Sin equipos todavía</div>
+            <div class="empty-sub">Agregá tus equipos favoritos para ver sus partidos de un vistazo</div>
+            <button class="empty-cta">＋ AGREGAR EQUIPO</button>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></div>
+          <div class="nav-item"><span class="nav-icon">📡</span><span class="nav-label">En Vivo</span></div>
+          <div class="nav-item"><span class="nav-icon">📅</span><span class="nav-label">Próximos</span></div>
+          <div class="nav-item"><span class="nav-icon">🔍</span><span class="nav-label">Buscar</span></div>
+          <div class="nav-item active"><span class="nav-icon">⭐</span><span class="nav-label">Favoritos</span><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PANTALLA 2: Favoritos con equipos ───────────────────── -->
+  <div class="phone-wrap">
+    <span class="phone-label">Con equipos guardados</span>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="app-header">
+          <div style="display:flex;flex-direction:column;">
+            <span class="header-title-text">RUGBY SCORE</span>
+            <span class="header-title-sub">ARGENTINA & MUNDO</span>
+          </div>
+          <div class="header-actions"><span class="header-icon">🔍</span></div>
+        </div>
+
+        <div class="content" style="padding-bottom:8px;">
+          <div class="fav-header">
+            <div class="fav-header-text">
+              <div class="fav-header-title">MIS EQUIPOS</div>
+              <div class="fav-header-sub">4 equipos seguidos</div>
+            </div>
+            <button class="add-btn">＋ AGREGAR</button>
+          </div>
+
+          <div class="fav-grid">
+            <!-- CUBA -->
+            <div class="fav-card" style="border-color:rgba(0,75,135,0.3);">
+              <div class="fav-live-tag"><div class="fav-live-dot"></div>EN VIVO</div>
+              <div class="fav-card-top" style="background: linear-gradient(160deg,rgba(0,75,135,0.2),transparent);">
+                <div class="fav-logo">🔵</div>
+                <div class="fav-team-name">CUBA</div>
+                <div class="fav-league-badge">TOP 14 URBA</div>
+              </div>
+              <div class="fav-card-bottom">
+                <div class="result-dots">
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-l"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-ns"></div>
+                </div>
+                <div class="fav-next-date">EN VIVO</div>
+              </div>
+            </div>
+
+            <!-- Alumni -->
+            <div class="fav-card">
+              <div class="fav-card-top" style="background: linear-gradient(160deg,rgba(27,67,50,0.2),transparent);">
+                <div class="fav-logo">🟢</div>
+                <div class="fav-team-name">ALUMNI</div>
+                <div class="fav-league-badge">TOP 14 URBA</div>
+              </div>
+              <div class="fav-card-bottom">
+                <div class="result-dots">
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-l"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-l"></div>
+                </div>
+                <div class="fav-next-date">HOY 16hs</div>
+              </div>
+            </div>
+
+            <!-- Crusaders -->
+            <div class="fav-card">
+              <div class="fav-card-top" style="background: linear-gradient(160deg,rgba(198,40,40,0.2),transparent);">
+                <div class="fav-logo">🔴</div>
+                <div class="fav-team-name">CRUSADERS</div>
+                <div class="fav-league-badge">SUPER RUGBY</div>
+              </div>
+              <div class="fav-card-bottom">
+                <div class="result-dots">
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-l"></div>
+                  <div class="dot dot-w"></div>
+                </div>
+                <div class="fav-next-date">SAB 10 MAY</div>
+              </div>
+            </div>
+
+            <!-- Leinster -->
+            <div class="fav-card">
+              <div class="fav-card-top" style="background: linear-gradient(160deg,rgba(21,101,192,0.2),transparent);">
+                <div class="fav-logo">💙</div>
+                <div class="fav-team-name">LEINSTER</div>
+                <div class="fav-league-badge">URC</div>
+              </div>
+              <div class="fav-card-bottom">
+                <div class="result-dots">
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                  <div class="dot dot-w"></div>
+                </div>
+                <div class="fav-next-date">DOM 11 MAY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></div>
+          <div class="nav-item"><span class="nav-icon">📡</span><span class="nav-label">En Vivo</span></div>
+          <div class="nav-item"><span class="nav-icon">📅</span><span class="nav-label">Próximos</span></div>
+          <div class="nav-item"><span class="nav-icon">🔍</span><span class="nav-label">Buscar</span></div>
+          <div class="nav-item active"><span class="nav-icon">⭐</span><span class="nav-label">Favoritos</span><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PANTALLA 3: Detalle de equipo (CUBA) ────────────────── -->
+  <div class="phone-wrap">
+    <span class="phone-label">Detalle equipo</span>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <!-- Header con back -->
+        <div class="app-header">
+          <div class="back-btn">←</div>
+          <div style="display:flex;flex-direction:column;">
+            <span class="header-title-text">EQUIPO</span>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- Hero -->
+          <div class="team-hero">
+            <button class="fav-toggle">⭐</button>
+            <div class="team-hero-logo">🔵</div>
+            <div class="team-hero-name">CUBA</div>
+            <div class="team-hero-league">TOP 14 URBA · TEMPORADA 2026</div>
+          </div>
+
+          <!-- Stats rápidas -->
+          <div class="stats-row">
+            <div class="stat-item">
+              <div class="stat-num">7</div>
+              <div class="stat-label">Jugados</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num green">5</div>
+              <div class="stat-label">Ganados</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num red">2</div>
+              <div class="stat-label">Perdidos</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num" style="color:#FFB300;">3°</div>
+              <div class="stat-label">Posición</div>
+            </div>
+          </div>
+
+          <!-- Último partido (EN VIVO) -->
+          <div class="section-head">
+            <span class="section-head-label">EN VIVO</span>
+            <div class="section-line"></div>
+          </div>
+
+          <div class="match-row" style="margin:0 12px 10px;border-left:3px solid #D32F2F;border-color:rgba(211,47,47,0.4);">
+            <div class="match-row-meta">
+              <span class="match-meta-liga">TOP 14 URBA</span>
+              <span class="match-meta-jornada">Fecha 8</span>
+            </div>
+            <div class="match-row-body">
+              <div class="team-side">
+                <div class="team-logo-sm">🔵</div>
+                <span class="team-name-sm bold">CUBA</span>
+              </div>
+              <div class="score-center">
+                <div class="score-nums">
+                  <span class="score-num">21</span>
+                  <span class="score-sep">–</span>
+                  <span class="score-num">14</span>
+                </div>
+                <span class="status-chip chip-live">1T</span>
+              </div>
+              <div class="team-side right">
+                <div class="team-logo-sm">⚪</div>
+                <span class="team-name-sm dim">SIC</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Últimos resultados -->
+          <div class="section-head">
+            <span class="section-head-label">ÚLTIMOS</span>
+            <div class="section-line"></div>
+          </div>
+
+          <!-- Partido ganado -->
+          <div class="match-row win">
+            <div class="match-row-meta">
+              <span class="match-meta-liga">TOP 14 URBA</span>
+              <span class="match-meta-jornada">Fecha 7 · 3 may</span>
+            </div>
+            <div class="match-row-body">
+              <div class="team-side">
+                <div class="team-logo-sm">🔵</div>
+                <span class="team-name-sm bold">CUBA</span>
+              </div>
+              <div class="score-center">
+                <div class="score-nums">
+                  <span class="score-num">31</span>
+                  <span class="score-sep">–</span>
+                  <span class="score-num">17</span>
+                </div>
+                <span class="status-chip chip-ft">FT</span>
+              </div>
+              <div class="team-side right">
+                <div class="team-logo-sm">🟡</div>
+                <span class="team-name-sm dim">HINDÚ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Partido perdido -->
+          <div class="match-row loss">
+            <div class="match-row-meta">
+              <span class="match-meta-liga">TOP 14 URBA</span>
+              <span class="match-meta-jornada">Fecha 6 · 26 abr</span>
+            </div>
+            <div class="match-row-body">
+              <div class="team-side">
+                <div class="team-logo-sm">🔴</div>
+                <span class="team-name-sm dim">NEWMAN</span>
+              </div>
+              <div class="score-center">
+                <div class="score-nums">
+                  <span class="score-num">28</span>
+                  <span class="score-sep">–</span>
+                  <span class="score-num">10</span>
+                </div>
+                <span class="status-chip chip-ft">FT</span>
+              </div>
+              <div class="team-side right">
+                <div class="team-logo-sm">🔵</div>
+                <span class="team-name-sm bold">CUBA</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Partido ganado -->
+          <div class="match-row win">
+            <div class="match-row-meta">
+              <span class="match-meta-liga">TOP 14 URBA</span>
+              <span class="match-meta-jornada">Fecha 5 · 19 abr</span>
+            </div>
+            <div class="match-row-body">
+              <div class="team-side">
+                <div class="team-logo-sm">🔵</div>
+                <span class="team-name-sm bold">CUBA</span>
+              </div>
+              <div class="score-center">
+                <div class="score-nums">
+                  <span class="score-num">24</span>
+                  <span class="score-sep">–</span>
+                  <span class="score-num">21</span>
+                </div>
+                <span class="status-chip chip-ft">FT</span>
+              </div>
+              <div class="team-side right">
+                <div class="team-logo-sm">🟢</div>
+                <span class="team-name-sm dim">ALUMNI</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Próximos partidos -->
+          <div class="section-head">
+            <span class="section-head-label">PRÓXIMOS</span>
+            <div class="section-line"></div>
+          </div>
+
+          <div class="match-row upcoming">
+            <div class="match-row-meta">
+              <span class="match-meta-liga">TOP 14 URBA</span>
+              <span class="match-meta-jornada">Fecha 9 · 17 may</span>
+            </div>
+            <div class="match-row-body">
+              <div class="team-side">
+                <div class="team-logo-sm">🔵</div>
+                <span class="team-name-sm bold">CUBA</span>
+              </div>
+              <div class="score-center">
+                <span class="status-chip chip-ns" style="font-size:12px;">15:30</span>
+              </div>
+              <div class="team-side right">
+                <div class="team-logo-sm">⚫</div>
+                <span class="team-name-sm dim">PUCARÁ</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:16px;"></div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></div>
+          <div class="nav-item"><span class="nav-icon">📡</span><span class="nav-label">En Vivo</span></div>
+          <div class="nav-item"><span class="nav-icon">📅</span><span class="nav-label">Próximos</span></div>
+          <div class="nav-item"><span class="nav-icon">🔍</span><span class="nav-label">Buscar</span></div>
+          <div class="nav-item active"><span class="nav-icon">⭐</span><span class="nav-label">Favoritos</span><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PANTALLA 4: Bottom sheet agregar equipo ──────────────── -->
+  <div class="phone-wrap">
+    <span class="phone-label">Agregar equipo</span>
+    <div class="phone">
+      <div class="phone-inner" style="position:relative;">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div class="app-header">
+          <div style="display:flex;flex-direction:column;">
+            <span class="header-title-text">RUGBY SCORE</span>
+            <span class="header-title-sub">ARGENTINA & MUNDO</span>
+          </div>
+          <div class="header-actions"><span class="header-icon">🔍</span></div>
+        </div>
+
+        <!-- Fondo difuminado (pantalla de favoritos detrás) -->
+        <div class="content" style="filter:blur(1px);opacity:0.4;pointer-events:none;">
+          <div class="fav-header">
+            <div class="fav-header-text">
+              <div class="fav-header-title">MIS EQUIPOS</div>
+            </div>
+          </div>
+          <div class="fav-grid">
+            <div class="fav-card"><div class="fav-card-top"><div class="fav-logo">🔵</div><div class="fav-team-name">CUBA</div></div></div>
+            <div class="fav-card"><div class="fav-card-top"><div class="fav-logo">🟢</div><div class="fav-team-name">ALUMNI</div></div></div>
+          </div>
+        </div>
+
+        <!-- Bottom sheet encima -->
+        <div class="overlay">
+          <div class="bottom-sheet">
+            <div class="sheet-handle"><div class="handle-bar"></div></div>
+            <div class="sheet-title">AGREGAR EQUIPO</div>
+            <div class="sheet-sub">Buscá por nombre o torneo</div>
+            <div class="search-input-wrap">
+              <span class="search-input-icon">🔍</span>
+              <input class="search-input" type="text" placeholder="Ej: Newman, Crusaders...">
+            </div>
+            <div class="team-option">
+              <div class="team-opt-logo">🔵</div>
+              <div class="team-opt-info">
+                <div class="team-opt-name">CUBA</div>
+                <div class="team-opt-league">TOP 14 URBA</div>
+              </div>
+              <span class="team-opt-check">✓</span>
+            </div>
+            <div class="team-option">
+              <div class="team-opt-logo">🔴</div>
+              <div class="team-opt-info">
+                <div class="team-opt-name">NEWMAN</div>
+                <div class="team-opt-league">TOP 14 URBA</div>
+              </div>
+            </div>
+            <div class="team-option">
+              <div class="team-opt-logo">🟡</div>
+              <div class="team-opt-info">
+                <div class="team-opt-name">HINDÚ</div>
+                <div class="team-opt-league">TOP 14 URBA</div>
+              </div>
+            </div>
+            <div class="team-option">
+              <div class="team-opt-logo">🟢</div>
+              <div class="team-opt-info">
+                <div class="team-opt-name">ALUMNI</div>
+                <div class="team-opt-league">TOP 14 URBA</div>
+              </div>
+              <span class="team-opt-check">✓</span>
+            </div>
+            <div class="team-option">
+              <div class="team-opt-logo">🔴</div>
+              <div class="team-opt-info">
+                <div class="team-opt-name">CRUSADERS</div>
+                <div class="team-opt-league">SUPER RUGBY PACIFIC</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></div>
+          <div class="nav-item"><span class="nav-icon">📡</span><span class="nav-label">En Vivo</span></div>
+          <div class="nav-item"><span class="nav-icon">📅</span><span class="nav-label">Próximos</span></div>
+          <div class="nav-item"><span class="nav-icon">🔍</span><span class="nav-label">Buscar</span></div>
+          <div class="nav-item active"><span class="nav-icon">⭐</span><span class="nav-label">Favoritos</span><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+</body>
+</html>

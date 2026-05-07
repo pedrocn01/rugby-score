@@ -30,7 +30,143 @@
       "Read(//c/Users/Pedro Castro Nevares/.claude/projects/**)",
       "Bash(flutter build:*)",
       "Bash(flutter --version)",
-      "WebFetch(domain:www.urba.com.ar)"
+      "WebFetch(domain:www.urba.com.ar)",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/leagues?search=sevens\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(python -m json.tool)",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/games?league=54&season=2025\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(node -e ':*)",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/games?league=52&season=2025\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(curl -s \"https://api.urba.org.ar/api/positions/2025176\")",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/games?league=41&season=2026\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\); const j=JSON.parse\\(d\\); console.log\\('Total:',j.results\\); j.response?.slice\\(0,10\\).forEach\\(m=>console.log\\(m.teams.home.name,'vs',m.teams.away.name,'|',m.status.short,'|',m.date\\)\\)\")",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/games?league=41&season=2026\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\" -o /tmp/sra.json)",
+      "Bash(node -e \"const j=require\\('/tmp/sra.json'\\); console.log\\('Total:',j.results\\); \\(j.response||[]\\).slice\\(0,10\\).forEach\\(m=>console.log\\(m.teams.home.name,'vs',m.teams.away.name,'|',m.status.short,'|',m.date\\)\\)\")",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/games?league=41&season=2026\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\" -o C:/temp/sra.json)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(mkdir -p C:/Users/Pedro/AppData/Local/Temp)",
+      "Bash(node -e \"const j=require\\('./sra_temp.json'\\); console.log\\('Total:',j.results\\); \\(j.response||[]\\).slice\\(0,15\\).forEach\\(m=>console.log\\(m.teams.home.name,'vs',m.teams.away.name,'|',m.status.short,'|',m.date\\)\\)\")",
+      "Bash(node -e \"const j=require\\('./champ_temp.json'\\); const c=j.championship?.[0]; const team=c?.teams?.[0]; console.log\\('team:', JSON.stringify\\(team?.club, null, 2\\)\\)\")",
+      "Bash(curl -s \"https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=Black+Lions\")",
+      "Bash(node -e \"process.stdin.resume\\(\\);let d='';process.stdin.on\\('data',x=>d+=x\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);const t=j.teams?.[0];console.log\\('Badge:',t?.strBadge,'\\\\\\\\nAlt badge:',t?.strBadgeAlternate\\)}\\)\")",
+      "Bash(curl -s \"https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=Cobras+Brasil\")",
+      "Bash(node -e \"process.stdin.resume\\(\\);let d='';process.stdin.on\\('data',x=>d+=x\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);const t=j.teams?.[0];console.log\\('Badge:',t?.strBadge\\)}\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://r2.thesportsdb.com/images/media/team/badge/2oikfe1759204626.png\")",
+      "Bash(curl -s \"https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=Cheetahs\")",
+      "Bash(node -e \"process.stdin.resume\\(\\);let d='';process.stdin.on\\('data',x=>d+=x\\);process.stdin.on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);\\(j.teams||[]\\).forEach\\(t=>console.log\\(t.strTeam, t.strSport, t.strBadge?.substring\\(0,60\\)\\)\\)}\\)\")",
+      "Bash(curl -s 'https://v1.rugby.api-sports.io/leagues?search=nations' -H 'x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/leagues?search=nations\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/leagues?search=championship\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/standings?league=76&season=2025\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(curl -s \"https://v1.rugby.api-sports.io/standings?league=16&season=2025\" -H \"x-apisports-key: ae0c789862dd0f66a7f3fd261e879f3b\")",
+      "Bash(grep -E \"\\\\.\\(dart|yml|json\\)$\")",
+      "WebFetch(domain:www.thesportsdb.com)",
+      "WebFetch(domain:upload.wikimedia.org)",
+      "Bash(curl -s \"https://site.web.api.espn.com/apis/v2/sports/rugby/242041/standings?region=us&lang=en&season=2026&seasontype=2\" -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36\")",
+      "Bash(curl -s \"https://site.web.api.espn.com/apis/v2/sports/rugby/242041/standings?region=us&lang=en&season=2026&seasontype=1&type=0\" -H \"User-Agent: Mozilla/5.0\")",
+      "WebFetch(domain:es.wikipedia.org)",
+      "Bash(git checkout *)",
+      "Bash(python scripts/download_logos.py)",
+      "PowerShell(Start-Process \"c:\\\\src\\\\Proyectos\\\\rugby_app\\\\design_preview_favoritos.html\")",
+      "Bash(flutter pub *)",
+      "Bash(Remove-Item \"c:\\\\src\\\\Proyectos\\\\rugby_app\\\\lib\\\\config\\\\firebase_options.dart\")"
+    ],
+    "additionalDirectories": [
+      "c:\\src\\Proyectos\\rugby_app\\assets"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-check-update.js"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-session-state.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-context-monitor.js",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-read-injection-scanner.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-phase-boundary.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-prompt-guard.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-read-guard.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-workflow-guard.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gsd-validate-commit.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }

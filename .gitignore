@@ -24,3 +24,5 @@ lib/config/secrets.dart
 *.key
 *.keystore
 run_dev.sh
+
+.vercel

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rugby Score — Preview de cambios de diseño</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ─── Reset ────────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ─── Cambio 5: Fondo con textura sutil ────────────────────────────── */
+  body {
+    background-color: #111111;
+    /* textura: noise SVG en muy baja opacidad */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    /* líneas de campo de rugby en diagonal, muy sutiles */
+    background-blend-mode: overlay;
+    min-height: 100vh;
+    font-family: 'Barlow', sans-serif;
+    color: #fff;
+  }
+
+  /* overlay de líneas campo */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -55deg,
+      transparent,
+      transparent 60px,
+      rgba(27, 67, 50, 0.035) 60px,
+      rgba(27, 67, 50, 0.035) 61px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── Header ───────────────────────────────────────────────────────── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #1B4332;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 56px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+
+  .header-left { display: flex; align-items: center; gap: 10px; }
+
+  .menu-icon {
+    width: 26px; height: 26px;
+    display: flex; flex-direction: column;
+    justify-content: center; gap: 5px; cursor: pointer;
+  }
+  .menu-icon span { display: block; height: 2px; background: #fff; border-radius: 2px; }
+  .menu-icon span:nth-child(2) { width: 70%; }
+
+  /* Cambio 1: Tipografía Barlow Condensed en el título */
+  .header-title {
+    display: flex; flex-direction: column;
+  }
+  .header-title .app-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 3.5px;
+    color: #fff;
+    line-height: 1;
+  }
+  .header-title .app-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 1px;
+  }
+
+  .search-icon { color: #fff; cursor: pointer; font-size: 22px; opacity: 0.9; }
+
+  /* ─── Contenido ────────────────────────────────────────────────────── */
+  .content { position: relative; z-index: 1; padding-bottom: 40px; }
+
+  /* ─── Sección ──────────────────────────────────────────────────────── */
+  .section { padding-top: 28px; }
+
+  .section-label-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 16px 14px;
+  }
+  /* Cambio 1: Tipografía en labels de sección */
+  .section-label {
+    background: #1B4332;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(27,67,50,0.5), transparent);
+  }
+
+  .carousel {
+    display: flex;
+    gap: 10px;
+    padding: 0 16px 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .carousel::-webkit-scrollbar { display: none; }
+
+  /* ─── Cards ────────────────────────────────────────────────────────── */
+  .card {
+    flex: 0 0 130px;
+    height: 150px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+  .card:hover {
+    transform: scale(1.04);
+  }
+
+  .card-gradient {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+  }
+
+  .card-logo-area {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 10px 10px 4px;
+    font-size: 40px;
+  }
+
+  .card-bar {
+    background: rgba(0,0,0,0.35);
+    padding: 6px 10px 7px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  /* Cambio 1: Font en nombres de cards */
+  .card-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+  .card-arrow { color: rgba(255,255,255,0.6); font-size: 13px; }
+
+  /* ─── Cambio 4: Badge EN VIVO ──────────────────────────────────────── */
+  .live-badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: #D32F2F;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: flex; align-items: center; gap: 4px;
+    z-index: 10;
+    box-shadow: 0 0 10px rgba(211,47,47,0.6);
+  }
+  .live-dot {
+    width: 5px; height: 5px;
+    background: #fff;
+    border-radius: 50%;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ─── Colores de cards ─────────────────────────────────────────────── */
+  .card-superliga  { background: linear-gradient(135deg, #1B4332, #071A0E); box-shadow: 0 3px 8px rgba(27,67,50,0.3); }
+  .card-uar        { background: linear-gradient(135deg, #004B87, #001529); box-shadow: 0 3px 8px rgba(0,75,135,0.35); }
+  .card-urc        { background: linear-gradient(135deg, #6A0DAD, #2A0045); box-shadow: 0 3px 8px rgba(106,13,173,0.35); }
+  .card-top14      { background: linear-gradient(135deg, #C62828, #4A0000); box-shadow: 0 3px 8px rgba(198,40,40,0.35); }
+  .card-premiership { background: linear-gradient(135deg, #1565C0, #0A1F5C); box-shadow: 0 3px 8px rgba(21,101,192,0.35); }
+  .card-champscup  { background: linear-gradient(135deg, #E65100, #5C1A00); box-shadow: 0 3px 8px rgba(230,81,0,0.35); }
+  .card-tdi        { background: linear-gradient(135deg, #004B87, #001D3D); box-shadow: 0 3px 8px rgba(0,75,135,0.35); }
+  .card-sevens     { background: linear-gradient(135deg, #FF6B00, #CC4400); box-shadow: 0 3px 8px rgba(255,107,0,0.35); }
+  .card-rugby-champ { background: linear-gradient(135deg, #1B4332, #071A0E); box-shadow: 0 3px 8px rgba(27,67,50,0.3); }
+
+  /* ─── Comparación lado a lado ──────────────────────────────────────── */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .col-before, .col-after {
+    padding: 0;
+  }
+
+  .col-label {
+    text-align: center;
+    padding: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    position: sticky;
+    top: 56px;
+    z-index: 50;
+  }
+  .col-label.before { background: #1a1a1a; color: rgba(255,255,255,0.4); border-right: 1px solid #222; }
+  .col-label.after  { background: #1a1a1a; color: #4CAF50; }
+
+  /* ─── Versión ANTES (sin cambios) ─────────────────────────────────── */
+  .before-card {
+    flex: 0 0 130px;
+    height: 150px;
+    border-radius: 16px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .before-card-logo {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 38px;
+  }
+  .before-card-bar {
+    background: rgba(0,0,0,0.35);
+    padding: 6px 10px 7px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .before-card-name {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
+  }
+  .before-section-label {
+    background: #1B4332;
+    color: #fff;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* ─── Footer ───────────────────────────────────────────────────────── */
+  footer {
+    position: relative; z-index: 1;
+    background: #0A0A0A;
+    border-top: 1px solid rgba(27,67,50,0.4);
+    padding: 32px 24px;
+    margin-top: 32px;
+  }
+  .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .footer-icon {
+    width: 36px; height: 36px; background: #1B4332;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .footer-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 15px; letter-spacing: 2.5px;
+  }
+  .footer-sub { color: rgba(255,255,255,0.4); font-size: 12px; margin-bottom: 28px; }
+  .footer-divider { height: 1px; background: #222; margin-bottom: 24px; }
+  .footer-contact-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 11px; letter-spacing: 2px;
+    color: rgba(27,67,50,0.8); margin-bottom: 12px;
+  }
+  .footer-email { color: rgba(255,255,255,0.6); font-size: 13px; }
+  .footer-copy { color: rgba(255,255,255,0.2); font-size: 10px; margin-top: 24px; }
+
+  /* ─── Banner explicativo ───────────────────────────────────────────── */
+  .info-banner {
+    background: rgba(27,67,50,0.15);
+    border: 1px solid rgba(27,67,50,0.4);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 20px 16px 0;
+    position: relative; z-index: 1;
+  }
+  .info-banner h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 14px; letter-spacing: 1.5px;
+    color: #4CAF50; margin-bottom: 12px;
+  }
+  .info-banner ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .info-banner li { font-size: 13px; color: rgba(255,255,255,0.7); display: flex; gap: 8px; }
+  .info-banner li span.tag {
+    background: rgba(76,175,80,0.15); border: 1px solid rgba(76,175,80,0.3);
+    color: #4CAF50; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 10px; letter-spacing: 1px;
+    padding: 1px 7px; border-radius: 4px; white-space: nowrap;
+    align-self: flex-start; margin-top: 1px;
+  }
+
+  /* divider vertical en comparación */
+  .divider-v {
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 1px; background: #333;
+    z-index: 60;
+  }
+
+  .comparison-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<!-- ─── Header (ya con cambio 1 aplicado) ──────────────────────────────── -->
+<header>
+  <div class="header-left">
+    <div class="menu-icon">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="header-title">
+      <span class="app-name">RUGBY SCORE</span>
+      <span class="app-sub">Resultados · Tablas · Fixtures</span>
+    </div>
+  </div>
+  <span class="search-icon">🔍</span>
+</header>
+
+<!-- ─── Banner con explicación ─────────────────────────────────────────── -->
+<div class="info-banner">
+  <h3>PREVIEW — 3 CAMBIOS PROPUESTOS</h3>
+  <ul>
+    <li>
+      <span class="tag">CAMBIO 1</span>
+      Tipografía Barlow Condensed — más deportiva, más carácter. Activa en todo: header, labels, cards y footer.
+    </li>
+    <li>
+      <span class="tag">CAMBIO 4</span>
+      Badge "EN VIVO" — aparece sobre las cards cuando hay partido en curso. Con punto pulsante rojo.
+    </li>
+    <li>
+      <span class="tag">CAMBIO 5</span>
+      Fondo con textura — líneas de campo de rugby y noise en 3% de opacidad. Sutil, solo da profundidad.
+    </li>
+  </ul>
+</div>
+
+<!-- ─── Comparación ANTES / DESPUÉS ────────────────────────────────────── -->
+<div class="comparison-wrap" style="position:relative; margin-top:24px;">
+  <div class="divider-v"></div>
+  <div class="comparison">
+
+    <!-- ── ANTES ── -->
+    <div class="col-before">
+      <div class="col-label before">ANTES</div>
+
+      <!-- Sección LOCALES -->
+      <div class="section">
+        <div class="section-label-row">
+          <span class="before-section-label">LOCALES</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="carousel">
+
+          <div class="before-card card-superliga" style="box-shadow:0 3px 8px rgba(27,67,50,0.3)">
+            <div class="before-card-logo">🏉</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">Superliga Americana</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="before-card card-uar" style="box-shadow:0 3px 8px rgba(0,75,135,0.35)">
+            <div class="before-card-logo">🏉</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">Torneo del Interior</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="before-card card-sevens" style="box-shadow:0 3px 8px rgba(255,107,0,0.35)">
+            <div class="before-card-logo">🏉</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">Circuito 7s</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sección INTERNACIONALES -->
+      <div class="section">
+        <div class="section-label-row">
+          <span class="before-section-label">INTERNACIONALES</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="carousel">
+
+          <div class="before-card card-urc">
+            <div class="before-card-logo">🏉</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">URC</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="before-card card-top14">
+            <div class="before-card-logo">🏉</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">Top 14</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="before-card card-premiership">
+            <div class="before-card-logo">🏉</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">Premiership</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sección SELECCIONES -->
+      <div class="section">
+        <div class="section-label-row">
+          <span class="before-section-label">SELECCIONES</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="carousel">
+
+          <div class="before-card card-rugby-champ">
+            <div class="before-card-logo">🏆</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">Rugby Championship</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="before-card card-champscup">
+            <div class="before-card-logo">🏆</div>
+            <div class="before-card-bar">
+              <span class="before-card-name">Champions Cup</span>
+              <span class="card-arrow">›</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── DESPUÉS ── -->
+    <div class="col-after">
+      <div class="col-label after">DESPUÉS</div>
+
+      <!-- Sección LOCALES -->
+      <div class="section">
+        <div class="section-label-row">
+          <span class="section-label">LOCALES</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="carousel">
+
+          <!-- Card con badge EN VIVO -->
+          <div class="card card-superliga">
+            <div class="live-badge"><span class="live-dot"></span>EN VIVO</div>
+            <div class="card-gradient">
+              <div class="card-logo-area">🏉</div>
+              <div class="card-bar">
+                <span class="card-name">Superliga Americana</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-uar">
+            <div class="card-gradient">
+              <div class="card-logo-area">🏉</div>
+              <div class="card-bar">
+                <span class="card-name">Torneo del Interior</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-sevens">
+            <div class="card-gradient">
+              <div class="card-logo-area">🏉</div>
+              <div class="card-bar">
+                <span class="card-name">Circuito 7s</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sección INTERNACIONALES -->
+      <div class="section">
+        <div class="section-label-row">
+          <span class="section-label">INTERNACIONALES</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="carousel">
+
+          <!-- Card con badge EN VIVO -->
+          <div class="card card-urc">
+            <div class="live-badge"><span class="live-dot"></span>EN VIVO</div>
+            <div class="card-gradient">
+              <div class="card-logo-area">🏉</div>
+              <div class="card-bar">
+                <span class="card-name">URC</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-top14">
+            <div class="card-gradient">
+              <div class="card-logo-area">🏉</div>
+              <div class="card-bar">
+                <span class="card-name">Top 14</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-premiership">
+            <div class="card-gradient">
+              <div class="card-logo-area">🏉</div>
+              <div class="card-bar">
+                <span class="card-name">Premiership</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sección SELECCIONES -->
+      <div class="section">
+        <div class="section-label-row">
+          <span class="section-label">SELECCIONES</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="carousel">
+
+          <div class="card card-rugby-champ">
+            <div class="card-gradient">
+              <div class="card-logo-area">🏆</div>
+              <div class="card-bar">
+                <span class="card-name">Rugby Championship</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-champscup">
+            <div class="card-gradient">
+              <div class="card-logo-area">🏆</div>
+              <div class="card-bar">
+                <span class="card-name">Champions Cup</span>
+                <span class="card-arrow">›</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── Footer ──────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-icon">🏉</div>
+    <span class="footer-name">RUGBY SCORE</span>
+  </div>
+  <p class="footer-sub">Resultados, tablas y fixtures del rugby argentino y mundial.</p>
+  <div class="footer-divider"></div>
+  <p class="footer-contact-label">CONTACTO</p>
+  <p class="footer-email">📧 rugbyscore01@gmail.com</p>
+  <p class="footer-copy">© 2025 Rugby Score. Datos provistos por api-sports.io.</p>
+</footer>
+
+</body>
+</html>

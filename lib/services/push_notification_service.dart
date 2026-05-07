@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import '../config/firebase_options.dart';
 import 'notifications_service.dart';
 
 class PushNotificationService {
@@ -11,7 +10,7 @@ class PushNotificationService {
   String? _fcmToken;
 
   Future<void> init() async {
-    if (!kIsWeb || !DefaultFirebaseOptions.isConfigured) return;
+    if (!kIsWeb) return;
 
     FirebaseMessaging.onMessage.listen(_onForegroundMessage);
 
@@ -29,12 +28,6 @@ class PushNotificationService {
   // Llamar cuando el usuario toca el ícono de campana.
   // Pide permiso si todavía no fue otorgado, luego togglea la suscripción.
   Future<bool> toggleTeam(String teamName) async {
-    if (!DefaultFirebaseOptions.isConfigured) {
-      // Firebase no configurado: solo guarda preferencia local
-      await NotificationsService.instance.toggle(teamName);
-      return true;
-    }
-
     if (_fcmToken == null) {
       final granted = await _requestPermission();
       if (!granted) return false;
