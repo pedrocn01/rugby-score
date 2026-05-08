@@ -66,7 +66,7 @@ def _init_firebase():
 def _fetch_international_live() -> dict:
     """Consulta cada liga internacional por separado (igual que la app Flutter)
     y filtra los partidos cuyo status está en LIVE_STATUSES."""
-    headers = {"Accept": "application/json"}
+    headers = {"Accept": "application/json", "X-Force-Fresh": "1"}
     if APP_SECRET:
         headers["X-App-Secret"] = APP_SECRET
 
