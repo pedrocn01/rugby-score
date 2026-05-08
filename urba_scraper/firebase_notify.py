@@ -189,18 +189,26 @@ def _process_matches(db, current: dict, previous: dict):
         score_text = f"{cur['home']} {cur['score_home']} - {cur['score_away']} {cur['away']}"
 
         if prev is None:
-            # Partido nuevo en vivo
             log.info("▶ Partido iniciado: %s", score_text)
             for team in [cur["home"], cur["away"]]:
                 _notify_team(db, team,
                     title="🏉 Partido en vivo",
                     body=score_text)
         elif cur["score_home"] != prev["score_home"] or cur["score_away"] != prev["score_away"]:
-            # Score cambió
             log.info("▶ Score cambió: %s", score_text)
             for team in [cur["home"], cur["away"]]:
                 _notify_team(db, team,
                     title="🏉 Cambio de score",
+                    body=score_text)
+
+    # Partidos que estaban en vivo y ya no aparecen → terminaron
+    for match_id, prev in previous.items():
+        if match_id not in current:
+            score_text = f"{prev['home']} {prev['score_home']} - {prev['score_away']} {prev['away']}"
+            log.info("▶ Partido terminado: %s", score_text)
+            for team in [prev["home"], prev["away"]]:
+                _notify_team(db, team,
+                    title="🏁 Partido terminado",
                     body=score_text)
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
@@ -214,11 +222,12 @@ def main():
     current.update(_fetch_international_live())
     current.update(_fetch_urba_live())
 
-    if not current:
+    previous = _get_previous_scores(db)
+
+    if not current and not previous:
         log.info("Sin partidos en vivo en este momento.")
         return
 
-    previous = _get_previous_scores(db)
     _process_matches(db, current, previous)
     _save_current_scores(db, current)
     log.info("✅ Listo.")
