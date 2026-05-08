@@ -17,6 +17,7 @@ Variables opcionales:
 import json
 import logging
 import os
+import time
 
 import firebase_admin
 import requests
@@ -71,11 +72,12 @@ def _fetch_international_live() -> dict:
         headers["X-App-Secret"] = APP_SECRET
 
     scores = {}
+    cache_buster = int(time.time())
     for league_id, season in INTERNATIONAL_LEAGUES.items():
         try:
             resp = requests.get(
                 f"{RUGBY_PROXY_URL}/games",
-                params={"league": league_id, "season": season},
+                params={"league": league_id, "season": season, "_cb": cache_buster},
                 headers=headers,
                 timeout=15,
             )
@@ -99,6 +101,8 @@ def _fetch_international_live() -> dict:
                         "score_away": int(score_a),
                         "source":     "international",
                     }
+                    log.info("  [vivo] %s %s - %s %s (status: %s)",
+                             home_name, score_h, score_a, away_name, status)
         except Exception as e:
             log.error("❌ Error fetching league %d: %s", league_id, e)
 
