@@ -175,7 +175,17 @@ class _TeamDetailPageState extends State<TeamDetailPage> {
                           color: notif ? const Color(0xFF4CAF50) : Colors.white70,
                         ),
                         tooltip: notif ? 'Desactivar notificaciones' : 'Activar notificaciones',
-                        onPressed: () => PushNotificationService.instance.toggleTeam(widget.teamName),
+                        onPressed: () async {
+                          final ok = await PushNotificationService.instance.toggleTeam(widget.teamName);
+                          if (!ok && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Permití las notificaciones en el navegador para activarlas'),
+                                duration: Duration(seconds: 4),
+                              ),
+                            );
+                          }
+                        },
                       ),
                       IconButton(
                         icon: Icon(

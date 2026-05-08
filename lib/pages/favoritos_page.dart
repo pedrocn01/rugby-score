@@ -669,7 +669,17 @@ class _TeamPickerState extends State<_TeamPicker> {
                             ),
                             // Campana (notificaciones)
                             InkWell(
-                              onTap: () => PushNotificationService.instance.toggleTeam(name),
+                              onTap: () async {
+                                final ok = await PushNotificationService.instance.toggleTeam(name);
+                                if (!ok && context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Permití las notificaciones en el navegador para activarlas'),
+                                      duration: Duration(seconds: 4),
+                                    ),
+                                  );
+                                }
+                              },
                               borderRadius: BorderRadius.circular(20),
                               child: Padding(
                                 padding: const EdgeInsets.all(6),

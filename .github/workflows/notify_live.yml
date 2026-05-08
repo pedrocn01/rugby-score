@@ -2,11 +2,13 @@ name: Notificaciones en vivo — Todos los equipos
 
 on:
   schedule:
-    # Viernes 18-23 UTC (15-20 Argentina) — Champions Cup, URC
-    - cron: '*/5 18-23 * * 5'
-    # Sábado 12-23 UTC (9-20 Argentina) — día principal de rugby
+    # Lunes a jueves: 17-23 UTC (14-20 Argentina) — Super Rugby Pacific, URC midweek
+    - cron: '*/5 17-23 * * 1-4'
+    # Viernes: 15-23 UTC (12-20 Argentina) — Champions Cup, URC, Top 14
+    - cron: '*/5 15-23 * * 5'
+    # Sábado: 12-23 UTC (9-20 Argentina) — día principal de rugby
     - cron: '*/5 12-23 * * 6'
-    # Domingo 12-23 UTC (9-20 Argentina) — Super Rugby, Premiership
+    # Domingo: 12-23 UTC (9-20 Argentina) — Super Rugby, Premiership
     - cron: '*/5 12-23 * * 0'
   workflow_dispatch:
 

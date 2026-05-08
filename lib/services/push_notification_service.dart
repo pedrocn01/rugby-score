@@ -31,6 +31,10 @@ class PushNotificationService {
     if (_fcmToken == null) {
       final granted = await _requestPermission();
       if (!granted) return false;
+      if (_fcmToken == null) {
+        debugPrint('❌ PushNotificationService.toggleTeam: token null tras pedir permiso (revisar FIREBASE_VAPID_KEY)');
+        return false;
+      }
     }
 
     await NotificationsService.instance.toggle(teamName);
