@@ -32,6 +32,26 @@ APP_SECRET        = os.environ.get("APP_SECRET", "").strip()
 
 LIVE_STATUSES = {"1H", "2H", "HT", "ET", "BT", "P"}
 
+# Mismas ligas que la app Flutter (leagueIds con ID positivo + leagueSeasons)
+INTERNATIONAL_LEAGUES = {
+    16:  2025,  # Top 14
+    13:  2025,  # Premiership
+    76:  2025,  # United Rugby Championship
+    54:  2025,  # Champions Cup
+    52:  2025,  # Challenge Cup
+    71:  2026,  # Super Rugby Pacific
+    51:  2026,  # Seis Naciones
+    85:  2025,  # The Rugby Championship
+    41:  2026,  # Super Rugby Américas
+    111: 2025,  # 7s Dubai
+    112: 2025,  # 7s Sudáfrica
+    120: 2026,  # 7s Singapore
+    110: 2026,  # 7s Australia
+    119: 2026,  # 7s Canadá
+    114: 2026,  # 7s USA
+    115: 2026,  # 7s Hong Kong
+}
+
 # ─── Inicializar Firebase Admin ───────────────────────────────────────────────
 
 def _init_firebase():
@@ -44,45 +64,46 @@ def _init_firebase():
 # ─── Obtener scores en vivo internacionales ───────────────────────────────────
 
 def _fetch_international_live() -> dict:
-    """Llama al Worker proxy para traer todos los partidos internacionales en vivo."""
-    try:
-        headers = {"Accept": "application/json"}
-        if APP_SECRET:
-            headers["X-App-Secret"] = APP_SECRET
+    """Consulta cada liga internacional por separado (igual que la app Flutter)
+    y filtra los partidos cuyo status está en LIVE_STATUSES."""
+    headers = {"Accept": "application/json"}
+    if APP_SECRET:
+        headers["X-App-Secret"] = APP_SECRET
 
-        resp = requests.get(
-            f"{RUGBY_PROXY_URL}/games",
-            params={"live": "all"},
-            headers=headers,
-            timeout=15,
-        )
-        resp.raise_for_status()
-        data = resp.json()
+    scores = {}
+    for league_id, season in INTERNATIONAL_LEAGUES.items():
+        try:
+            resp = requests.get(
+                f"{RUGBY_PROXY_URL}/games",
+                params={"league": league_id, "season": season},
+                headers=headers,
+                timeout=15,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            matches = data.get("response", []) if isinstance(data, dict) else []
+            for match in matches:
+                status = match.get("status", {}).get("short", "")
+                if status not in LIVE_STATUSES:
+                    continue
+                match_id  = str(match.get("id", ""))
+                home_name = match.get("teams", {}).get("home", {}).get("name", "")
+                away_name = match.get("teams", {}).get("away", {}).get("name", "")
+                score_h   = match.get("scores", {}).get("home") or 0
+                score_a   = match.get("scores", {}).get("away") or 0
+                if match_id and home_name:
+                    scores[match_id] = {
+                        "home":       home_name,
+                        "away":       away_name,
+                        "score_home": int(score_h),
+                        "score_away": int(score_a),
+                        "source":     "international",
+                    }
+        except Exception as e:
+            log.error("❌ Error fetching league %d: %s", league_id, e)
 
-        scores = {}
-        matches = data.get("response", []) if isinstance(data, dict) else []
-        for match in matches:
-            status = match.get("status", {}).get("short", "")
-            if status not in LIVE_STATUSES:
-                continue
-            match_id  = str(match.get("id", ""))
-            home_name = match.get("teams", {}).get("home", {}).get("name", "")
-            away_name = match.get("teams", {}).get("away", {}).get("name", "")
-            score_h   = match.get("scores", {}).get("home") or 0
-            score_a   = match.get("scores", {}).get("away") or 0
-            if match_id and home_name:
-                scores[match_id] = {
-                    "home":       home_name,
-                    "away":       away_name,
-                    "score_home": int(score_h),
-                    "score_away": int(score_a),
-                    "source":     "international",
-                }
-        log.info("Internacional: %d partidos en vivo", len(scores))
-        return scores
-    except Exception as e:
-        log.error("❌ Error fetching international live scores: %s", e)
-        return {}
+    log.info("Internacional: %d partidos en vivo", len(scores))
+    return scores
 
 # ─── Obtener scores en vivo URBA ─────────────────────────────────────────────
 
