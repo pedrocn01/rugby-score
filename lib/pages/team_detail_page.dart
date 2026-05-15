@@ -176,12 +176,20 @@ class _TeamDetailPageState extends State<TeamDetailPage> {
                         ),
                         tooltip: notif ? 'Desactivar notificaciones' : 'Activar notificaciones',
                         onPressed: () async {
-                          final ok = await PushNotificationService.instance.toggleTeam(widget.teamName);
-                          if (!ok && context.mounted) {
+                          final result = await PushNotificationService.instance.toggleTeam(widget.teamName);
+                          if (!context.mounted) return;
+                          if (result == NotifToggleResult.permissionDenied) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Permití las notificaciones en el navegador para activarlas'),
                                 duration: Duration(seconds: 4),
+                              ),
+                            );
+                          } else if (result == NotifToggleResult.tokenError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Hubo un error al activar las notificaciones. Intentá recargar la página.'),
+                                duration: Duration(seconds: 5),
                               ),
                             );
                           }

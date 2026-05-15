@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'notifications_service.dart';
 
+enum NotifToggleResult { ok, permissionDenied, tokenError }
+
 class PushNotificationService {
   PushNotificationService._();
   static final PushNotificationService instance = PushNotificationService._();
@@ -27,19 +29,19 @@ class PushNotificationService {
 
   // Llamar cuando el usuario toca el ícono de campana.
   // Pide permiso si todavía no fue otorgado, luego togglea la suscripción.
-  Future<bool> toggleTeam(String teamName) async {
+  Future<NotifToggleResult> toggleTeam(String teamName) async {
     if (_fcmToken == null) {
       final granted = await _requestPermission();
-      if (!granted) return false;
+      if (!granted) return NotifToggleResult.permissionDenied;
       if (_fcmToken == null) {
-        debugPrint('❌ PushNotificationService.toggleTeam: token null tras pedir permiso (revisar FIREBASE_VAPID_KEY)');
-        return false;
+        debugPrint('❌ PushNotificationService.toggleTeam: token null tras pedir permiso (revisar FIREBASE_VAPID_KEY en Vercel)');
+        return NotifToggleResult.tokenError;
       }
     }
 
     await NotificationsService.instance.toggle(teamName);
     await _syncToFirestore();
-    return true;
+    return NotifToggleResult.ok;
   }
 
   Future<bool> _requestPermission() async {

@@ -670,12 +670,20 @@ class _TeamPickerState extends State<_TeamPicker> {
                             // Campana (notificaciones)
                             InkWell(
                               onTap: () async {
-                                final ok = await PushNotificationService.instance.toggleTeam(name);
-                                if (!ok && context.mounted) {
+                                final result = await PushNotificationService.instance.toggleTeam(name);
+                                if (!context.mounted) return;
+                                if (result == NotifToggleResult.permissionDenied) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Permití las notificaciones en el navegador para activarlas'),
                                       duration: Duration(seconds: 4),
+                                    ),
+                                  );
+                                } else if (result == NotifToggleResult.tokenError) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Hubo un error al activar las notificaciones. Intentá recargar la página.'),
+                                      duration: Duration(seconds: 5),
                                     ),
                                   );
                                 }
