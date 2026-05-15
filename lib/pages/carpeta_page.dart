@@ -135,11 +135,19 @@ class _SubFolderTile extends StatelessWidget {
 
   Color get _primary {
     switch (folderName) {
-      case 'TOP 14':     return const Color(0xFF1B2F7A);
-      case 'Primera A':  return const Color(0xFF0A2240);
-      case 'Primera B':  return const Color(0xFFB35A00);
-      case 'Primera C':  return const Color(0xFFAA1500);
-      default:           return const Color(0xFF1B4332);
+      case 'TOP 14':          return const Color(0xFF1B2F7A);
+      case 'Primera A':       return const Color(0xFF0A2240);
+      case 'Primera B':       return const Color(0xFFB35A00);
+      case 'Primera C':       return const Color(0xFFAA1500);
+      case 'Segunda':         return const Color(0xFF003A70);
+      case 'Tercera':         return const Color(0xFF1B5E20);
+      case 'Desarrollo':      return const Color(0xFF00695C);
+      case 'Femenino':        return const Color(0xFF880E4F);
+      case 'M-19':            return const Color(0xFFB84800);
+      case 'M-17':            return const Color(0xFF9E3700);
+      case 'M-16':            return const Color(0xFF8A2F00);
+      case 'M-15':            return const Color(0xFF742600);
+      default:                return const Color(0xFF1B4332);
     }
   }
 

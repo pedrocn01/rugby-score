@@ -194,16 +194,18 @@ class _FolderTileState extends State<_FolderTile> {
 
   Color get _primary {
     switch (widget.folderName) {
-      case 'Circuito 7s':        return const Color(0xFFFF6B00);
+      case 'Circuito 7s':         return const Color(0xFFFF6B00);
       case 'Torneo del Interior': return const Color(0xFF004B87);
-      default:                   return const Color(0xFF1B4332);
+      case 'URBA - Juveniles':    return const Color(0xFFB84800);
+      default:                    return const Color(0xFF1B4332);
     }
   }
   Color get _dark {
     switch (widget.folderName) {
-      case 'Circuito 7s':        return const Color(0xFFCC4400);
+      case 'Circuito 7s':         return const Color(0xFFCC4400);
       case 'Torneo del Interior': return const Color(0xFF001D3D);
-      default:                   return const Color(0xFF071A0E);
+      case 'URBA - Juveniles':    return const Color(0xFF5C1F00);
+      default:                    return const Color(0xFF071A0E);
     }
   }
 

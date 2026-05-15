@@ -32,6 +32,72 @@ const Map<String, int> urbaChampionshipIds = {
   '1C Intermedia':           2025193,
   '1C Pre-Intermedia':       2025195,
   '1C Pre-Intermedia B':     2025205,
+  // ── Segunda ────────────────────────────────────────────────────────────────
+  'Segunda Superior':        2025180,
+  'Segunda Intermedia':      2025196,
+  // ── Tercera ────────────────────────────────────────────────────────────────
+  'Tercera Superior':        2025181,
+  'Tercera Intermedia':      2025199,
+  // ── Desarrollo ─────────────────────────────────────────────────────────────
+  'Desarrollo Superior':     2025182,
+  'Desarrollo Intermedia':   2025207,
+  // ── Femenino ───────────────────────────────────────────────────────────────
+  'Femenino TOP 9':            2025208,
+  'Femenino Primera División': 2025209,
+  'Femenino Segunda División': 2025210,
+  // ── M-19 ───────────────────────────────────────────────────────────────────
+  'M-19 G1 A':                     2025224,
+  'M-19 G1 B':                     2025225,
+  'M-19 G1 Formativa A':           2025226,
+  'M-19 G1 Formativa B':           2025229,
+  'M-19 G1 Formativa C':           2025230,
+  'M-19 G2 Nivel 1 A':             2025213,
+  'M-19 G2 Nivel 1 A Eq B':        2025214,
+  'M-19 G2 Nivel 1 B':             2025215,
+  'M-19 G2 Nivel 1 B Eq B':        2025216,
+  'M-19 G2 Nivel 2 C':             2025217,
+  'M-19 G2 Nivel 2 C Eq B':        2025218,
+  'M-19 G2 Nivel 2 D':             2025219,
+  'M-19 G2 Nivel 2 D Eq B':        2025220,
+  'M-19 G2 Nivel 2 Desarrollo':    2025227,
+  'M-19 G2 Nivel 2 Desarrollo Eq B': 2025228,
+  // ── M-17 ───────────────────────────────────────────────────────────────────
+  'M-17 G2 Nivel 1 A':             2025231,
+  'M-17 G2 Nivel 1 A Eq B':        2025232,
+  'M-17 G2 Nivel 1 B':             2025233,
+  'M-17 G2 Nivel 1 B Eq B':        2025234,
+  'M-17 G2 Nivel 2 C':             2025235,
+  'M-17 G2 Nivel 2 C Eq B':        2025236,
+  'M-17 G1 A':                     2025237,
+  'M-17 G1 B':                     2025238,
+  'M-17 G1 C':                     2025239,
+  'M-17 G1 Formativo A':           2025240,
+  'M-17 G1 Formativo B':           2025241,
+  'M-17 G1 Formativo C':           2025242,
+  // ── M-16 ───────────────────────────────────────────────────────────────────
+  'M-16 G2 Nivel 1 A':             2025243,
+  'M-16 G2 Nivel 1 A Eq B':        2025244,
+  'M-16 G2 Nivel 1 B':             2025245,
+  'M-16 G2 Nivel 1 B Eq B':        2025246,
+  'M-16 G2 Nivel 2 C':             2025247,
+  'M-16 G2 Nivel 2 C Eq B':        2025248,
+  'M-16 G2 Nivel 2 Desarrollo':    2025249,
+  'M-16 G2 Nivel 2 Desarrollo Eq B': 2025250,
+  'M-16 G1 A':                     2025251,
+  'M-16 G1 B':                     2025252,
+  'M-16 G1 Formativa A':           2025253,
+  'M-16 G1 Formativa B':           2025254,
+  // ── M-15 ───────────────────────────────────────────────────────────────────
+  'M-15 G2 Nivel 1 A':             2025255,
+  'M-15 G2 Nivel 1 A Eq B':        2025256,
+  'M-15 G2 Nivel 1 B':             2025257,
+  'M-15 G2 Nivel 1 B Eq B':        2025258,
+  'M-15 G2 Nivel 2 Desarrollo':    2025259,
+  'M-15 G2 Nivel 2 Desarrollo Eq B': 2025260,
+  'M-15 G1 A':                     2025261,
+  'M-15 G1 B':                     2025262,
+  'M-15 G1 Formativa A':           2025263,
+  'M-15 G1 Formativa B':           2025264,
 };
 
 // ─── Clasificación de la tabla por liga ──────────────────────────────────────
@@ -39,7 +105,12 @@ const Map<String, int> urbaChampionshipIds = {
 // URBA Top 14 : 4 Playoffs · 2 descensos directos
 // URBA Primera A/B/C: 1 Ascenso directo · pos 2-5 Playoff de ascenso · 2 descensos
 const Set<String> urbaTop14Leagues = {'URBA Top 14'};
-const Set<String> urbaFirstLeagues = {'URBA Primera A', 'URBA Primera B', 'URBA Primera C'};
+const Set<String> urbaFirstLeagues = {
+  'URBA Primera A', 'URBA Primera B', 'URBA Primera C',
+  'Segunda Superior', 'Segunda Intermedia',
+  'Tercera Superior', 'Tercera Intermedia',
+  'Desarrollo Superior', 'Desarrollo Intermedia',
+};
 
 class UrbaService {
   static const _base = 'https://api.urba.org.ar/api';
