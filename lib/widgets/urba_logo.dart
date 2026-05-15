@@ -42,7 +42,14 @@ Widget? urbaLogoWidget(String liga, {double size = 80}) {
     case '1C Intermedia':       return _SubdivisionLogo(cat: 'C', div: 'INT',   color: const Color(0xFFAA1500), size: size);
     case '1C Pre-Intermedia':   return _SubdivisionLogo(cat: 'C', div: 'PRE',   color: const Color(0xFFAA1500), size: size);
     case '1C Pre-Intermedia B': return _SubdivisionLogo(cat: 'C', div: 'PRE B', color: const Color(0xFFAA1500), size: size);
-    default: return null;
+    // ── Carpetas Juveniles ────────────────────────────────────────────────────
+    case 'M-19': return _JuvenilFolderLogo(cat: 'M-19', size: size);
+    case 'M-17': return _JuvenilFolderLogo(cat: 'M-17', size: size);
+    case 'M-16': return _JuvenilFolderLogo(cat: 'M-16', size: size);
+    case 'M-15': return _JuvenilFolderLogo(cat: 'M-15', size: size);
+    default:
+      if (_isJuvenilLeague(liga)) return _JuvenilLogo(name: liga, size: size);
+      return null;
   }
 }
 
@@ -251,6 +258,179 @@ class _Top14SubdivisionLogo extends StatelessWidget {
               height:        1.0,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Helpers Juveniles ────────────────────────────────────────────────────────
+
+bool _isJuvenilLeague(String name) =>
+    name.startsWith('M-19 ') || name.startsWith('M-17 ') ||
+    name.startsWith('M-16 ') || name.startsWith('M-15 ');
+
+Color _juvenilColor(String cat) {
+  switch (cat) {
+    case 'M-19': return const Color(0xFFB84800);
+    case 'M-17': return const Color(0xFF9E3700);
+    case 'M-16': return const Color(0xFF8A2F00);
+    case 'M-15': return const Color(0xFF742600);
+    default:     return const Color(0xFF8A2F00);
+  }
+}
+
+String _juvenilLabel(String name) {
+  final spaceIdx = name.indexOf(' ');
+  if (spaceIdx == -1) return name;
+  return name.substring(spaceIdx + 1)
+      .replaceAll('Formativa ', 'Form ')
+      .replaceAll('Formativo ', 'Form ')
+      .replaceAll('Nivel 1 ', 'N1-')
+      .replaceAll('Nivel 2 ', 'N2-')
+      .replaceAll('Desarrollo', 'Des')
+      .replaceAll(' Eq B', ' B');
+}
+
+// ─── Logo carpeta M-19 / M-17 / M-16 / M-15 ─────────────────────────────────
+
+class _JuvenilFolderLogo extends StatelessWidget {
+  final String cat;
+  final double size;
+  const _JuvenilFolderLogo({required this.cat, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _juvenilColor(cat);
+    final dark  = Color.lerp(color, Colors.black, 0.55)!;
+    final parts  = cat.split('-');
+    final letter = parts[0];
+    final number = parts.length > 1 ? parts[1] : '';
+    return Container(
+      width:  size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
+          colors: [color, dark],
+        ),
+        borderRadius: BorderRadius.circular(size * 0.12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(letter,
+                style: TextStyle(
+                  color:      Colors.white.withValues(alpha: 0.65),
+                  fontSize:   size * 0.22,
+                  fontWeight: FontWeight.w900,
+                  height:     1.0,
+                )),
+              Text('-',
+                style: TextStyle(
+                  color:      Colors.white.withValues(alpha: 0.45),
+                  fontSize:   size * 0.18,
+                  fontWeight: FontWeight.w900,
+                  height:     1.0,
+                )),
+              Text(number,
+                style: TextStyle(
+                  color:      Colors.white,
+                  fontSize:   size * 0.40,
+                  fontWeight: FontWeight.w900,
+                  height:     1.0,
+                )),
+            ],
+          ),
+          SizedBox(height: size * 0.04),
+          Text('URBA',
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.55),
+              fontSize:      size * 0.13,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.025,
+              height:        1.0,
+            )),
+          Text('JUVENILES',
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.35),
+              fontSize:      size * 0.09,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.018,
+              height:        1.3,
+            )),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Logo liga juvenil individual (M-19 G1 A, M-17 G2 Nivel 1 B, etc.) ───────
+
+class _JuvenilLogo extends StatelessWidget {
+  final String name;
+  final double size;
+  const _JuvenilLogo({required this.name, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    final cat   = name.split(' ').first;
+    final label = _juvenilLabel(name);
+    final color = _juvenilColor(cat);
+    final dark  = Color.lerp(color, Colors.black, 0.55)!;
+    return Container(
+      width:  size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
+          colors: [color, dark],
+        ),
+        borderRadius: BorderRadius.circular(size * 0.12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(cat,
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.85),
+              fontSize:      size * 0.18,
+              fontWeight:    FontWeight.w900,
+              letterSpacing: size * 0.005,
+              height:        1.0,
+            )),
+          SizedBox(height: size * 0.05),
+          SizedBox(
+            width: size * 0.88,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color:         Colors.white,
+                  fontSize:      size * 0.14,
+                  fontWeight:    FontWeight.w700,
+                  letterSpacing: size * 0.004,
+                  height:        1.2,
+                )),
+            ),
+          ),
+          SizedBox(height: size * 0.04),
+          Text('URBA',
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.40),
+              fontSize:      size * 0.10,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.02,
+              height:        1.0,
+            )),
         ],
       ),
     );
