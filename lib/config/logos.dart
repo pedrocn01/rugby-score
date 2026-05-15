@@ -4,9 +4,14 @@
 // ─── Logos de carpetas (home) ─────────────────────────────────────────────
 
 const Map<String, String> folderLogoUrls = {
-  'URBA':        'assets/logos/folder_urba.png',
-  'Circuito 7s': 'assets/logos/folder_circuito_7s.png',
-  'TOP 14':      'assets/logos/league_urba.png',
+  'URBA':              'assets/logos/folder_urba.png',
+  'Circuito 7s':       'assets/logos/folder_circuito_7s.png',
+  'TOP 14':            'assets/logos/league_urba.png',
+  'URBA - Juveniles':  'assets/logos/league_urba.png',
+  'M-19':              'assets/logos/league_urba.png',
+  'M-17':              'assets/logos/league_urba.png',
+  'M-16':              'assets/logos/league_urba.png',
+  'M-15':              'assets/logos/league_urba.png',
 };
 
 // Logos locales (assets SVG) — usan SvgPicture.asset en vez de Image.asset
