@@ -180,14 +180,8 @@ def parse_match(tag, channel_id: str | None, round_name: str) -> dict | None:
         home_score = int_or_none(text_or_none(tag, ".local .resultado"))
         away_score = int_or_none(text_or_none(tag, ".visitante .resultado"))
 
-    timestamp = 0
-    if date_iso:
-        try:
-            timestamp = int(datetime.fromisoformat(date_iso).timestamp())
-        except ValueError:
-            pass
-
     result: dict = {
+        "id":        f"{home_name}_vs_{away_name}_{date_iso[:10] if date_iso else 'hoy'}",
         "date":      date_iso or "",
         "timestamp": timestamp,
         "week":      round_name,

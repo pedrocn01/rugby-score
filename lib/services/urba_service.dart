@@ -240,12 +240,6 @@ class UrbaService {
       final homeLogo    = homeImgUri != null ? 'https://api.urba.org.ar/$homeImgUri' : null;
       final awayLogo    = awayImgUri != null ? 'https://api.urba.org.ar/$awayImgUri' : null;
       final dateStr     = m['playdate'] as String? ?? round['playdate'] as String? ?? '';
-      final videoClub   = m['video_club'] as String? ?? '';
-      final videoTv     = m['video_tv']   as String? ?? '';
-      final videoUrl    = videoClub.isNotEmpty
-          ? 'https://api.urba.org.ar/$videoClub'
-          : (videoTv.isNotEmpty ? 'https://api.urba.org.ar/$videoTv' : null);
-
       // Convertir playdate a timestamp Unix para ordenamiento
       final dt        = DateTime.tryParse(dateStr);
       final timestamp = dt != null ? dt.millisecondsSinceEpoch ~/ 1000 : 0;
@@ -267,7 +261,6 @@ class UrbaService {
           'home': {'name': homeName, 'logo': homeLogo},
           'away': {'name': awayName, 'logo': awayLogo},
         },
-        'video': videoUrl,
       };
     }).toList();
   }

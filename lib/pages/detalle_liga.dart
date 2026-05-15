@@ -1,5 +1,3 @@
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import '../config/leagues.dart';
 import '../config/logos.dart';
@@ -571,7 +569,6 @@ class _DetalleLigaState extends State<DetalleLiga> {
     final hora        = _formatHora(partido['date']);
     final status      = partido['status']?['short'] ?? '';
     final referee     = partido['referee'] as String?;
-    final videoUrl    = partido['video'] as String?;
     final homeWon     = (homeScore is int && awayScore is int) && homeScore > awayScore;
     final awayWon     = (homeScore is int && awayScore is int) && awayScore > homeScore;
 
@@ -657,44 +654,21 @@ class _DetalleLigaState extends State<DetalleLiga> {
                 ],
               ),
             ],
-            if (referee != null || videoUrl != null) ...[
+            if (referee != null) ...[
               const SizedBox(height: 10),
               const Divider(height: 1, color: Color(0xFFEEEEEE)),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  if (referee != null) ...[
-                    const Icon(Icons.sports, size: 13, color: Color(0xFF999999)),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        referee,
-                        style: const TextStyle(fontSize: 11, color: Color(0xFF888888)),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  const Icon(Icons.sports, size: 13, color: Color(0xFF999999)),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      referee,
+                      style: const TextStyle(fontSize: 11, color: Color(0xFF888888)),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ] else
-                    const Spacer(),
-                  if (videoUrl != null)
-                    GestureDetector(
-                      onTap: () => html.window.open(videoUrl, '_blank'),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: widget.theme.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: widget.theme.primary.withValues(alpha: 0.3)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.play_circle_outline, size: 13, color: widget.theme.primary),
-                            const SizedBox(width: 4),
-                            Text('Ver video', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: widget.theme.primary)),
-                          ],
-                        ),
-                      ),
-                    ),
+                  ),
                 ],
               ),
             ],
