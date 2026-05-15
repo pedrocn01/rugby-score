@@ -98,6 +98,7 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
     final hasScore    = homeScore != null && awayScore != null;
     final status      = m['status']?['short'] as String? ?? '';
     final isLive      = _liveStatuses.contains(status);
+    final referee     = m['referee'] as String?;
     final theme       = leagueThemes[widget.league];
     final leagueColor = theme?.primary ?? const Color(0xFF1B4332);
     final homeLogoUrl = clubLogo(_homeName) ?? m['teams']?['home']?['logo']?.toString();
@@ -212,6 +213,19 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
                             ),
                           ],
                         ),
+                        if (referee != null) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.sports, size: 11, color: Colors.white38),
+                              const SizedBox(width: 4),
+                              Text(referee,
+                                style: const TextStyle(color: Colors.white38,
+                                  fontSize: 10, fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),

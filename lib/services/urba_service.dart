@@ -107,7 +107,11 @@ class UrbaService {
           'draw':   {'total': p['tied'] ?? 0},
           'lose':   {'total': p['lost'] ?? 0},
         },
-        'points':      p['points_total'] ?? 0,
+        'points':          p['points_total']    ?? 0,
+        'bonus_offensive': p['bonus_offensive'] ?? 0,
+        'bonus_defensive': p['bonus_defensive'] ?? 0,
+        'points_favor':    p['points_favor']    ?? 0,
+        'points_against':  p['points_against']  ?? 0,
         'description': description,
       };
     }).toList();
@@ -196,9 +200,12 @@ class UrbaService {
         final mh = (m['teams']?['home']?['name'] as String? ?? '').toLowerCase().trim();
         final ma = (m['teams']?['away']?['name'] as String? ?? '').toLowerCase().trim();
         if (mh == lh && ma == la) {
-          matches[i] = Map<String, dynamic>.from(m)
+          final updated = Map<String, dynamic>.from(m)
             ..['status'] = live['status']
             ..['scores'] = live['scores'];
+          if (live['referee'] != null) updated['referee'] = live['referee'];
+          if (live['live_data'] != null) updated['live_data'] = live['live_data'];
+          matches[i] = updated;
           break;
         }
       }
@@ -233,6 +240,11 @@ class UrbaService {
       final homeLogo    = homeImgUri != null ? 'https://api.urba.org.ar/$homeImgUri' : null;
       final awayLogo    = awayImgUri != null ? 'https://api.urba.org.ar/$awayImgUri' : null;
       final dateStr     = m['playdate'] as String? ?? round['playdate'] as String? ?? '';
+      final videoClub   = m['video_club'] as String? ?? '';
+      final videoTv     = m['video_tv']   as String? ?? '';
+      final videoUrl    = videoClub.isNotEmpty
+          ? 'https://api.urba.org.ar/$videoClub'
+          : (videoTv.isNotEmpty ? 'https://api.urba.org.ar/$videoTv' : null);
 
       // Convertir playdate a timestamp Unix para ordenamiento
       final dt        = DateTime.tryParse(dateStr);
@@ -255,6 +267,7 @@ class UrbaService {
           'home': {'name': homeName, 'logo': homeLogo},
           'away': {'name': awayName, 'logo': awayLogo},
         },
+        'video': videoUrl,
       };
     }).toList();
   }

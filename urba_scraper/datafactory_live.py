@@ -141,14 +141,30 @@ def parse_match(tag, channel_id: str | None, round_name: str) -> dict | None:
     else:
         raw_status = "notStarted"
 
+    # ── Árbitro desde el HTML del fixture ────────────────────────────────────
+    referee_raw = text_or_none(
+        tag,
+        ".mc-referee", ".arbitro", ".referee",
+        "[class*='referee']", "[class*='arbitro']",
+    )
+    if referee_raw:
+        # Limpiar prefijo "Árbitro " si lo trae el HTML
+        for prefix in ("Árbitro ", "Arbitro ", "Árb. ", "Arb. "):
+            if referee_raw.startswith(prefix):
+                referee_raw = referee_raw[len(prefix):]
+                break
+    referee = referee_raw or None
+
     home_score: int | None = None
     away_score: int | None = None
     status_short = "NS"
+    live_data: dict | None = None
 
     if raw_status == "inProgress" and channel_id:
         # Pedir livescore para obtener marcador y periodo exactos
         live = fetch_livescore(channel_id)
         if live:
+            live_data = live  # guardar el JSON completo para histórico
             status_short = map_status(live)
             score = live.get("score") or {}
             home_score = int_or_none(score.get("local") or live.get("localScore"))
@@ -171,7 +187,7 @@ def parse_match(tag, channel_id: str | None, round_name: str) -> dict | None:
         except ValueError:
             pass
 
-    return {
+    result: dict = {
         "date":      date_iso or "",
         "timestamp": timestamp,
         "week":      round_name,
@@ -185,6 +201,11 @@ def parse_match(tag, channel_id: str | None, round_name: str) -> dict | None:
             "away": {"name": away_name, "logo": None},
         },
     }
+    if referee:
+        result["referee"] = referee
+    if live_data:
+        result["live_data"] = live_data
+    return result
 
 
 def main():

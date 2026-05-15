@@ -1,3 +1,5 @@
+// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import '../config/leagues.dart';
 import '../config/logos.dart';
@@ -568,6 +570,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
     final fecha       = _formatFecha(partido['date']);
     final hora        = _formatHora(partido['date']);
     final status      = partido['status']?['short'] ?? '';
+    final referee     = partido['referee'] as String?;
+    final videoUrl    = partido['video'] as String?;
     final homeWon     = (homeScore is int && awayScore is int) && homeScore > awayScore;
     final awayWon     = (homeScore is int && awayScore is int) && awayScore > homeScore;
 
@@ -650,6 +654,47 @@ class _DetalleLigaState extends State<DetalleLiga> {
                     const Text('  ·  ', style: TextStyle(color: Color(0xFFCCCCCC))),
                     Text('2T: $homePT2-$awayPT2', style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
                   ],
+                ],
+              ),
+            ],
+            if (referee != null || videoUrl != null) ...[
+              const SizedBox(height: 10),
+              const Divider(height: 1, color: Color(0xFFEEEEEE)),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  if (referee != null) ...[
+                    const Icon(Icons.sports, size: 13, color: Color(0xFF999999)),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        referee,
+                        style: const TextStyle(fontSize: 11, color: Color(0xFF888888)),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ] else
+                    const Spacer(),
+                  if (videoUrl != null)
+                    GestureDetector(
+                      onTap: () => html.window.open(videoUrl, '_blank'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: widget.theme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: widget.theme.primary.withValues(alpha: 0.3)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.play_circle_outline, size: 13, color: widget.theme.primary),
+                            const SizedBox(width: 4),
+                            Text('Ver video', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: widget.theme.primary)),
+                          ],
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ],
@@ -860,6 +905,8 @@ class _DetalleLigaState extends State<DetalleLiga> {
     );
   }
 
+  bool get _isUrbaLeague => urbaApiStandingsLeagues.contains(widget.nombreLiga);
+
   Widget _tablaHeader() {
     return Container(
       decoration: BoxDecoration(
@@ -867,17 +914,26 @@ class _DetalleLigaState extends State<DetalleLiga> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      child: const Row(
-        children: [
-          SizedBox(width: 28, child: Text('#',     style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
-          Expanded(            child: Text('Equipo', style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
-          SizedBox(width: 32, child: Text('PJ',   textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
-          SizedBox(width: 32, child: Text('G',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
-          SizedBox(width: 32, child: Text('E',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
-          SizedBox(width: 32, child: Text('P',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
-          SizedBox(width: 40, child: Text('Pts',  textAlign: TextAlign.center, style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w800, fontSize: 12))),
-        ],
-      ),
+      child: _isUrbaLeague
+          ? const Row(children: [
+              SizedBox(width: 24, child: Text('#',   style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
+              Expanded(            child: Text('Equipo', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12))),
+              SizedBox(width: 28, child: Text('PJ',  textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 28, child: Text('G',   textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 28, child: Text('P',   textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 28, child: Text('B+',  textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 28, child: Text('B-',  textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 36, child: Text('Pts', textAlign: TextAlign.center, style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w800, fontSize: 12))),
+            ])
+          : const Row(children: [
+              SizedBox(width: 28, child: Text('#',     style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w700, fontSize: 12))),
+              Expanded(            child: Text('Equipo', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12))),
+              SizedBox(width: 32, child: Text('PJ',   textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 32, child: Text('G',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 32, child: Text('E',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 32, child: Text('P',    textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12))),
+              SizedBox(width: 40, child: Text('Pts',  textAlign: TextAlign.center, style: TextStyle(color: Colors.white,   fontWeight: FontWeight.w800, fontSize: 12))),
+            ]),
     );
   }
 
@@ -923,6 +979,9 @@ class _DetalleLigaState extends State<DetalleLiga> {
             }
           }
 
+          final bo  = equipo['bonus_offensive'] as int?;
+          final bd  = equipo['bonus_defensive'] as int?;
+
           return Container(
             decoration: BoxDecoration(
               color: rowBg,
@@ -933,19 +992,30 @@ class _DetalleLigaState extends State<DetalleLiga> {
               borderRadius: isLast ? const BorderRadius.vertical(bottom: Radius.circular(14)) : BorderRadius.zero,
             ),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-            child: Row(
-              children: [
-                SizedBox(width: 28, child: Text(pos.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
-                _teamLogoSmall(nombre, apiLogoUrl: logoUrl),
-                const SizedBox(width: 6),
-                Expanded(           child: Text(nombre,         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
-                SizedBox(width: 32, child: Text(pj.toString(),  textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
-                SizedBox(width: 32, child: Text(g.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
-                SizedBox(width: 32, child: Text(e.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
-                SizedBox(width: 32, child: Text(p.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
-                SizedBox(width: 40, child: Text(pts.toString(), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Color(0xFF1A1A1A)))),
-              ],
-            ),
+            child: _isUrbaLeague
+                ? Row(children: [
+                    SizedBox(width: 24, child: Text(pos.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
+                    _teamLogoSmall(nombre, apiLogoUrl: logoUrl),
+                    const SizedBox(width: 6),
+                    Expanded(           child: Text(nombre,                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
+                    SizedBox(width: 28, child: Text(pj.toString(),               textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 28, child: Text(g.toString(),                textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 28, child: Text(p.toString(),                textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 28, child: Text((bo ?? '-').toString(),      textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 28, child: Text((bd ?? '-').toString(),      textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 36, child: Text(pts.toString(),              textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Color(0xFF1A1A1A)))),
+                  ])
+                : Row(children: [
+                    SizedBox(width: 28, child: Text(pos.toString(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: widget.theme.primary))),
+                    _teamLogoSmall(nombre, apiLogoUrl: logoUrl),
+                    const SizedBox(width: 6),
+                    Expanded(           child: Text(nombre,         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1A1A1A)))),
+                    SizedBox(width: 32, child: Text(pj.toString(),  textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 32, child: Text(g.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 32, child: Text(e.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 32, child: Text(p.toString(),   textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Color(0xFF666666)))),
+                    SizedBox(width: 40, child: Text(pts.toString(), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Color(0xFF1A1A1A)))),
+                  ]),
           );
         }).toList(),
       ),
