@@ -4,6 +4,7 @@ import '../config/leagues.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
 import '../widgets/league_card.dart';
+import '../widgets/profile_avatar.dart';
 import '../widgets/rugby_logo.dart';
 import 'carpeta_page.dart';
 import 'detalle_liga.dart';
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             elevation:       0,
             iconTheme:       const IconThemeData(color: Colors.white),
             actions: [
+              const ProfileAvatarButton(),
               IconButton(
                 icon: const Icon(Icons.search_rounded, color: Colors.white),
                 tooltip: 'Buscar equipo',
