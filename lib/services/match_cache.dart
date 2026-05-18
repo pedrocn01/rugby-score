@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import '../config/leagues.dart';
 import '../data/static_data.dart';
 import 'rugby_service.dart';
-import 'urba_service.dart';
 
 class MatchEntry {
   final String league;
@@ -76,22 +75,6 @@ class MatchCache {
             _data.putIfAbsent(leagueName, () => []).add(m);
           }
         }
-      }
-
-      // Inyectar partidos en vivo del URBA Top 14 — solo sábados.
-      try {
-        final urbaLive = await UrbaService().fetchLiveTop14();
-        if (urbaLive != null && urbaLive.isNotEmpty) {
-          const liveStatuses = {'1H', '2H', 'HT', 'ET', 'BT', 'P'};
-          final enVivo = urbaLive
-              .where((m) => liveStatuses.contains(m['status']?['short']))
-              .toList();
-          if (enVivo.isNotEmpty) {
-            _data['URBA Top 14'] = enVivo;
-          }
-        }
-      } catch (e) {
-        debugPrint('❌ MatchCache: error cargando URBA live: $e');
       }
 
       _lastFetch = DateTime.now();

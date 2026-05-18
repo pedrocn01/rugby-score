@@ -69,7 +69,11 @@
       "Bash(python scripts/download_logos.py)",
       "PowerShell(Start-Process \"c:\\\\src\\\\Proyectos\\\\rugby_app\\\\design_preview_favoritos.html\")",
       "Bash(flutter pub *)",
-      "Bash(Remove-Item \"c:\\\\src\\\\Proyectos\\\\rugby_app\\\\lib\\\\config\\\\firebase_options.dart\")"
+      "Bash(Remove-Item \"c:\\\\src\\\\Proyectos\\\\rugby_app\\\\lib\\\\config\\\\firebase_options.dart\")",
+      "WebFetch(domain:espn.datafactory.la)",
+      "Bash(curl -s \"https://api.urba.org.ar/api/rounds\" -H \"User-Agent: Mozilla/5.0\")",
+      "Bash(curl -s \"https://api.urba.org.ar/api/round/20240101\" -H \"User-Agent: Mozilla/5.0\")",
+      "Bash(curl -s \"https://fixture.urba.org.ar/api\" -H \"User-Agent: Mozilla/5.0\")"
     ],
     "additionalDirectories": [
       "c:\\src\\Proyectos\\rugby_app\\assets"

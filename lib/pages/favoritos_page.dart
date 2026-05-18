@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
 import '../services/favorites_service.dart';
-import '../services/notifications_service.dart';
-import '../services/push_notification_service.dart';
 import '../services/match_cache.dart';
 import '../data/static_data.dart';
 import '../services/urba_service.dart';
@@ -610,17 +608,13 @@ class _TeamPickerState extends State<_TeamPicker> {
             // Lista
             Expanded(
               child: ListenableBuilder(
-                listenable: Listenable.merge([
-                  FavoritesService.instance,
-                  NotificationsService.instance,
-                ]),
+                listenable: FavoritesService.instance,
                 builder: (context, _) => ListView.builder(
                   controller: scrollCtrl,
                   itemCount: _filtered.length,
                   itemBuilder: (ctx, i) {
                     final name    = _filtered[i];
                     final isFav   = FavoritesService.instance.isFavorite(name);
-                    final isNotif = NotificationsService.instance.isSubscribed(name);
                     final logo        = clubLogo(name);
                     final networkLogo = logo == null ? _networkLogos[name] : null;
                     final league      = _leagueFor(name);
@@ -667,38 +661,6 @@ class _TeamPickerState extends State<_TeamPicker> {
                                 ],
                               ),
                             ),
-                            // Campana (notificaciones)
-                            InkWell(
-                              onTap: () async {
-                                final result = await PushNotificationService.instance.toggleTeam(name);
-                                if (!context.mounted) return;
-                                if (result == NotifToggleResult.permissionDenied) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Permití las notificaciones en el navegador para activarlas'),
-                                      duration: Duration(seconds: 4),
-                                    ),
-                                  );
-                                } else if (result == NotifToggleResult.tokenError) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Hubo un error al activar las notificaciones. Intentá recargar la página.'),
-                                      duration: Duration(seconds: 5),
-                                    ),
-                                  );
-                                }
-                              },
-                              borderRadius: BorderRadius.circular(20),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Icon(
-                                  isNotif ? Icons.notifications_rounded : Icons.notifications_none_rounded,
-                                  color: isNotif ? const Color(0xFF4CAF50) : Colors.white38,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 4),
                             // Estrella (favoritos)
                             Icon(
                               isFav ? Icons.check_circle_rounded : Icons.circle_outlined,
