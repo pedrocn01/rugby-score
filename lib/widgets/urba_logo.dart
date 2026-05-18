@@ -18,6 +18,11 @@ Widget? urbaLogoWidget(String liga, {double size = 80}) {
     case 'URBA Primera A': return _PrimeraLogo(letra: 'A', color: const Color(0xFF0A2240), size: size);
     case 'URBA Primera B': return _PrimeraLogo(letra: 'B', color: const Color(0xFFB35A00), size: size);
     case 'URBA Primera C': return _PrimeraLogo(letra: 'C', color: const Color(0xFFAA1500), size: size);
+    // ── Segunda / Tercera / Desarrollo / Femenino ─────────────────────────────
+    case 'Segunda':    return _OrdinalLogo(numero: '2', color: const Color(0xFF003A70), size: size);
+    case 'Tercera':    return _OrdinalLogo(numero: '3', color: const Color(0xFF1B5E20), size: size);
+    case 'Desarrollo': return _AbbrevLogo(abbrev: 'DES', color: const Color(0xFF00695C), size: size);
+    case 'Femenino':   return _AbbrevLogo(abbrev: 'FEM', color: const Color(0xFF880E4F), size: size);
     // ── TOP 14 sub-categorías ────────────────────────────────────────────────
     case 'TOP 14 Intermedia':       return _Top14SubdivisionLogo(div: 'INT',   size: size);
     case 'TOP 14 Pre-Intermedia A': return _Top14SubdivisionLogo(div: 'PRE A', size: size);
@@ -431,6 +436,125 @@ class _JuvenilLogo extends StatelessWidget {
               letterSpacing: size * 0.02,
               height:        1.0,
             )),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Logo Segunda / Tercera ───────────────────────────────────────────────────
+
+class _OrdinalLogo extends StatelessWidget {
+  final String numero;
+  final Color  color;
+  final double size;
+  const _OrdinalLogo({required this.numero, required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    final darkColor = Color.lerp(color, Colors.black, 0.55)!;
+    return Container(
+      width:  size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
+          colors: [color, darkColor],
+        ),
+        borderRadius: BorderRadius.circular(size * 0.12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                numero,
+                style: TextStyle(
+                  color:      Colors.white,
+                  fontSize:   size * 0.50,
+                  fontWeight: FontWeight.w900,
+                  height:     1.0,
+                ),
+              ),
+              Text(
+                'ª',
+                style: TextStyle(
+                  color:      Colors.white.withValues(alpha: 0.75),
+                  fontSize:   size * 0.26,
+                  fontWeight: FontWeight.w900,
+                  height:     1.0,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: size * 0.04),
+          Text(
+            'URBA',
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.80),
+              fontSize:      size * 0.13,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.025,
+              height:        1.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Logo Desarrollo / Femenino ───────────────────────────────────────────────
+
+class _AbbrevLogo extends StatelessWidget {
+  final String abbrev;
+  final Color  color;
+  final double size;
+  const _AbbrevLogo({required this.abbrev, required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    final darkColor = Color.lerp(color, Colors.black, 0.55)!;
+    return Container(
+      width:  size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
+          colors: [color, darkColor],
+        ),
+        borderRadius: BorderRadius.circular(size * 0.12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            abbrev,
+            style: TextStyle(
+              color:         Colors.white,
+              fontSize:      size * 0.32,
+              fontWeight:    FontWeight.w900,
+              letterSpacing: size * 0.01,
+              height:        1.0,
+            ),
+          ),
+          SizedBox(height: size * 0.04),
+          Text(
+            'URBA',
+            style: TextStyle(
+              color:         Colors.white.withValues(alpha: 0.80),
+              fontSize:      size * 0.13,
+              fontWeight:    FontWeight.w700,
+              letterSpacing: size * 0.025,
+              height:        1.0,
+            ),
+          ),
         ],
       ),
     );
