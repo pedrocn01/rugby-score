@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -24,7 +11,7 @@
   <meta name="robots" content="index, follow">
   <meta name="google-site-verification" content="a0Ealh-yxkA9bYfp7XC3FnKH8SGlmrsUpYT5ZXNQhDM" />
 
-  <!-- Open Graph (para compartir en redes sociales) -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Rugby Score — Resultados en vivo">
   <meta property="og:description" content="Resultados en vivo, tablas de posiciones y fixtures del rugby argentino y mundial.">
   <meta property="og:type" content="website">
@@ -38,7 +25,7 @@
   <meta name="twitter:description" content="Resultados en vivo, tablas de posiciones y fixtures del rugby argentino y mundial.">
   <meta name="twitter:image" content="https://rugby-score-umber.vercel.app/icons/Icon-512.png">
 
-  <!-- iOS meta tags & icons -->
+  <!-- iOS -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -52,6 +39,53 @@
   <title>Rugby Score — Resultados de Rugby en Vivo</title>
   <link rel="manifest" href="manifest.json">
 
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0A0A0A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Georgia, serif;
+    }
+
+    #loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #loading-title {
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 3px;
+    }
+
+    #loading-sub {
+      color: rgba(255,255,255,0.4);
+      font-size: 9px;
+      letter-spacing: 2px;
+      margin-top: -12px;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 2px solid transparent;
+      border-top-color: #4CAF50;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
   <!-- Vercel Analytics -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -59,14 +93,12 @@
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
+  <div id="loading">
+    <div id="loading-title">RUGBY SCORE</div>
+    <div id="loading-sub">Resultados · Tablas · Fixtures</div>
+    <div class="spinner"></div>
+  </div>
 
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
