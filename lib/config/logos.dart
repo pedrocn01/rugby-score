@@ -17,6 +17,10 @@ const Map<String, String> folderLogoUrls = {
 // Logos locales (assets SVG) — usan SvgPicture.asset en vez de Image.asset
 const Map<String, String> folderLogoAssets = {
   'Torneo del Interior': 'assets/logos/torneo_interior.svg',
+  'Segunda':             'assets/logos/folder_segunda.svg',
+  'Tercera':             'assets/logos/folder_tercera.svg',
+  'Desarrollo':          'assets/logos/folder_desarrollo.svg',
+  'Femenino':            'assets/logos/folder_femenino.svg',
 };
 
 // ─── Logos de clubes ──────────────────────────────────────────────────────

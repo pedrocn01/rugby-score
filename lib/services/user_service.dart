@@ -41,13 +41,18 @@ class UserService extends ChangeNotifier {
 
   Future<void> loadProfile(String uid) async {
     try {
-      final doc = await _db.collection('users').doc(uid).get();
+      final doc = await _db
+          .collection('users')
+          .doc(uid)
+          .get()
+          .timeout(const Duration(seconds: 5));
       if (doc.exists) {
         _profile = UserProfile.fromMap(uid, doc.data()!);
         notifyListeners();
       }
     } catch (e) {
       debugPrint('❌ UserService.loadProfile: $e');
+      // Profile stays null → OnboardingPage will be shown
     }
   }
 

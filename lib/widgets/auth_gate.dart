@@ -15,11 +15,16 @@ class AuthGate extends StatefulWidget {
 class _AuthGateState extends State<AuthGate> {
   String? _lastUid;
   Future<void>? _loadFuture;
+  bool _authTimedOut = false;
 
   @override
   void initState() {
     super.initState();
     UserService.instance.addListener(_onProfileChanged);
+    // Safety valve: if the auth stream never emits, bail to login after 6 seconds
+    Future.delayed(const Duration(seconds: 6), () {
+      if (mounted && !_authTimedOut) setState(() => _authTimedOut = true);
+    });
   }
 
   @override
@@ -35,11 +40,17 @@ class _AuthGateState extends State<AuthGate> {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _Splash();
+        // Use currentUser synchronously while stream initialises —
+        // avoids the splash on cached sessions.
+        final User? user = snapshot.data ??
+            (snapshot.connectionState == ConnectionState.waiting
+                ? FirebaseAuth.instance.currentUser
+                : null);
+
+        if (snapshot.connectionState == ConnectionState.waiting && user == null) {
+          return _authTimedOut ? const LoginPage() : const _Splash();
         }
 
-        final user = snapshot.data;
         if (user == null) {
           _lastUid = null;
           _loadFuture = null;
