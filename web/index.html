@@ -99,6 +99,30 @@
     <div class="spinner"></div>
   </div>
 
+  <script>
+    // Cuando hay una nueva versión del service worker, activarla de inmediato
+    // y recargar la página para que los usuarios siempre vean el último deploy.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.ready.then(reg => {
+          reg.update();
+          reg.addEventListener('updatefound', () => {
+            const sw = reg.installing;
+            if (!sw) return;
+            sw.addEventListener('statechange', () => {
+              if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+                sw.postMessage('skip-waiting');
+              }
+            });
+          });
+        });
+      });
+    }
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
