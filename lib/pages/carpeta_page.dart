@@ -338,7 +338,8 @@ class _FolderRowState extends State<_FolderRow> {
       case 'Segunda':   return const Color(0xFF003A70);
       case 'Tercera':   return const Color(0xFF1B5E20);
       case 'Desarrollo':return const Color(0xFF00695C);
-      case 'Femenino':  return const Color(0xFF880E4F);
+      case 'Femenino':       return const Color(0xFF880E4F);
+      case 'Universitario':  return const Color(0xFF1A237E);
       case 'M-19':      return const Color(0xFFB84800);
       case 'M-17':      return const Color(0xFF9E3700);
       case 'M-16':      return const Color(0xFF8A2F00);

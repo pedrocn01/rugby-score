@@ -128,6 +128,9 @@ const Map<String, int> leagueIds = {
   'M-15 G1 B':                     -86,
   'M-15 G1 Formativa A':           -87,
   'M-15 G1 Formativa B':           -88,
+  // ── Universitario (CURUBA) ─────────────────────────────────────────────────
+  'Universitario Superior':        -89,
+  'Universitario Intermedia':      -90,
   // Circuito 7s
   '7s Dubai':                  111,
   '7s Sudáfrica':              112,
@@ -224,6 +227,9 @@ const Set<String> urbaApiStandingsLeagues = {
   'Femenino TOP 9',
   'Femenino Primera División',
   'Femenino Segunda División',
+  // Universitario (CURUBA)
+  'Universitario Superior',
+  'Universitario Intermedia',
   // M-19
   'M-19 G1 A',
   'M-19 G1 B',
@@ -288,7 +294,9 @@ const Set<String> noRelegationLeagues = {
   'Super Rugby Pacific',
   'Super Rugby Américas',
   'TDI A 2026',
-  // Femenino y Juveniles: sin marcadores de descenso/ascenso
+  // Universitario, Femenino y Juveniles: sin marcadores de descenso/ascenso
+  'Universitario Superior',
+  'Universitario Intermedia',
   'Femenino TOP 9',
   'Femenino Primera División',
   'Femenino Segunda División',
@@ -358,7 +366,11 @@ const Map<String, List<String>> folders = {
     'Femenino Primera División',
     'Femenino Segunda División',
   ],
-  'URBA': ['TOP 14', 'Primera A', 'Primera B', 'Primera C', 'Segunda', 'Tercera', 'Desarrollo', 'Femenino'],
+  'Universitario': [
+    'Universitario Superior',
+    'Universitario Intermedia',
+  ],
+  'URBA': ['TOP 14', 'Primera A', 'Primera B', 'Primera C', 'Segunda', 'Tercera', 'Desarrollo', 'Femenino', 'Universitario'],
   'M-19': [
     'M-19 G1 A',
     'M-19 G1 B',
