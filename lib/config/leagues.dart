@@ -3,11 +3,11 @@
 
 // ─── IDs de liga → temporada ───────────────────────────────────────────────
 const Map<int, int> leagueSeasons = {
-  16: 2025, // Top 14
-  13: 2025, // Premiership
-  76: 2025, // United Rugby Championship
-  54: 2025, // Champions Cup
-  52: 2025, // Challenge Cup
+  16: 2026, // Top 14
+  13: 2026, // Premiership
+  76: 2026, // United Rugby Championship
+  54: 2026, // Champions Cup
+  52: 2026, // Challenge Cup
   71: 2026, // Super Rugby Pacific
   51: 2026, // Seis Naciones
   85: 2025, // The Rugby Championship
