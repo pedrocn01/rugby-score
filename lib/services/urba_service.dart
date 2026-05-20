@@ -87,6 +87,8 @@ const Map<String, int> urbaChampionshipIds = {
   'M-16 G1 B':                     2025252,
   'M-16 G1 Formativa A':           2025253,
   'M-16 G1 Formativa B':           2025254,
+  // ── Universitario (CURUBA) ─────────────────────────────────────────────────
+  'Rugby Universitario':           2025212,
   // ── M-15 ───────────────────────────────────────────────────────────────────
   'M-15 G2 Nivel 1 A':             2025255,
   'M-15 G2 Nivel 1 A Eq B':        2025256,
