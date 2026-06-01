@@ -4,7 +4,15 @@ import '../services/user_service.dart';
 
 class OnboardingPage extends StatefulWidget {
   final String uid;
-  const OnboardingPage({super.key, required this.uid});
+  final bool isChangingTeam;
+  final String? currentTeam;
+
+  const OnboardingPage({
+    super.key,
+    required this.uid,
+    this.isChangingTeam = false,
+    this.currentTeam,
+  });
 
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
@@ -24,10 +32,18 @@ class _OnboardingPageState extends State<OnboardingPage>
       'Brazil', 'Namibia', 'Canada', 'Kenya', 'Hong Kong', 'Spain',
       'Belgium', 'Germany', 'Netherlands',
     ],
-    'URBA': [
+    'URBA Top 14': [
       'Hindú', 'Alumni', 'SIC', 'CASI', 'Belgrano Athletic', 'Los Tilos',
       'Regatas', 'Atlético del Rosario', 'Los Matreros', 'CUBA', 'Newman',
       'Champagnat', 'Buenos Aires CRC', 'La Plata',
+    ],
+    'URBA Otras': [
+      'San Albano', 'Pucará', 'Old Christians', 'Hurling', 'Arquitectura',
+      'Liceo Naval', 'Banco Nación', 'Curupayti', 'Ateneo de Rugby',
+      'Argentina RC', 'Lomas AC', 'Belgrano RC', 'San Fernando RC',
+      'Old Georgians', 'Palermo Bohemian', 'San Patricio', 'Rowing Club',
+      'Villa del Parque', 'Oriental RC', 'Tigres RC', 'Old Resian',
+      'Mariano Moreno', 'Sociedad Hebraica', 'San Isidro RC', 'Universitario BA',
     ],
     'TDI': [
       'Tucumán Rugby', 'Gimnasia y Esgrima de Rosario', 'Marista RC', 'Duendes RC',
@@ -56,7 +72,22 @@ class _OnboardingPageState extends State<OnboardingPage>
   @override
   void initState() {
     super.initState();
+    _selected = widget.currentTeam;
     _tabCtrl = TabController(length: _categories.length, vsync: this);
+    if (widget.currentTeam != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _jumpToTeamTab(widget.currentTeam!));
+    }
+  }
+
+  void _jumpToTeamTab(String team) {
+    int idx = 0;
+    for (final entry in _categories.entries) {
+      if (entry.value.contains(team)) {
+        _tabCtrl.animateTo(idx);
+        break;
+      }
+      idx++;
+    }
   }
 
   @override
@@ -68,12 +99,24 @@ class _OnboardingPageState extends State<OnboardingPage>
   Future<void> _confirm() async {
     if (_selected == null) return;
     setState(() => _saving = true);
-    await UserService.instance.saveProfile(UserProfile(
-      uid: widget.uid,
-      hinchaTeam: _selected!,
-      favoriteTeams: [_selected!],
-    ));
-    // AuthGate rebuild automático via UserService.notifyListeners()
+
+    if (widget.isChangingTeam) {
+      final existing = UserService.instance.profile?.favoriteTeams ?? [];
+      final updated = existing.contains(_selected!) ? existing : [...existing, _selected!];
+      await UserService.instance.saveProfile(UserProfile(
+        uid: widget.uid,
+        hinchaTeam: _selected!,
+        favoriteTeams: updated,
+      ));
+      if (mounted) Navigator.pop(context);
+    } else {
+      await UserService.instance.saveProfile(UserProfile(
+        uid: widget.uid,
+        hinchaTeam: _selected!,
+        favoriteTeams: [_selected!],
+      ));
+      // AuthGate rebuild automático via UserService.notifyListeners()
+    }
   }
 
   @override
@@ -83,21 +126,22 @@ class _OnboardingPageState extends State<OnboardingPage>
       appBar: AppBar(
         backgroundColor: const Color(0xFF111111),
         elevation: 0,
-        automaticallyImplyLeading: false,
-        title: const Column(
+        automaticallyImplyLeading: widget.isChangingTeam,
+        iconTheme: const IconThemeData(color: Colors.white70),
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '¿De qué equipo sos hincha?',
-              style: TextStyle(
+              widget.isChangingTeam ? 'Cambiá tu equipo' : '¿De qué equipo sos hincha?',
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
               ),
             ),
             Text(
-              'Elegí tu equipo principal',
-              style: TextStyle(color: Colors.white38, fontSize: 11),
+              widget.isChangingTeam ? 'Elegí tu nuevo equipo principal' : 'Elegí tu equipo principal',
+              style: const TextStyle(color: Colors.white38, fontSize: 11),
             ),
           ],
         ),
@@ -229,7 +273,9 @@ class _OnboardingPageState extends State<OnboardingPage>
                           )
                         : Text(
                             _selected != null
-                                ? 'Confirmar — $_selected'
+                                ? widget.isChangingTeam
+                                    ? 'Actualizar — $_selected'
+                                    : 'Confirmar — $_selected'
                                 : 'Elegí un equipo',
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,

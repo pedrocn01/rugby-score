@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../config/logos.dart';
+import '../pages/onboarding_page.dart';
 import '../services/auth_service.dart';
 import '../services/user_service.dart';
 
@@ -41,6 +42,28 @@ class ProfileAvatarButton extends StatelessWidget {
               ),
             const SizedBox(height: 24),
             const Divider(color: Colors.white12),
+            ListTile(
+              leading: const Icon(Icons.swap_horiz_rounded, color: Color(0xFF4CAF50)),
+              title: const Text(
+                'Cambiar equipo',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                final uid = FirebaseAuth.instance.currentUser?.uid;
+                if (uid == null) return;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => OnboardingPage(
+                      uid: uid,
+                      isChangingTeam: true,
+                      currentTeam: profile?.hinchaTeam,
+                    ),
+                  ),
+                );
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.logout_rounded, color: Colors.redAccent),
               title: const Text(
