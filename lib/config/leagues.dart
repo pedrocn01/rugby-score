@@ -13,14 +13,6 @@ const Map<int, int> leagueSeasons = {
   85: 2025, // The Rugby Championship
   41: 2026, // Super Rugby Américas
   145: 2026, // Nations Championship
-  // Circuito 7s
-  111: 2025, // 7s Dubai
-  112: 2025, // 7s Sudáfrica
-  120: 2026, // 7s Singapore
-  110: 2026, // 7s Australia
-  119: 2026, // 7s Canadá
-  114: 2026, // 7s USA
-  115: 2026, // 7s Hong Kong
 };
 
 // ─── Nombre en UI → ID de liga ─────────────────────────────────────────────
@@ -441,8 +433,8 @@ const Map<String, List<String>> folders = {
 
 // ─── Secciones del home ───────────────────────────────────────────────────
 const Map<String, List<String>> sections = {
-  'LOCALES':          ['URBA', 'Torneo del Interior', 'URBA - Juveniles'],
+  'LOCALES':          ['URBA', 'URBA - Juveniles'],
   'EUROPA':           ['Top 14', 'Premiership', 'United Rugby Championship', 'Champions Cup', 'Challenge Cup'],
   'SUPER RUGBY':      ['Super Rugby Pacific', 'Super Rugby Américas'],
-  'INTERNACIONAL':    ['Nations Championship', 'Seis Naciones', 'The Rugby Championship', 'Circuito 7s'],
+  'INTERNACIONAL':    ['Nations Championship', 'Seis Naciones', 'The Rugby Championship'],
 };

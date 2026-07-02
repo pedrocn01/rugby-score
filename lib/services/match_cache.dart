@@ -98,12 +98,6 @@ class MatchCache {
         }
       }
 
-      // Ligas estáticas (TDI A 2026): inyectar sus partidos directamente.
-      for (final league in staticLeagues) {
-        final matches = StaticDataService.getMatches(league);
-        if (matches.isNotEmpty) _data[league] = matches;
-      }
-
       _lastFetch = DateTime.now();
     } finally {
       _loading = false;
