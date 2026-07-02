@@ -159,6 +159,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     });
   }
 
+  void _goTab(BuildContext ctx, String name, int tab) {
+    final id    = leagueIds[name] ?? 0;
+    final theme = leagueThemes[name] ?? const LeagueTheme(
+      primary: Color(0xFF1B4332), accent: Color(0xFF40916C), background: Color(0xFFE8F5EE),
+    );
+    Navigator.push(ctx, MaterialPageRoute(
+      builder: (_) => DetalleLiga(
+        nombreLiga:            name,
+        leagueId:              id,
+        theme:                 theme,
+        isStatic:              staticLeagues.contains(name),
+        isStaticStandingsOnly: staticStandingsOnly.contains(name),
+        initialTab:            tab,
+      ),
+    ));
+  }
+
   void _go(BuildContext ctx, String name) {
     if (folders.containsKey(name)) {
       final ligas = folders[name]!;
@@ -239,13 +256,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 if (_loaded && _weekendCount > 0)
                   _StripBar(count: _weekendCount),
 
-                // Hero internacional
+                // Hero internacional — abre en tab PRÓXIMOS (idx 2)
                 if (_heroLeague != null)
                   _HeroCard(
                     league:  _heroLeague!,
                     matches: _heroMatches,
                     total:   _heroTotal,
-                    onTap:   () => _go(context, _heroLeague!),
+                    onTap:   () => _goTab(context, _heroLeague!, 2),
                   ),
 
                 // Hero URBA
@@ -255,35 +272,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     matchCount: _urbaCount,
                     onTap:      () => _go(context, 'URBA'),
                   ),
-
-                // ── INTERNACIONAL ────────────────────────────────────────
-                const _SectionLabel('Internacional'),
-                ..._internacionalOrder
-                    .where((l) => l != _heroLeague)
-                    .map((l) => _LeagueRow(
-                          name:  l,
-                          sub:   _subs[l] ?? '',
-                          status: _status[l],
-                          onTap: () => _go(context, l),
-                        )),
-
-                // ── SUPER RUGBY ──────────────────────────────────────────
-                const _SectionLabel('Super Rugby'),
-                ..._superRugbyOrder.map((l) => _LeagueRow(
-                      name:  l,
-                      sub:   _subs[l] ?? '',
-                      status: _status[l],
-                      onTap: () => _go(context, l),
-                    )),
-
-                // ── EUROPA ───────────────────────────────────────────────
-                const _SectionLabel('Europa'),
-                ..._europaOrder.map((l) => _LeagueRow(
-                      name:  l,
-                      sub:   _subs[l] ?? '',
-                      status: _status[l],
-                      onTap: () => _go(context, l),
-                    )),
 
                 // ── LOCALES ──────────────────────────────────────────────
                 const _SectionLabel('Locales'),
@@ -301,6 +289,35 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   color: const Color(0xFFB84800),
                   onTap: () => _go(context, 'URBA - Juveniles'),
                 ),
+
+                // ── EUROPA ───────────────────────────────────────────────
+                const _SectionLabel('Europa'),
+                ..._europaOrder.map((l) => _LeagueRow(
+                      name:  l,
+                      sub:   _subs[l] ?? '',
+                      status: _status[l],
+                      onTap: () => _go(context, l),
+                    )),
+
+                // ── SUPER RUGBY ──────────────────────────────────────────
+                const _SectionLabel('Super Rugby'),
+                ..._superRugbyOrder.map((l) => _LeagueRow(
+                      name:  l,
+                      sub:   _subs[l] ?? '',
+                      status: _status[l],
+                      onTap: () => _go(context, l),
+                    )),
+
+                // ── INTERNACIONAL ────────────────────────────────────────
+                const _SectionLabel('Internacional'),
+                ..._internacionalOrder
+                    .where((l) => l != _heroLeague)
+                    .map((l) => _LeagueRow(
+                          name:  l,
+                          sub:   _subs[l] ?? '',
+                          status: _status[l],
+                          onTap: () => _go(context, l),
+                        )),
 
                 const _FooterWidget(),
               ]),

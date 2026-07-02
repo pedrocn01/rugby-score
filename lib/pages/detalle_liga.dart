@@ -18,6 +18,7 @@ class DetalleLiga extends StatefulWidget {
   final LeagueTheme theme;
   final bool isStatic;
   final bool isStaticStandingsOnly;
+  final int initialTab;
 
   const DetalleLiga({
     super.key,
@@ -26,6 +27,7 @@ class DetalleLiga extends StatefulWidget {
     required this.theme,
     this.isStatic = false,
     this.isStaticStandingsOnly = false,
+    this.initialTab = 0,
   });
 
   @override
@@ -448,6 +450,7 @@ class _DetalleLigaState extends State<DetalleLiga> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
+      initialIndex: widget.initialTab,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         drawer: const AppDrawer(),

@@ -78,11 +78,8 @@ class MatchCache {
         }
       }
 
-      // Ligas URBA: no están en api-sports, vienen de la API de URBA.
-      // Solo las 4 divisiones principales para no saturar el feed.
-      const urbaFeedLeagues = [
-        'URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C',
-      ];
+      // Liga URBA: solo el Top 14 en el feed global (Próximos y En Vivo).
+      const urbaFeedLeagues = ['URBA Top 14'];
       final urba = UrbaService();
       final urbaResults = await Future.wait(
         urbaFeedLeagues.map((name) => urba

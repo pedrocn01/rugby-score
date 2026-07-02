@@ -271,8 +271,9 @@ class _ProximoCard extends StatelessWidget {
     if (date == null || date.length < 16) return '';
     try {
       final dt = DateTime.parse(date).toLocal();
-      final h  = dt.hour.toString().padLeft(2, '0');
-      final m  = dt.minute.toString().padLeft(2, '0');
+      if (dt.hour == 0 && dt.minute == 0) return '';
+      final h = dt.hour.toString().padLeft(2, '0');
+      final m = dt.minute.toString().padLeft(2, '0');
       return '$h:$m';
     } catch (_) {
       return '';

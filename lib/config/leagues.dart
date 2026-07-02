@@ -157,6 +157,8 @@ const Set<String> espnStandingsLeagues = {
 const Set<String> computeStandingsLeagues = {
   'Nations Championship',
   'Super Rugby Américas',
+  'Top 14',
+  'Premiership',
   '7s Dubai',
   '7s Sudáfrica',
   '7s Singapore',
