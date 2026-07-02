@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/leagues.dart';
-import '../config/logos.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/team_logo.dart';
 import '../widgets/urba_logo.dart';
 import '../config/themes.dart';
 import '../data/static_data.dart';
@@ -695,58 +695,11 @@ class _DetalleLigaState extends State<DetalleLiga> {
     );
   }
 
-  Widget _teamInitials(String teamName, double size) {
-    final initial = teamName.isNotEmpty ? teamName[0].toUpperCase() : '?';
-    return Container(
-      width: size, height: size,
-      decoration: BoxDecoration(
-        color: widget.theme.primary.withValues(alpha: 0.15),
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          initial,
-          style: TextStyle(
-            fontSize: size * 0.5,
-            fontWeight: FontWeight.w800,
-            color: widget.theme.primary,
-          ),
-        ),
-      ),
-    );
-  }
+  Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) =>
+      TeamLogo(name: teamName, apiUrl: apiLogoUrl, size: 20);
 
-  Widget _teamLogoSmall(String teamName, {String? apiLogoUrl}) {
-    final url = clubLogo(teamName) ?? apiLogoUrl;
-    if (url == null) return _teamInitials(teamName, 20);
-    if (url.startsWith('assets/')) {
-      return Image.asset(url, width: 20, height: 20, fit: BoxFit.contain,
-        errorBuilder: (_, e, s) => apiLogoUrl != null
-          ? Image.network(apiLogoUrl, width: 20, height: 20, fit: BoxFit.contain,
-              cacheWidth: 40, cacheHeight: 40,
-              errorBuilder: (_, e2, s2) => _teamInitials(teamName, 20))
-          : _teamInitials(teamName, 20));
-    }
-    return Image.network(url, width: 20, height: 20, fit: BoxFit.contain,
-      cacheWidth: 40, cacheHeight: 40,
-      errorBuilder: (_, e, s) => _teamInitials(teamName, 20));
-  }
-
-  Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) {
-    final url = clubLogo(teamName) ?? apiLogoUrl;
-    if (url == null) return _teamInitials(teamName, size);
-    if (url.startsWith('assets/')) {
-      return Image.asset(url, width: size, height: size, fit: BoxFit.contain,
-        errorBuilder: (_, e, s) => apiLogoUrl != null
-          ? Image.network(apiLogoUrl, width: size, height: size, fit: BoxFit.contain,
-              cacheWidth: 64, cacheHeight: 64,
-              errorBuilder: (_, e2, s2) => _teamInitials(teamName, size))
-          : _teamInitials(teamName, size));
-    }
-    return Image.network(url, width: size, height: size, fit: BoxFit.contain,
-      cacheWidth: 64, cacheHeight: 64,
-      errorBuilder: (_, e, s) => _teamInitials(teamName, size));
-  }
+  Widget _teamLogo(String teamName, {double size = 28, String? apiLogoUrl}) =>
+      TeamLogo(name: teamName, apiUrl: apiLogoUrl, size: size);
 
   static const _liveStatuses = {'1H', '2H', 'HT', 'ET', 'BT', 'P'};
 

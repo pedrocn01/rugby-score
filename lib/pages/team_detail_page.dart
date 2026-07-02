@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/logos.dart';
 import '../config/themes.dart';
+import '../widgets/team_logo.dart';
 import '../services/favorites_service.dart';
 import '../data/static_data.dart';
 import '../services/match_cache.dart';
@@ -188,18 +189,17 @@ class _TeamDetailPageState extends State<TeamDetailPage> {
                       width: 72, height: 72,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.08),
+                        color: Colors.white,
                         border: Border.all(
                           color: const Color(0xFF4CAF50).withValues(alpha: 0.4),
                           width: 2,
                         ),
                       ),
-                      child: ClipOval(
-                        child: logoPath != null
-                            ? Image.asset(logoPath, fit: BoxFit.contain,
-                                errorBuilder: (_, e, st) => _initials(widget.teamName))
-                            : _initials(widget.teamName),
-                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: logoPath != null
+                          ? Image.asset(logoPath, fit: BoxFit.contain,
+                              errorBuilder: (_, _, _) => _initials(widget.teamName))
+                          : _initials(widget.teamName),
                     ),
                     const SizedBox(height: 10),
                     // Nombre
@@ -579,17 +579,7 @@ class _TeamLogo extends StatelessWidget {
   const _TeamLogo({required this.name, this.apiUrl});
 
   @override
-  Widget build(BuildContext context) {
-    final url = clubLogo(name) ?? apiUrl;
-    if (url == null) return const SizedBox(width: 22, height: 22);
-    if (url.startsWith('assets/')) {
-      return Image.asset(url, width: 22, height: 22, fit: BoxFit.contain,
-        errorBuilder: (_, e, st) => const SizedBox(width: 22));
-    }
-    return Image.network(url, width: 22, height: 22, fit: BoxFit.contain,
-      cacheWidth: 44,
-      errorBuilder: (_, e, st) => const SizedBox(width: 22));
-  }
+  Widget build(BuildContext context) => TeamLogo(name: name, apiUrl: apiUrl, size: 22);
 }
 
 // ─── Sin datos ────────────────────────────────────────────────────────────────

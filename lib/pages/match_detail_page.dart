@@ -4,6 +4,7 @@ import '../config/themes.dart';
 import '../services/match_cache.dart';
 import '../services/urba_service.dart';
 import '../services/espn_lineup_service.dart';
+import '../widgets/team_logo.dart';
 import 'team_detail_page.dart';
 
 class _Entry {
@@ -288,13 +289,26 @@ class _Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (url == null) return _initials(name, size);
+
+    Widget img;
     if (url!.startsWith('assets/')) {
-      return Image.asset(url!, width: size, height: size, fit: BoxFit.contain,
-        errorBuilder: (_, e, s) => _initials(name, size));
+      img = Image.asset(url!, width: size, height: size, fit: BoxFit.contain,
+        errorBuilder: (_, _, _) => _initials(name, size));
+    } else {
+      img = Image.network(url!, width: size, height: size, fit: BoxFit.contain,
+        cacheWidth: (size * 2).toInt(),
+        errorBuilder: (_, _, _) => _initials(name, size));
     }
-    return Image.network(url!, width: size, height: size, fit: BoxFit.contain,
-      cacheWidth: (size * 2).toInt(),
-      errorBuilder: (_, e, s) => _initials(name, size));
+
+    return Container(
+      width: size, height: size,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(size * 0.18),
+      ),
+      padding: EdgeInsets.all(size * 0.1),
+      child: img,
+    );
   }
 
   Widget _initials(String n, double s) {
@@ -524,17 +538,8 @@ class _TeamLogo extends StatelessWidget {
   const _TeamLogo({required this.name, this.apiUrl});
 
   @override
-  Widget build(BuildContext context) {
-    final url = clubLogo(name) ?? apiUrl;
-    if (url == null) return const SizedBox(width: 22, height: 22);
-    if (url.startsWith('assets/')) {
-      return Image.asset(url, width: 22, height: 22, fit: BoxFit.contain,
-        errorBuilder: (_, e, s) => const SizedBox(width: 22));
-    }
-    return Image.network(url, width: 22, height: 22, fit: BoxFit.contain,
-      cacheWidth: 44,
-      errorBuilder: (_, e, s) => const SizedBox(width: 22));
-  }
+  Widget build(BuildContext context) =>
+      TeamLogo(name: name, apiUrl: apiUrl, size: 22);
 }
 
 // ─── Formaciones ──────────────────────────────────────────────────────────────

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../config/logos.dart';
 import '../services/match_cache.dart';
 import '../widgets/pulse_dot.dart';
+import '../widgets/team_logo.dart';
 import 'match_detail_page.dart';
 
 class LivePage extends StatefulWidget {
@@ -159,8 +159,6 @@ class _LiveCard extends StatelessWidget {
     final m            = entry.match;
     final home         = m['teams']?['home']?['name'] as String? ?? 'Local';
     final away         = m['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final homeLogoUrl  = clubLogo(home) ?? m['teams']?['home']?['logo']?.toString();
-    final awayLogoUrl  = clubLogo(away) ?? m['teams']?['away']?['logo']?.toString();
     final homeScore    = m['scores']?['home'] ?? '-';
     final awayScore    = m['scores']?['away'] ?? '-';
     final status       = m['status']?['short'] as String? ?? '';
@@ -215,12 +213,7 @@ class _LiveCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (homeLogoUrl != null)
-                        homeLogoUrl.startsWith('assets/')
-                          ? Image.asset(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain)
-                          : Image.network(homeLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
-                              cacheWidth: 64, cacheHeight: 64,
-                              errorBuilder: (_, e, s) => const SizedBox(height: 32)),
+                      TeamLogo(name: home, apiUrl: m['teams']?['home']?['logo']?.toString(), size: 32),
                       const SizedBox(height: 4),
                       Text(home, textAlign: TextAlign.right,
                         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)),
@@ -244,12 +237,7 @@ class _LiveCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (awayLogoUrl != null)
-                        awayLogoUrl.startsWith('assets/')
-                          ? Image.asset(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain)
-                          : Image.network(awayLogoUrl, width: 32, height: 32, fit: BoxFit.contain,
-                              cacheWidth: 64, cacheHeight: 64,
-                              errorBuilder: (_, e, s) => const SizedBox(height: 32)),
+                      TeamLogo(name: away, apiUrl: m['teams']?['away']?['logo']?.toString(), size: 32),
                       const SizedBox(height: 4),
                       Text(away, textAlign: TextAlign.left,
                         style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 13)),

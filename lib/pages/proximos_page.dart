@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../config/logos.dart';
 import '../services/match_cache.dart';
+import '../widgets/team_logo.dart';
 import 'match_detail_page.dart';
 class ProximosPage extends StatefulWidget {
   const ProximosPage({super.key});
@@ -283,8 +283,6 @@ class _ProximoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final home         = match['teams']?['home']?['name'] as String? ?? 'Local';
     final away         = match['teams']?['away']?['name'] as String? ?? 'Visitante';
-    final homeLogoUrl  = clubLogo(home) ?? match['teams']?['home']?['logo']?.toString();
-    final awayLogoUrl  = clubLogo(away) ?? match['teams']?['away']?['logo']?.toString();
     final hora         = _formatHora(match['date'] as String?);
     final status       = match['status']?['short'] as String? ?? 'NS';
     final homeScore    = match['scores']?['home'];
@@ -347,14 +345,9 @@ class _ProximoCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    if (homeLogoUrl != null)
                       Padding(
                         padding: const EdgeInsets.only(right: 6),
-                        child: homeLogoUrl.startsWith('assets/')
-                          ? Image.asset(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain)
-                          : Image.network(homeLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
-                              cacheWidth: 36, cacheHeight: 36,
-                              errorBuilder: (_, e, s) => const SizedBox(width: 18)),
+                        child: TeamLogo(name: home, apiUrl: match['teams']?['home']?['logo']?.toString(), size: 18),
                       ),
                     Expanded(
                       child: Text(home,
@@ -369,14 +362,9 @@ class _ProximoCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    if (awayLogoUrl != null)
                       Padding(
                         padding: const EdgeInsets.only(right: 6),
-                        child: awayLogoUrl.startsWith('assets/')
-                          ? Image.asset(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain)
-                          : Image.network(awayLogoUrl, width: 18, height: 18, fit: BoxFit.contain,
-                              cacheWidth: 36, cacheHeight: 36,
-                              errorBuilder: (_, e, s) => const SizedBox(width: 18)),
+                        child: TeamLogo(name: away, apiUrl: match['teams']?['away']?['logo']?.toString(), size: 18),
                       ),
                     Expanded(
                       child: Text(away,
