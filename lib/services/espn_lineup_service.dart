@@ -26,10 +26,14 @@ class EspnLineupService {
   static const _base = 'https://site.api.espn.com/apis/site/v2/sports/rugby';
 
   static const Map<String, int> _espnLeagueIds = {
-    'Nations Championship': 17567,
-    'Seis Naciones':        182527,
+    'Nations Championship':   17567,
+    'Seis Naciones':          182527,
     'The Rugby Championship': 164205,
   };
+
+  // ESPN devuelve los 15 titulares en este orden cuando jerseyNumber es null:
+  // backs de atrás hacia adelante (15→9), luego forwards (1→8).
+  static const _espnStarterOrder = [15, 14, 13, 12, 11, 10, 9, 1, 2, 3, 4, 5, 6, 7, 8];
 
   static bool supportsLineups(String league) => _espnLeagueIds.containsKey(league);
 
@@ -77,15 +81,22 @@ class EspnLineupService {
         final subs     = <LineupPlayer>[];
 
         for (int i = 0; i < players.length; i++) {
-          final p   = players[i] as Map<String, dynamic>;
-          final ath = p['athlete'] as Map<String, dynamic>?;
+          final p    = players[i] as Map<String, dynamic>;
+          final ath  = p['athlete'] as Map<String, dynamic>?;
           final name = ath?['displayName'] as String? ?? '?';
           final pos  = p['position']?['displayName'] as String? ?? '';
-          final num  = int.tryParse(p['jerseyNumber']?.toString() ?? '') ?? (i + 1);
+          // Si ESPN ya tiene el número confirmado lo usamos; si no, usamos
+          // el mapa de índice→camiseta real (starters) o i+1 (suplentes).
+          final apiNum = int.tryParse(p['jerseyNumber']?.toString() ?? '');
+          final num = apiNum ?? (i < 15 ? _espnStarterOrder[i] : i + 1);
 
           final player = LineupPlayer(number: num, name: name, position: pos);
           if (i < 15) { starters.add(player); } else { subs.add(player); }
         }
+
+        // Ordenar titulares por número de camiseta (1→15) y suplentes (16→23)
+        starters.sort((a, b) => (a.number ?? 99).compareTo(b.number ?? 99));
+        subs.sort((a, b) => (a.number ?? 99).compareTo(b.number ?? 99));
 
         return TeamLineup(teamName: teamName, starters: starters, subs: subs);
       }
