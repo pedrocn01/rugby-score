@@ -34,6 +34,7 @@ const Map<String, int> leagueIds = {
   'Seis Naciones':             51,
   'The Rugby Championship':    85,
   'Super Rugby Américas':      41,
+  'Nations Championship':      145,
   'URBA Top 14':               -1,
   'URBA Primera A':            -2,
   'URBA Primera B':            -3,
@@ -46,7 +47,6 @@ const Map<String, int> leagueIds = {
   'TOP 14 Pre-Intermedia E':   -11,
   'TOP 14 Pre-Intermedia F':   -13,
   'TOP 14 M-22':               -12,
-  'Nations Championship':      145,
   'TDI A 2026':                -20,
   // ── Primera A ──────────────────────────────────────────────────────────────
   '1A Intermedia':             -14,
@@ -292,6 +292,7 @@ const Set<String> noRelegationLeagues = {
   'United Rugby Championship',
   'Super Rugby Pacific',
   'Super Rugby Américas',
+  'Nations Championship',
   'TDI A 2026',
   // Universitario, Femenino y Juveniles: sin marcadores de descenso/ascenso
   'Rugby Universitario',
