@@ -284,10 +284,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     onTap:  () => _go(context, 'URBA'),
                   ),
                 _FolderRow(
-                  name:  'URBA - Juveniles',
-                  sub:   'M-19 · M-17 · M-16 · M-15',
-                  color: const Color(0xFFB84800),
-                  onTap: () => _go(context, 'URBA - Juveniles'),
+                  name:    'URBA - Juveniles',
+                  sub:     'M-19 · M-17 · M-16 · M-15',
+                  color:   const Color(0xFFB84800),
+                  logoUrl: leagueLogoUrls['URBA Top 14'],
+                  onTap:   () => _go(context, 'URBA - Juveniles'),
                 ),
 
                 // ── EUROPA ───────────────────────────────────────────────
@@ -705,10 +706,11 @@ class _FolderRow extends StatelessWidget {
   final String    name;
   final String    sub;
   final Color     color;
+  final String?   logoUrl;
   final _Status?  status;
   final VoidCallback onTap;
   const _FolderRow({required this.name, required this.sub, required this.color,
-      this.status, required this.onTap});
+      this.logoUrl, this.status, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -727,15 +729,18 @@ class _FolderRow extends StatelessWidget {
               margin: const EdgeInsets.only(right: 10),
               decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
             ),
-            // Icon
+            // Logo o ícono de carpeta
             Container(
               width: 30, height: 30,
               margin: const EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: .12),
+                color: logoUrl != null ? Colors.white : color.withValues(alpha: .12),
                 borderRadius: BorderRadius.circular(7),
               ),
-              child: Icon(Icons.folder_open_rounded, color: color, size: 16),
+              padding: logoUrl != null ? const EdgeInsets.all(3) : EdgeInsets.zero,
+              child: logoUrl != null
+                  ? Image.asset(logoUrl!, fit: BoxFit.contain)
+                  : Icon(Icons.folder_open_rounded, color: color, size: 16),
             ),
             // Info
             Expanded(
