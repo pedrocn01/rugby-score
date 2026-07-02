@@ -12,6 +12,7 @@ const Map<int, int> leagueSeasons = {
   51: 2026, // Seis Naciones
   85: 2025, // The Rugby Championship
   41: 2026, // Super Rugby Américas
+  145: 2026, // Nations Championship
   // Circuito 7s
   111: 2025, // 7s Dubai
   112: 2025, // 7s Sudáfrica
@@ -45,7 +46,7 @@ const Map<String, int> leagueIds = {
   'TOP 14 Pre-Intermedia E':   -11,
   'TOP 14 Pre-Intermedia F':   -13,
   'TOP 14 M-22':               -12,
-  'Nations Championship':      -10,
+  'Nations Championship':      145,
   'TDI A 2026':                -20,
   // ── Primera A ──────────────────────────────────────────────────────────────
   '1A Intermedia':             -14,
@@ -146,7 +147,6 @@ const Set<String> staticLeagues = {
   'URBA Primera A',
   'URBA Primera B',
   'URBA Primera C',
-  'Nations Championship',
   'TDI A 2026',
 };
 
@@ -163,6 +163,7 @@ const Set<String> espnStandingsLeagues = {
 
 // ─── Ligas cuya tabla se calcula a partir de los partidos de la API ───────
 const Set<String> computeStandingsLeagues = {
+  'Nations Championship',
   'Super Rugby Américas',
   '7s Dubai',
   '7s Sudáfrica',
