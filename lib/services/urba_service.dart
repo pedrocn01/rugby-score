@@ -205,7 +205,43 @@ class UrbaService {
 
     final allMatches = results.expand((m) => m).toList();
 
+    // Inyectar horarios reales para URBA Top 14:
+    // las 3 primeras fechas pendientes juegan a las 14:00, el resto a las 15:30.
+    if (leagueName == 'URBA Top 14') {
+      return _injectUrbaKickoffTimes(allMatches);
+    }
+
     return allMatches;
+  }
+
+  List<dynamic> _injectUrbaKickoffTimes(List<dynamic> matches) {
+    // Obtener fechas únicas de partidos NS (pendientes), ordenadas
+    final pendingDates = matches
+        .where((m) => m['status']?['short'] == 'NS')
+        .map((m) => (m['date'] as String? ?? '').substring(0, 10))
+        .where((d) => d.length == 10)
+        .toSet()
+        .toList()
+      ..sort();
+
+    final first3 = pendingDates.take(3).toSet();
+
+    return matches.map<dynamic>((m) {
+      if (m['status']?['short'] != 'NS') return m;
+      final rawDate = (m['date'] as String? ?? '');
+      final dateOnly = rawDate.length >= 10 ? rawDate.substring(0, 10) : '';
+      if (dateOnly.isEmpty) return m;
+
+      final time    = first3.contains(dateOnly) ? '14:00:00' : '15:30:00';
+      final newDate = '${dateOnly}T$time-03:00';
+      final dt      = DateTime.tryParse(newDate);
+
+      return <String, dynamic>{
+        ...Map<String, dynamic>.from(m as Map),
+        'date':      newDate,
+        'timestamp': dt != null ? dt.millisecondsSinceEpoch ~/ 1000 : m['timestamp'],
+      };
+    }).toList();
   }
 
   Future<List<dynamic>> _fetchRound(dynamic round) async {
