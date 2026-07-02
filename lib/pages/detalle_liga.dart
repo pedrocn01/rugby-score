@@ -116,6 +116,23 @@ class _DetalleLigaState extends State<DetalleLiga> {
   List<List<dynamic>> _computeStandingsFromMatches(List<dynamic> matches) {
     final Map<String, TeamStats> stats = {};
 
+    // Registrar todos los equipos que aparecen (incluso partidos no jugados)
+    // para que la tabla muestre todos los equipos aunque el torneo no haya empezado.
+    for (final match in matches) {
+      final home     = match['teams']?['home']?['name'] as String? ?? '';
+      final away     = match['teams']?['away']?['name'] as String? ?? '';
+      final homeLogo = match['teams']?['home']?['logo']?.toString();
+      final awayLogo = match['teams']?['away']?['logo']?.toString();
+      if (home.isNotEmpty) {
+        stats.putIfAbsent(home, () => TeamStats(home));
+        stats[home]!.logoUrl ??= homeLogo;
+      }
+      if (away.isNotEmpty) {
+        stats.putIfAbsent(away, () => TeamStats(away));
+        stats[away]!.logoUrl ??= awayLogo;
+      }
+    }
+
     for (final match in matches) {
       final hs = match['scores']?['home'];
       final as_ = match['scores']?['away'];
