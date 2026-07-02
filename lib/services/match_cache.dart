@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../config/leagues.dart';
 import '../data/static_data.dart';
 import 'rugby_service.dart';
+import 'urba_service.dart';
 
 class MatchEntry {
   final String league;
@@ -75,6 +76,32 @@ class MatchCache {
             _data.putIfAbsent(leagueName, () => []).add(m);
           }
         }
+      }
+
+      // Ligas URBA: no están en api-sports, vienen de la API de URBA.
+      // Solo las 4 divisiones principales para no saturar el feed.
+      const urbaFeedLeagues = [
+        'URBA Top 14', 'URBA Primera A', 'URBA Primera B', 'URBA Primera C',
+      ];
+      final urba = UrbaService();
+      final urbaResults = await Future.wait(
+        urbaFeedLeagues.map((name) => urba
+            .fetchMatches(name)
+            .catchError((err) {
+              debugPrint('❌ MatchCache: error cargando $name (URBA): $err');
+              return <dynamic>[];
+            })),
+      );
+      for (int i = 0; i < urbaFeedLeagues.length; i++) {
+        if (urbaResults[i].isNotEmpty) {
+          _data[urbaFeedLeagues[i]] = urbaResults[i];
+        }
+      }
+
+      // Ligas estáticas (TDI A 2026): inyectar sus partidos directamente.
+      for (final league in staticLeagues) {
+        final matches = StaticDataService.getMatches(league);
+        if (matches.isNotEmpty) _data[league] = matches;
       }
 
       _lastFetch = DateTime.now();
