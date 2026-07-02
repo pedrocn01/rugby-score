@@ -3,6 +3,7 @@ import '../config/logos.dart';
 import '../config/themes.dart';
 import '../services/match_cache.dart';
 import '../services/urba_service.dart';
+import '../services/espn_lineup_service.dart';
 import 'team_detail_page.dart';
 
 class _Entry {
@@ -28,6 +29,7 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
   bool _loading = true;
   final List<_Entry> _homeHistory = [];
   final List<_Entry> _awayHistory = [];
+  MatchLineup? _lineup;
 
   late String _homeName;
   late String _awayName;
@@ -44,7 +46,21 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
     final homeAll = <_Entry>[];
     final awayAll = <_Entry>[];
 
-    final cache = await MatchCache.instance.fetchAll();
+    final futures = <Future>[
+      MatchCache.instance.fetchAll(),
+      if (EspnLineupService.supportsLineups(widget.league))
+        EspnLineupService().fetchLineup(
+          league:   widget.league,
+          homeTeam: _homeName,
+          awayTeam: _awayName,
+          date:     widget.match['date'] as String? ?? '',
+        ),
+    ];
+
+    final results0 = await Future.wait(futures);
+    final cache = results0[0] as Map<String, List<dynamic>>;
+    final lineup = results0.length > 1 ? results0[1] as MatchLineup? : null;
+
     for (final e in cache.entries) {
       for (final m in e.value) {
         if (_hasTeam(m, _homeName)) homeAll.add(_Entry(e.key, m));
@@ -53,11 +69,11 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
     }
 
     final urba = UrbaService();
-    final results = await Future.wait(
+    final urbaResults = await Future.wait(
       _urbaLeagues.map((l) => urba.fetchMatches(l).catchError((_) => <dynamic>[])),
     );
     for (int i = 0; i < _urbaLeagues.length; i++) {
-      for (final m in results[i]) {
+      for (final m in urbaResults[i]) {
         if (_hasTeam(m, _homeName)) homeAll.add(_Entry(_urbaLeagues[i], m));
         if (_hasTeam(m, _awayName)) awayAll.add(_Entry(_urbaLeagues[i], m));
       }
@@ -67,6 +83,7 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
     setState(() {
       _homeHistory.addAll(_recentOf(homeAll));
       _awayHistory.addAll(_recentOf(awayAll));
+      _lineup  = lineup;
       _loading = false;
     });
   }
@@ -241,6 +258,8 @@ class _MatchDetailPageState extends State<MatchDetailPage> {
           else
             SliverList(
               delegate: SliverChildListDelegate([
+                if (_lineup != null) _LineupSection(lineup: _lineup!),
+
                 _SectionHead(_homeName),
                 if (_homeHistory.isEmpty) const _NoMatches(),
                 ..._homeHistory.map((e) => _MatchRow(entry: e, teamName: _homeName)),
@@ -515,6 +534,191 @@ class _TeamLogo extends StatelessWidget {
     return Image.network(url, width: 22, height: 22, fit: BoxFit.contain,
       cacheWidth: 44,
       errorBuilder: (_, e, s) => const SizedBox(width: 22));
+  }
+}
+
+// ─── Formaciones ──────────────────────────────────────────────────────────────
+
+class _LineupSection extends StatelessWidget {
+  final MatchLineup lineup;
+  const _LineupSection({required this.lineup});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Encabezado de sección ──────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1B4332),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text('FORMACIONES',
+                    style: TextStyle(color: Colors.white, fontSize: 10,
+                      fontWeight: FontWeight.w800, letterSpacing: 1.5)),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        const Color(0xFF1B4332).withValues(alpha: 0.5),
+                        Colors.transparent,
+                      ]),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ── Cabecera de equipos ───────────────────────────────────────────
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1B5E20),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(lineup.home.teamName,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white, fontSize: 11,
+                      fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+                ),
+              ),
+              const SizedBox(width: 2),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1B5E20),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(lineup.away.teamName,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white, fontSize: 11,
+                      fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+
+          // ── Titulares 1→15 ────────────────────────────────────────────────
+          ...List.generate(lineup.home.starters.length, (i) {
+            final h = lineup.home.starters[i];
+            final a = i < lineup.away.starters.length ? lineup.away.starters[i] : null;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 2),
+              child: Row(
+                children: [
+                  Expanded(child: _PlayerTile(player: h)),
+                  const SizedBox(width: 2),
+                  Expanded(child: a != null ? _PlayerTile(player: a) : const SizedBox()),
+                ],
+              ),
+            );
+          }),
+
+          // ── Divider suplentes ─────────────────────────────────────────────
+          if (lineup.home.subs.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  const Expanded(child: Divider(color: Color(0xFF2A2A2A), thickness: 1)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text('SUPLENTES',
+                      style: const TextStyle(color: Color(0xFF9E9E9E),
+                        fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 2)),
+                  ),
+                  const Expanded(child: Divider(color: Color(0xFF2A2A2A), thickness: 1)),
+                ],
+              ),
+            ),
+
+            // ── Suplentes 16→23 ───────────────────────────────────────────
+            ...List.generate(lineup.home.subs.length, (i) {
+              final h = lineup.home.subs[i];
+              final a = i < lineup.away.subs.length ? lineup.away.subs[i] : null;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Row(
+                  children: [
+                    Expanded(child: _PlayerTile(player: h, isSub: true)),
+                    const SizedBox(width: 2),
+                    Expanded(child: a != null ? _PlayerTile(player: a, isSub: true) : const SizedBox()),
+                  ],
+                ),
+              );
+            }),
+          ],
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlayerTile extends StatelessWidget {
+  final LineupPlayer player;
+  final bool isSub;
+  const _PlayerTile({required this.player, this.isSub = false});
+
+  static String _abbrev(String name) {
+    final parts = name.trim().split(' ');
+    if (parts.length == 1) return name;
+    return '${parts.first[0].toUpperCase()}. ${parts.skip(1).join(' ')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: isSub ? const Color(0xFF141414) : const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 18,
+            child: Text('${player.number ?? ''}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Color(0xFF4CAF50),
+                fontSize: 12, fontWeight: FontWeight.w700)),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_abbrev(player.name),
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white,
+                    fontSize: 11, fontWeight: FontWeight.w600)),
+                Text(player.position,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Color(0xFF9E9E9E),
+                    fontSize: 9)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
